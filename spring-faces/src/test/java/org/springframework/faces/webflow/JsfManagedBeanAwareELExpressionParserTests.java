@@ -2,13 +2,14 @@ package org.springframework.faces.webflow;
 
 import junit.framework.TestCase;
 
-import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockRequestContext;
+
+import com.sun.el.ExpressionFactoryImpl;
 
 public class JsfManagedBeanAwareELExpressionParserTests extends TestCase {
 

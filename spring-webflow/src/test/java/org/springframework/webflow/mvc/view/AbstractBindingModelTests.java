@@ -150,13 +150,15 @@ public abstract class AbstractBindingModelTests extends TestCase {
 		model.pushNestedPath("nestedBean");
 		assertEquals("test", model.getFieldValue("datum1"));
 		assertEquals("0", model.getFieldValue("datum2"));
-		assertEquals(int.class, model.getFieldType("datum2"));
+		assertEquals(getNestedPathDataum2FieldType(), model.getFieldType("datum2"));
 
 		messages.addMessage(new MessageBuilder().source("nestedBean.datum2").error().defaultText("Error").build());
 		assertNotNull(model.getFieldErrors("datum2").get(0));
 		model.popNestedPath();
 		assertEquals("", model.getFieldValue("datum1"));
 	}
+
+	protected abstract Class<?> getNestedPathDataum2FieldType();
 
 	public static class NestedPathBean {
 		private String datum1 = "";

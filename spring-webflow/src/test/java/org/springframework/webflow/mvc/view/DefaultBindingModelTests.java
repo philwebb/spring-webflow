@@ -10,4 +10,8 @@ public class DefaultBindingModelTests extends AbstractBindingModelTests {
 		return new WebFlowSpringELExpressionParser(new SpelExpressionParser());
 	}
 
+	@Override
+	protected Class<?> getNestedPathDataum2FieldType() {
+		return Integer.class;
+	}
 }

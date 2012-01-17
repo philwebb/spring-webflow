@@ -19,7 +19,6 @@ import javax.faces.lifecycle.Lifecycle;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.ExpressionParser;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -36,6 +35,8 @@ import org.springframework.webflow.execution.View;
 import org.springframework.webflow.execution.ViewFactory;
 import org.springframework.webflow.expression.el.WebFlowELExpressionParser;
 import org.springframework.webflow.test.MockExternalContext;
+
+import com.sun.el.ExpressionFactoryImpl;
 
 public class JsfViewFactoryTests extends TestCase {
 

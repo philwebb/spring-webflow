@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 
 /**
  * Iterator that combines multiple other iterators. This is a simple implementation that just maintains a list of
- * iterators which are invoked in sequence untill all iterators are exhausted.
+ * iterators which are invoked in sequence until all iterators are exhausted.
  * 
  * @author Erwin Vervaet
  */

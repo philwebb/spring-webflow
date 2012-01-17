@@ -25,4 +25,9 @@ public class SpringBeanBindingModelTests extends AbstractBindingModelTests {
 		assertEquals(new Integer(3), model.getFieldValue("datum2"));
 	}
 
+	@Override
+	protected Class<?> getNestedPathDataum2FieldType() {
+		return int.class;
+	}
+
 }

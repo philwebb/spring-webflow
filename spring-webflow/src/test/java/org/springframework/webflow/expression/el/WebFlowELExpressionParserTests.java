@@ -5,7 +5,6 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-import org.jboss.el.ExpressionFactoryImpl;
 import org.springframework.binding.expression.Expression;
 import org.springframework.binding.expression.support.FluentParserContext;
 import org.springframework.context.support.StaticApplicationContext;
@@ -22,6 +21,8 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.TestAction;
 import org.springframework.webflow.test.MockRequestContext;
 import org.springframework.webflow.test.MockRequestControlContext;
+
+import com.sun.el.ExpressionFactoryImpl;
 
 public class WebFlowELExpressionParserTests extends TestCase {
 	private WebFlowELExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
@@ -49,8 +50,8 @@ public class WebFlowELExpressionParserTests extends TestCase {
 
 	public void testResolveFlowRequestContext() {
 		MockRequestContext context = new MockRequestContext();
-		Expression exp = parser.parseExpression("flowRequestContext", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression exp = parser.parseExpression("flowRequestContext",
+				new FluentParserContext().evaluate(RequestContext.class));
 		assertSame(context, exp.getValue(context));
 	}
 
@@ -164,8 +165,8 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		StaticApplicationContext ac = new StaticApplicationContext();
 		ac.getBeanFactory().registerSingleton("multiAction", new FormAction());
 		context.getRootFlow().setApplicationContext(ac);
-		Expression exp = parser.parseExpression("multiAction.setupForm", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression exp = parser.parseExpression("multiAction.setupForm",
+				new FluentParserContext().evaluate(RequestContext.class));
 		AnnotatedAction action = (AnnotatedAction) exp.getValue(context);
 		assertSame(ac.getBean("multiAction"), action.getTargetAction());
 		assertEquals("setupForm", action.getMethod());
@@ -176,8 +177,8 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		LocalAttributeMap attributes = new LocalAttributeMap();
 		attributes.put("foo", "bar");
 		context.setCurrentEvent(new Event(this, "event", attributes));
-		Expression exp = parser.parseExpression("currentEvent.attributes.foo", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression exp = parser.parseExpression("currentEvent.attributes.foo",
+				new FluentParserContext().evaluate(RequestContext.class));
 		assertEquals("bar", exp.getValue(context));
 	}
 
@@ -194,8 +195,8 @@ public class WebFlowELExpressionParserTests extends TestCase {
 		ac.refresh();
 		context.getRootFlow().setApplicationContext(ac);
 		context.getMockExternalContext().setLocale(Locale.FRANCE);
-		Expression exp = parser.parseExpression("resourceBundle.foo", new FluentParserContext()
-				.evaluate(RequestContext.class));
+		Expression exp = parser.parseExpression("resourceBundle.foo",
+				new FluentParserContext().evaluate(RequestContext.class));
 		assertEquals("bar", exp.getValue(context));
 	}
 }
