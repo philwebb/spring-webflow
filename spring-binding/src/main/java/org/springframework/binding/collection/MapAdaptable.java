@@ -22,7 +22,7 @@ import java.util.Map;
  * 
  * @author Keith Donald
  */
-public interface MapAdaptable {
+public interface MapAdaptable<K, V> {
 
 	/**
 	 * Returns this object's contents as a {@link Map}. The returned map may or may not be modifiable depending on this
@@ -32,6 +32,6 @@ public interface MapAdaptable {
 	 * calculated) be cached as appropriate.
 	 * @return the object's contents as a map
 	 */
-	public Map asMap();
+	public Map<K, V> asMap();
 
 }
