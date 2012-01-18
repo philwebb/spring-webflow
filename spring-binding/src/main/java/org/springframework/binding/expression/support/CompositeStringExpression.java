@@ -52,7 +52,7 @@ public class CompositeStringExpression implements Expression {
 		throw new UnsupportedOperationException("Cannot set a composite string expression value");
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return String.class;
 	}
 

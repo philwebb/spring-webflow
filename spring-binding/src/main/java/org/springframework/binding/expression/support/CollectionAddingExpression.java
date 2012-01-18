@@ -61,7 +61,7 @@ public class CollectionAddingExpression implements Expression {
 		}
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		return Object.class;
 	}
 
