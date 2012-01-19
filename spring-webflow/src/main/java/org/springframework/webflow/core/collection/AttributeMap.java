@@ -27,7 +27,7 @@ import org.springframework.binding.collection.MapAdaptable;
  * 
  * @author Keith Donald
  */
-public interface AttributeMap extends MapAdaptable {
+public interface AttributeMap extends MapAdaptable<String, Object> {
 
 	/**
 	 * Get an attribute value out of this map, returning <code>null</code> if not found.
@@ -62,7 +62,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return true if so, false otherwise
 	 * @throws IllegalArgumentException when the value is not of the required type
 	 */
-	public boolean contains(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public boolean contains(String attributeName, Class<?> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Get an attribute value, returning the default value if no value is found.
@@ -79,7 +79,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the attribute value, or null if not found
 	 * @throws IllegalArgumentException when the value is not of the required type
 	 */
-	public Object get(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T> T get(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Get an attribute value, asserting the value is of the required type and returning the default value if not found.
@@ -89,7 +89,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the attribute value, or the default if not found
 	 * @throws IllegalArgumentException when the value (if found) is not of the required type
 	 */
-	public Object get(String attributeName, Class requiredType, Object defaultValue) throws IllegalStateException;
+	public <T> T get(String attributeName, Class<T> requiredType, T defaultValue) throws IllegalStateException;
 
 	/**
 	 * Get the value of a required attribute, throwing an exception of no attribute is found.
@@ -106,7 +106,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the attribute value
 	 * @throws IllegalArgumentException when the attribute is not found or not of the required type
 	 */
-	public Object getRequired(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T> T getRequired(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Returns a string attribute value in the map, returning <code>null</code> if no value was found.
@@ -140,7 +140,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the collection attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a collection
 	 */
-	public Collection getCollection(String attributeName) throws IllegalArgumentException;
+	public Collection<Object> getCollection(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a collection attribute value in the map and make sure it is of the required type.
@@ -149,7 +149,8 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the collection attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a collection of the required type
 	 */
-	public Collection getCollection(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T extends Collection<Object>> T getCollection(String attributeName, Class<T> requiredType)
+			throws IllegalArgumentException;
 
 	/**
 	 * Returns a collection attribute value in the map, throwing an exception if the attribute is not present or not a
@@ -158,7 +159,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the collection attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or is present but not a collection
 	 */
-	public Collection getRequiredCollection(String attributeName) throws IllegalArgumentException;
+	public Collection<Object> getRequiredCollection(String attributeName) throws IllegalArgumentException;
 
 	/**
 	 * Returns a collection attribute value in the map, throwing an exception if the attribute is not present or not a
@@ -169,7 +170,8 @@ public interface AttributeMap extends MapAdaptable {
 	 * @throws IllegalArgumentException if the attribute is not present or is present but not a collection of the
 	 * required type
 	 */
-	public Collection getRequiredCollection(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T extends Collection<Object>> T getRequiredCollection(String attributeName, Class<T> requiredType)
+			throws IllegalArgumentException;
 
 	/**
 	 * Returns an array attribute value in the map and makes sure it is of the required type.
@@ -178,7 +180,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the array attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not an array of the required type
 	 */
-	public Object[] getArray(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T> T[] getArray(String attributeName, Class<? extends T[]> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Returns an array attribute value in the map, throwing an exception if the attribute is not present or not an
@@ -189,7 +191,8 @@ public interface AttributeMap extends MapAdaptable {
 	 * @throws IllegalArgumentException if the attribute is not present or is present but not a array of the required
 	 * type
 	 */
-	public Object[] getRequiredArray(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T> T[] getRequiredArray(String attributeName, Class<? extends T[]> requiredType)
+			throws IllegalArgumentException;
 
 	/**
 	 * Returns a number attribute value in the map that is of the specified type, returning <code>null</code> if no
@@ -199,7 +202,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the number attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a number of the required type
 	 */
-	public Number getNumber(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T extends Number> T getNumber(String attributeName, Class<T> requiredType) throws IllegalArgumentException;
 
 	/**
 	 * Returns a number attribute value in the map of the specified type, returning the default value if no value was
@@ -209,7 +212,7 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the number attribute value
 	 * @throws IllegalArgumentException if the attribute is present but not a number of the required type
 	 */
-	public Number getNumber(String attributeName, Class requiredType, Number defaultValue)
+	public <T extends Number> T getNumber(String attributeName, Class<T> requiredType, T defaultValue)
 			throws IllegalArgumentException;
 
 	/**
@@ -219,7 +222,8 @@ public interface AttributeMap extends MapAdaptable {
 	 * @return the number attribute value
 	 * @throws IllegalArgumentException if the attribute is not present or present but not a number of the required type
 	 */
-	public Number getRequiredNumber(String attributeName, Class requiredType) throws IllegalArgumentException;
+	public <T extends Number> T getRequiredNumber(String attributeName, Class<T> requiredType)
+			throws IllegalArgumentException;
 
 	/**
 	 * Returns an integer attribute value in the map, returning <code>null</code> if no value was found.

@@ -172,7 +172,7 @@ public class FlowDefinitionResourceFactory {
 	 * @param clazz to specify if the path should be relative to another class
 	 * @return the classpath-based flow definition resource
 	 */
-	public FlowDefinitionResource createClassPathResource(String path, Class clazz) {
+	public FlowDefinitionResource createClassPathResource(String path, Class<?> clazz) {
 		Resource resource = new ClassPathResource(path, clazz);
 		return new FlowDefinitionResource(getFlowId(resource), resource, null);
 	}

@@ -159,7 +159,7 @@ public class MapAccessor<K, V> implements MapAdaptable<K, V> {
 	 * @return the collection value
 	 * @throws IllegalArgumentException if the key is present but the value is not a collection
 	 */
-	public Collection<?> getCollection(Object key) throws IllegalArgumentException {
+	public Collection<Object> getCollection(Object key) throws IllegalArgumentException {
 		if (!map.containsKey(key)) {
 			return null;
 		}
@@ -173,7 +173,8 @@ public class MapAccessor<K, V> implements MapAdaptable<K, V> {
 	 * @return the collection value
 	 * @throws IllegalArgumentException if the key is present but the value is not a collection
 	 */
-	public <T extends Collection<?>> T getCollection(Object key, Class<T> requiredType) throws IllegalArgumentException {
+	public <T extends Collection<Object>> T getCollection(Object key, Class<T> requiredType)
+			throws IllegalArgumentException {
 		if (!map.containsKey(key)) {
 			return null;
 		}
@@ -187,7 +188,7 @@ public class MapAccessor<K, V> implements MapAdaptable<K, V> {
 	 * @return the collection value
 	 * @throws IllegalArgumentException if the key is not present or present but the value is not a collection
 	 */
-	public Collection<?> getRequiredCollection(Object key) throws IllegalArgumentException {
+	public Collection<Object> getRequiredCollection(Object key) throws IllegalArgumentException {
 		assertContainsKey(key);
 		return assertKeyValueOfType(key, Collection.class);
 	}

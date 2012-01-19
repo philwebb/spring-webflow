@@ -32,7 +32,7 @@ import org.springframework.webflow.core.collection.CollectionUtils;
  * @author Keith Donald
  * @author Scott Andrews
  */
-public class PortletRequestParameterMap extends StringKeyedMapAdapter {
+public class PortletRequestParameterMap extends StringKeyedMapAdapter<Object> {
 
 	/**
 	 * The wrapped Portlet request.
@@ -73,10 +73,10 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter {
 		throw new UnsupportedOperationException("PortletRequest parameter maps are immutable");
 	}
 
-	protected Iterator getAttributeNames() {
+	protected Iterator<String> getAttributeNames() {
 		if (request instanceof MultipartActionRequest) {
 			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
-			CompositeIterator iterator = new CompositeIterator();
+			CompositeIterator<String> iterator = new CompositeIterator<String>();
 			iterator.add(multipartRequest.getFileMap().keySet().iterator());
 			iterator.add(CollectionUtils.toIterator(request.getParameterNames()));
 			return iterator;

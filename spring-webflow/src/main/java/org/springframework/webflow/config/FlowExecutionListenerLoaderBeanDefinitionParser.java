@@ -41,7 +41,7 @@ class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBean
 	}
 
 	protected void doParse(Element element, BeanDefinitionBuilder definitionBuilder) {
-		List listenerElements = DomUtils.getChildElementsByTagName(element, "listener");
+		List<Element> listenerElements = DomUtils.getChildElementsByTagName(element, "listener");
 		definitionBuilder.addPropertyValue("listeners", parseListenersWithCriteria(listenerElements));
 	}
 
@@ -51,10 +51,11 @@ class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBean
 	 * @return a map containing keys that are references to given listeners and values of string that represent the
 	 * criteria
 	 */
-	private Map parseListenersWithCriteria(List listeners) {
-		Map listenersWithCriteria = new ManagedMap(listeners.size());
-		for (Iterator i = listeners.iterator(); i.hasNext();) {
-			Element listenerElement = (Element) i.next();
+	private Map<RuntimeBeanReference, String> parseListenersWithCriteria(List<Element> listeners) {
+		Map<RuntimeBeanReference, String> listenersWithCriteria = new ManagedMap<RuntimeBeanReference, String>(
+				listeners.size());
+		for (Iterator<Element> iterator = listeners.iterator(); iterator.hasNext();) {
+			Element listenerElement = iterator.next();
 			RuntimeBeanReference ref = new RuntimeBeanReference(listenerElement.getAttribute("ref"));
 			String criteria = listenerElement.getAttribute("criteria");
 			listenersWithCriteria.put(ref, criteria);

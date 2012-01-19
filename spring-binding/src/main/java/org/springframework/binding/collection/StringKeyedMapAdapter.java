@@ -124,7 +124,7 @@ public abstract class StringKeyedMapAdapter<V> implements Map<String, V> {
 	 * @param key the key to associate the value with
 	 * @param value the value to associate with the key
 	 */
-	protected abstract void setAttribute(String key, Object value);
+	protected abstract void setAttribute(String key, V value);
 
 	/**
 	 * Hook method that needs to be implemented by concrete subclasses. Removes a key and its associated value from the

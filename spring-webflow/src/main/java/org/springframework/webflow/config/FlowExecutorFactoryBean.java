@@ -58,7 +58,8 @@ import org.springframework.webflow.mvc.builder.MvcEnvironment;
  * @author Keith Donald
  * @author Erwin Vervaet
  */
-class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, BeanClassLoaderAware, InitializingBean {
+class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationContextAware, BeanClassLoaderAware,
+		InitializingBean {
 
 	private static final String ALWAYS_REDIRECT_ON_PAUSE = "alwaysRedirectOnPause";
 
@@ -70,7 +71,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private Integer maxFlowExecutionSnapshots;
 
-	private Set flowExecutionAttributes;
+	private Set<FlowElementAttribute> flowExecutionAttributes;
 
 	private FlowExecutionListenerLoader flowExecutionListenerLoader;
 
@@ -112,7 +113,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 	 * Execution attributes may affect flow execution behavior.
 	 * @param flowExecutionAttributes the flow execution system attributes
 	 */
-	public void setFlowExecutionAttributes(Set flowExecutionAttributes) {
+	public void setFlowExecutionAttributes(Set<FlowElementAttribute> flowExecutionAttributes) {
 		this.flowExecutionAttributes = flowExecutionAttributes;
 	}
 
@@ -161,7 +162,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	// implementing FactoryBean
 
-	public Class getObjectType() {
+	public Class<?> getObjectType() {
 		return FlowExecutor.class;
 	}
 
@@ -169,15 +170,15 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		return true;
 	}
 
-	public Object getObject() throws Exception {
+	public FlowExecutor getObject() throws Exception {
 		return flowExecutor;
 	}
 
 	private MutableAttributeMap createFlowExecutionAttributes() {
 		LocalAttributeMap executionAttributes = new LocalAttributeMap();
 		if (flowExecutionAttributes != null) {
-			for (Iterator it = flowExecutionAttributes.iterator(); it.hasNext();) {
-				FlowElementAttribute attribute = (FlowElementAttribute) it.next();
+			for (Iterator<FlowElementAttribute> it = flowExecutionAttributes.iterator(); it.hasNext();) {
+				FlowElementAttribute attribute = it.next();
 				executionAttributes.put(attribute.getName(), getConvertedValue(attribute));
 			}
 		}
@@ -239,7 +240,7 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 
 	private Object getConvertedValue(FlowElementAttribute attribute) {
 		if (attribute.needsTypeConversion()) {
-			Class targetType = fromStringToClass(attribute.getType());
+			Class<?> targetType = fromStringToClass(attribute.getType());
 			ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetType);
 			return converter.execute(attribute.getValue());
 		} else {
@@ -247,8 +248,8 @@ class FlowExecutorFactoryBean implements FactoryBean, ApplicationContextAware, B
 		}
 	}
 
-	private Class fromStringToClass(String name) {
-		Class clazz = conversionService.getClassForAlias(name);
+	private Class<?> fromStringToClass(String name) {
+		Class<?> clazz = conversionService.getClassForAlias(name);
 		if (clazz != null) {
 			return clazz;
 		} else {

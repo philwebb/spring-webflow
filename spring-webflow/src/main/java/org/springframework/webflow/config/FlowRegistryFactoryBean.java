@@ -55,7 +55,8 @@ import org.springframework.webflow.engine.model.registry.FlowModelHolder;
  * @author Jeremy Grelle
  * @author Scott Andrews
  */
-class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, InitializingBean, DisposableBean {
+class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, BeanClassLoaderAware, InitializingBean,
+		DisposableBean {
 
 	private FlowLocation[] flowLocations;
 
@@ -143,11 +144,11 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 		registerFlowBuilders();
 	}
 
-	public Object getObject() throws Exception {
+	public FlowDefinitionRegistry getObject() throws Exception {
 		return flowRegistry;
 	}
 
-	public Class getObjectType() {
+	public Class<?> getObjectType() {
 		return FlowDefinitionRegistry.class;
 	}
 
@@ -175,7 +176,7 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 			for (int i = 0; i < flowLocationPatterns.length; i++) {
 				String pattern = flowLocationPatterns[i];
 				FlowDefinitionResource[] resources;
-				AttributeMap attributes = getFlowAttributes(Collections.EMPTY_SET);
+				AttributeMap attributes = getFlowAttributes(Collections.<FlowElementAttribute> emptySet());
 				try {
 					resources = flowResourceFactory.createResources(pattern, attributes);
 				} catch (IOException e) {
@@ -202,8 +203,8 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	private FlowDefinitionHolder createFlowDefinitionHolder(FlowDefinitionResource flowResource) {
 		FlowBuilder builder = createFlowBuilder(flowResource);
-		FlowBuilderContext builderContext = new FlowBuilderContextImpl(flowResource.getId(), flowResource
-				.getAttributes(), flowRegistry, flowBuilderServices);
+		FlowBuilderContext builderContext = new FlowBuilderContextImpl(flowResource.getId(),
+				flowResource.getAttributes(), flowRegistry, flowBuilderServices);
 		FlowAssembler assembler = new FlowAssembler(builder, builderContext);
 		return new DefaultFlowHolder(assembler);
 	}
@@ -213,7 +214,7 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 		return flowResourceFactory.createResource(location.getPath(), flowAttributes, location.getId());
 	}
 
-	private AttributeMap getFlowAttributes(Set attributes) {
+	private AttributeMap getFlowAttributes(Set<FlowElementAttribute> attributes) {
 		MutableAttributeMap flowAttributes = null;
 		if (flowBuilderServices.getDevelopment()) {
 			flowAttributes = new LocalAttributeMap(1 + attributes.size(), 1);
@@ -223,8 +224,8 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 			if (flowAttributes == null) {
 				flowAttributes = new LocalAttributeMap(attributes.size(), 1);
 			}
-			for (Iterator it = attributes.iterator(); it.hasNext();) {
-				FlowElementAttribute attribute = (FlowElementAttribute) it.next();
+			for (Iterator<FlowElementAttribute> it = attributes.iterator(); it.hasNext();) {
+				FlowElementAttribute attribute = it.next();
 				flowAttributes.put(attribute.getName(), getConvertedValue(attribute));
 			}
 		}
@@ -258,7 +259,7 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	private Object getConvertedValue(FlowElementAttribute attribute) {
 		if (attribute.needsTypeConversion()) {
-			Class targetType = fromStringToClass(attribute.getType());
+			Class<?> targetType = fromStringToClass(attribute.getType());
 			ConversionExecutor converter = flowBuilderServices.getConversionService().getConversionExecutor(
 					String.class, targetType);
 			return converter.execute(attribute.getValue());
@@ -267,8 +268,8 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 		}
 	}
 
-	private Class fromStringToClass(String name) {
-		Class clazz = flowBuilderServices.getConversionService().getClassForAlias(name);
+	private Class<?> fromStringToClass(String name) {
+		Class<?> clazz = flowBuilderServices.getConversionService().getClassForAlias(name);
 		if (clazz != null) {
 			return clazz;
 		} else {
@@ -276,7 +277,7 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 		}
 	}
 
-	private Class loadClass(String name) {
+	private Class<?> loadClass(String name) {
 		try {
 			return ClassUtils.forName(name, classLoader);
 		} catch (ClassNotFoundException e) {
@@ -286,7 +287,7 @@ class FlowRegistryFactoryBean implements FactoryBean, BeanClassLoaderAware, Init
 
 	private FlowDefinition buildFlowDefinition(FlowBuilderInfo builderInfo) {
 		try {
-			Class flowBuilderClass = loadClass(builderInfo.getClassName());
+			Class<?> flowBuilderClass = loadClass(builderInfo.getClassName());
 			FlowBuilder builder = (FlowBuilder) flowBuilderClass.newInstance();
 			AttributeMap flowAttributes = getFlowAttributes(builderInfo.getAttributes());
 			FlowBuilderContext builderContext = new FlowBuilderContextImpl(builderInfo.getId(), flowAttributes,

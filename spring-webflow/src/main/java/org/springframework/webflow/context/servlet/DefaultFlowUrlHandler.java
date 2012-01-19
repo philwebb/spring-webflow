@@ -168,10 +168,10 @@ public class DefaultFlowUrlHandler implements FlowUrlHandler {
 		}
 	}
 
-	protected void appendQueryParameters(StringBuffer url, Map parameters, String encodingScheme) {
-		Iterator entries = parameters.entrySet().iterator();
+	protected void appendQueryParameters(StringBuffer url, Map<String, Object> parameters, String encodingScheme) {
+		Iterator<Map.Entry<String, Object>> entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
+			Map.Entry<?, ?> entry = entries.next();
 			appendQueryParameter(url, entry.getKey(), entry.getValue(), encodingScheme);
 			if (entries.hasNext()) {
 				url.append('&');

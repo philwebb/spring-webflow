@@ -207,7 +207,7 @@ public class ELExpressionParserCompatibilityTests extends TestCase {
 					TypeDescriptor.valueOf(String.class));
 		}
 
-		public Class[] getSpecificTargetClasses() {
+		public Class<?>[] getSpecificTargetClasses() {
 			return null;
 		}
 

@@ -65,10 +65,10 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 		return url.toString();
 	}
 
-	private void appendQueryParameters(StringBuffer url, Map parameters) {
-		Iterator entries = parameters.entrySet().iterator();
+	private void appendQueryParameters(StringBuffer url, Map<String, Object> parameters) {
+		Iterator<Map.Entry<String, Object>> entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
-			Map.Entry entry = (Map.Entry) entries.next();
+			Map.Entry<String, Object> entry = entries.next();
 			appendQueryParameter(url, entry.getKey(), entry.getValue());
 			if (entries.hasNext()) {
 				url.append('&');
