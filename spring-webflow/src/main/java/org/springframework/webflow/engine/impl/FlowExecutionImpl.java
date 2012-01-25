@@ -123,7 +123,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 	 * <p>
 	 * Transient to support restoration by the {@link FlowExecutionImplFactory}.
 	 */
-	private transient AttributeMap attributes;
+	private transient AttributeMap<Object> attributes;
 
 	/**
 	 * The outcome reached by this flow execution when it ends.

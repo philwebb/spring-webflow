@@ -51,11 +51,11 @@ public class FlowDefinitionRedirectAction extends AbstractAction {
 		// now parse that and build a corresponding view selection
 		int index = encodedRedirect.indexOf('?');
 		String flowDefinitionId;
-		LocalAttributeMap executionInput = null;
+		LocalAttributeMap<String> executionInput = null;
 		if (index != -1) {
 			flowDefinitionId = encodedRedirect.substring(0, index);
 			String[] parameters = StringUtils.delimitedListToStringArray(encodedRedirect.substring(index + 1), "&");
-			executionInput = new LocalAttributeMap(parameters.length, 1);
+			executionInput = new LocalAttributeMap<String>(parameters.length, 1);
 			for (int i = 0; i < parameters.length; i++) {
 				String nameAndValue = parameters[i];
 				index = nameAndValue.indexOf('=');

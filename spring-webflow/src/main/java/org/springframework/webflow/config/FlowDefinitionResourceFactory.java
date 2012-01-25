@@ -90,7 +90,7 @@ public class FlowDefinitionResourceFactory {
 	 * @param attributes the flow definition meta attributes to configure
 	 * @return the flow definition resource
 	 */
-	public FlowDefinitionResource createResource(String path, AttributeMap attributes) {
+	public FlowDefinitionResource createResource(String path, AttributeMap<?> attributes) {
 		return createResource(path, attributes, null);
 	}
 
@@ -102,7 +102,7 @@ public class FlowDefinitionResourceFactory {
 	 * @param flowId the flow definition id to configure
 	 * @return the flow definition resource
 	 */
-	public FlowDefinitionResource createResource(String path, AttributeMap attributes, String flowId) {
+	public FlowDefinitionResource createResource(String path, AttributeMap<?> attributes, String flowId) {
 		Resource resource;
 		if (basePath == null) {
 			resource = resourceLoader.getResource(path);
@@ -131,7 +131,7 @@ public class FlowDefinitionResourceFactory {
 	 * @param attributes meta attributes to apply to each flow definition resource
 	 * @return the flow definition resources
 	 */
-	public FlowDefinitionResource[] createResources(String pattern, AttributeMap attributes) throws IOException {
+	public FlowDefinitionResource[] createResources(String pattern, AttributeMap<?> attributes) throws IOException {
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			ResourcePatternResolver resolver = (ResourcePatternResolver) resourceLoader;
 			Resource[] resources;

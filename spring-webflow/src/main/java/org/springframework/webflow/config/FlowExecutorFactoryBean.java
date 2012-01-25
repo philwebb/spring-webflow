@@ -153,7 +153,7 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		if (conversionService == null) {
 			conversionService = new DefaultConversionService();
 		}
-		MutableAttributeMap executionAttributes = createFlowExecutionAttributes();
+		MutableAttributeMap<Object> executionAttributes = createFlowExecutionAttributes();
 		FlowExecutionImplFactory executionFactory = createFlowExecutionFactory(executionAttributes);
 		DefaultFlowExecutionRepository executionRepository = createFlowExecutionRepository(executionFactory);
 		executionFactory.setExecutionKeyFactory(executionRepository);
@@ -174,8 +174,8 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		return flowExecutor;
 	}
 
-	private MutableAttributeMap createFlowExecutionAttributes() {
-		LocalAttributeMap executionAttributes = new LocalAttributeMap();
+	private MutableAttributeMap<Object> createFlowExecutionAttributes() {
+		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
 		if (flowExecutionAttributes != null) {
 			for (Iterator<FlowElementAttribute> it = flowExecutionAttributes.iterator(); it.hasNext();) {
 				FlowElementAttribute attribute = it.next();
@@ -186,13 +186,13 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		return executionAttributes;
 	}
 
-	private void putDefaultFlowExecutionAttributes(LocalAttributeMap executionAttributes) {
+	private void putDefaultFlowExecutionAttributes(LocalAttributeMap<Object> executionAttributes) {
 		if (!executionAttributes.contains(ALWAYS_REDIRECT_ON_PAUSE)) {
-			boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			Boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
 			executionAttributes.put(ALWAYS_REDIRECT_ON_PAUSE, redirect);
 		}
 		if (!executionAttributes.contains(REDIRECT_IN_SAME_STATE)) {
-			boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
+			Boolean redirect = (environment == MvcEnvironment.PORTLET) ? Boolean.FALSE : Boolean.TRUE;
 			executionAttributes.put(REDIRECT_IN_SAME_STATE, redirect);
 		}
 	}
@@ -227,7 +227,7 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		}
 	}
 
-	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap executionAttributes) {
+	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap<?> executionAttributes) {
 		FlowExecutionImplFactory executionFactory = new FlowExecutionImplFactory();
 		executionFactory.setExecutionAttributes(executionAttributes);
 		if (flowExecutionListenerLoader != null) {

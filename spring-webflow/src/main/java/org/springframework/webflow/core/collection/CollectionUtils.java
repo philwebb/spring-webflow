@@ -38,7 +38,7 @@ public class CollectionUtils {
 	/**
 	 * The shared, singleton empty attribute map instance.
 	 */
-	public static final AttributeMap EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap(
+	public static final AttributeMap<Object> EMPTY_ATTRIBUTE_MAP = new LocalAttributeMap<Object>(
 			Collections.<String, Object> emptyMap());
 
 	/**
@@ -67,8 +67,8 @@ public class CollectionUtils {
 	 * @param attributeValue the attribute value
 	 * @return the unmodifiable map with a single element
 	 */
-	public static AttributeMap singleEntryMap(String attributeName, Object attributeValue) {
-		return new LocalAttributeMap(attributeName, attributeValue);
+	public static <V> AttributeMap<V> singleEntryMap(String attributeName, V attributeValue) {
+		return new LocalAttributeMap<V>(attributeName, attributeValue);
 	}
 
 	/**

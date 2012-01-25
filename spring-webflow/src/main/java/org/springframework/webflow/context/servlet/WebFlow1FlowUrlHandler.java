@@ -53,7 +53,7 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 		return url.toString();
 	}
 
-	public String createFlowDefinitionUrl(String flowId, AttributeMap input, HttpServletRequest request) {
+	public String createFlowDefinitionUrl(String flowId, AttributeMap<?> input, HttpServletRequest request) {
 		StringBuffer url = new StringBuffer();
 		url.append(request.getRequestURI());
 		url.append('?');
@@ -65,10 +65,10 @@ public class WebFlow1FlowUrlHandler implements FlowUrlHandler {
 		return url.toString();
 	}
 
-	private void appendQueryParameters(StringBuffer url, Map<String, Object> parameters) {
-		Iterator<Map.Entry<String, Object>> entries = parameters.entrySet().iterator();
+	private <T> void appendQueryParameters(StringBuffer url, Map<String, T> parameters) {
+		Iterator<Map.Entry<String, T>> entries = parameters.entrySet().iterator();
 		while (entries.hasNext()) {
-			Map.Entry<String, Object> entry = entries.next();
+			Map.Entry<String, T> entry = entries.next();
 			appendQueryParameter(url, entry.getKey(), entry.getValue());
 			if (entries.hasNext()) {
 				url.append('&');

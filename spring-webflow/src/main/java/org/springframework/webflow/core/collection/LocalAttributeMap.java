@@ -33,17 +33,17 @@ import org.springframework.util.Assert;
  * 
  * @author Keith Donald
  */
-public class LocalAttributeMap implements MutableAttributeMap, Serializable {
+public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializable {
 
 	/**
 	 * The backing map storing the attributes.
 	 */
-	private Map<String, Object> attributes;
+	private Map<String, V> attributes;
 
 	/**
 	 * A helper for accessing attributes. Marked transient and restored on deserialization.
 	 */
-	private transient MapAccessor<String, Object> attributeAccessor;
+	private transient MapAccessor<String, V> attributeAccessor;
 
 	/**
 	 * Creates a new attribute map, initially empty.
@@ -64,7 +64,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	/**
 	 * Creates a new attribute map with a single entry.
 	 */
-	public LocalAttributeMap(String attributeName, Object attributeValue) {
+	public LocalAttributeMap(String attributeName, V attributeValue) {
 		initAttributes(createTargetMap(1, 1));
 		put(attributeName, attributeValue);
 	}
@@ -72,14 +72,14 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	/**
 	 * Creates a new attribute map wrapping the specified map.
 	 */
-	public LocalAttributeMap(Map<String, Object> map) {
+	public LocalAttributeMap(Map<String, ? extends V> map) {
 		Assert.notNull(map, "The target map is required");
 		initAttributes(map);
 	}
 
 	// implementing attribute map
 
-	public Map<String, Object> asMap() {
+	public Map<String, V> asMap() {
 		return attributeAccessor.asMap();
 	}
 
@@ -87,7 +87,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		return attributes.size();
 	}
 
-	public Object get(String attributeName) {
+	public V get(String attributeName) {
 		return attributes.get(attributeName);
 	}
 
@@ -99,27 +99,28 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		return attributes.containsKey(attributeName);
 	}
 
-	public boolean contains(String attributeName, Class<?> requiredType) throws IllegalArgumentException {
+	public boolean contains(String attributeName, Class<? extends V> requiredType) throws IllegalArgumentException {
 		return attributeAccessor.containsKey(attributeName, requiredType);
 	}
 
-	public Object get(String attributeName, Object defaultValue) {
+	public V get(String attributeName, V defaultValue) {
 		return attributeAccessor.get(attributeName, defaultValue);
 	}
 
-	public <T> T get(String attributeName, Class<T> requiredType) throws IllegalArgumentException {
+	public <T extends V> T get(String attributeName, Class<T> requiredType) throws IllegalArgumentException {
 		return attributeAccessor.get(attributeName, requiredType);
 	}
 
-	public <T> T get(String attributeName, Class<T> requiredType, T defaultValue) throws IllegalStateException {
+	public <T extends V> T get(String attributeName, Class<T> requiredType, T defaultValue)
+			throws IllegalStateException {
 		return attributeAccessor.get(attributeName, requiredType, defaultValue);
 	}
 
-	public Object getRequired(String attributeName) throws IllegalArgumentException {
+	public V getRequired(String attributeName) throws IllegalArgumentException {
 		return attributeAccessor.getRequired(attributeName);
 	}
 
-	public <T> T getRequired(String attributeName, Class<T> requiredType) throws IllegalArgumentException {
+	public <T extends V> T getRequired(String attributeName, Class<T> requiredType) throws IllegalArgumentException {
 		return attributeAccessor.getRequired(attributeName, requiredType);
 	}
 
@@ -135,29 +136,30 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		return attributeAccessor.getRequiredString(attributeName);
 	}
 
-	public Collection<Object> getCollection(String attributeName) throws IllegalArgumentException {
+	public Collection<V> getCollection(String attributeName) throws IllegalArgumentException {
 		return attributeAccessor.getCollection(attributeName);
 	}
 
-	public <T extends Collection<Object>> T getCollection(String attributeName, Class<T> requiredType)
+	public <T extends Collection<V>> T getCollection(String attributeName, Class<T> requiredType)
 			throws IllegalArgumentException {
 		return attributeAccessor.getCollection(attributeName, requiredType);
 	}
 
-	public Collection<Object> getRequiredCollection(String attributeName) throws IllegalArgumentException {
+	public Collection<V> getRequiredCollection(String attributeName) throws IllegalArgumentException {
 		return attributeAccessor.getRequiredCollection(attributeName);
 	}
 
-	public <T extends Collection<Object>> T getRequiredCollection(String attributeName, Class<T> requiredType)
+	public <T extends Collection<V>> T getRequiredCollection(String attributeName, Class<T> requiredType)
 			throws IllegalArgumentException {
 		return attributeAccessor.getRequiredCollection(attributeName, requiredType);
 	}
 
-	public <T> T[] getArray(String attributeName, Class<? extends T[]> requiredType) throws IllegalArgumentException {
+	public <T extends V> T[] getArray(String attributeName, Class<? extends T[]> requiredType)
+			throws IllegalArgumentException {
 		return attributeAccessor.getArray(attributeName, requiredType);
 	}
 
-	public <T> T[] getRequiredArray(String attributeName, Class<? extends T[]> requiredType)
+	public <T extends V> T[] getRequiredArray(String attributeName, Class<? extends T[]> requiredType)
 			throws IllegalArgumentException {
 		return attributeAccessor.getRequiredArray(attributeName, requiredType);
 	}
@@ -212,24 +214,24 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		return attributeAccessor.getRequiredBoolean(attributeName);
 	}
 
-	public AttributeMap union(AttributeMap attributes) {
+	public AttributeMap<V> union(AttributeMap<? extends V> attributes) {
 		if (attributes == null) {
-			return new LocalAttributeMap(getMapInternal());
+			return new LocalAttributeMap<V>(getMapInternal());
 		} else {
-			Map<String, Object> map = createTargetMap();
+			Map<String, V> map = createTargetMap();
 			map.putAll(getMapInternal());
 			map.putAll(attributes.asMap());
-			return new LocalAttributeMap(map);
+			return new LocalAttributeMap<V>(map);
 		}
 	}
 
 	// implementing MutableAttributeMap
 
-	public Object put(String attributeName, Object attributeValue) {
+	public V put(String attributeName, V attributeValue) {
 		return getMapInternal().put(attributeName, attributeValue);
 	}
 
-	public MutableAttributeMap putAll(AttributeMap attributes) {
+	public MutableAttributeMap<V> putAll(AttributeMap<? extends V> attributes) {
 		if (attributes == null) {
 			return this;
 		}
@@ -237,12 +239,12 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		return this;
 	}
 
-	public MutableAttributeMap removeAll(MutableAttributeMap attributes) {
+	public MutableAttributeMap<V> removeAll(MutableAttributeMap<? extends V> attributes) {
 		if (attributes == null) {
 			return this;
 		}
 		Iterator<String> it = attributes.asMap().keySet().iterator();
-		Map<String, Object> internal = getMapInternal();
+		Map<String, V> internal = getMapInternal();
 		while (it.hasNext()) {
 			internal.remove(it.next());
 		}
@@ -254,7 +256,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	}
 
 	public Object extract(String attributeName) {
-		Map<String, Object> map = getMapInternal();
+		Map<String, V> map = getMapInternal();
 		if (map.containsKey(attributeName)) {
 			Object value = map.get(attributeName);
 			map.remove(attributeName);
@@ -264,12 +266,13 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 		}
 	}
 
-	public MutableAttributeMap clear() throws UnsupportedOperationException {
+	public MutableAttributeMap<V> clear() throws UnsupportedOperationException {
 		getMapInternal().clear();
 		return this;
 	}
 
-	public MutableAttributeMap replaceWith(AttributeMap attributes) throws UnsupportedOperationException {
+	public MutableAttributeMap<V> replaceWith(AttributeMap<? extends V> attributes)
+			throws UnsupportedOperationException {
 		clear();
 		putAll(attributes);
 		return this;
@@ -281,15 +284,15 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	 * Initializes this attribute map.
 	 * @param attributes the attributes
 	 */
-	protected void initAttributes(Map<String, Object> attributes) {
-		this.attributes = attributes;
-		attributeAccessor = new MapAccessor<String, Object>(this.attributes);
+	protected void initAttributes(Map<String, ? extends V> attributes) {
+		this.attributes = (Map<String, V>) attributes;
+		attributeAccessor = new MapAccessor<String, V>(this.attributes);
 	}
 
 	/**
 	 * Returns the wrapped, modifiable map implementation.
 	 */
-	protected Map<String, Object> getMapInternal() {
+	protected Map<String, V> getMapInternal() {
 		return attributes;
 	}
 
@@ -299,8 +302,8 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	 * Factory method that returns the target map storing the data in this attribute map.
 	 * @return the target map
 	 */
-	protected Map<String, Object> createTargetMap() {
-		return new HashMap<String, Object>();
+	protected Map<String, V> createTargetMap() {
+		return new HashMap<String, V>();
 	}
 
 	/**
@@ -309,15 +312,16 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 	 * @param loadFactor the load factor
 	 * @return the target map
 	 */
-	protected Map<String, Object> createTargetMap(int size, int loadFactor) {
-		return new HashMap<String, Object>(size, loadFactor);
+	protected Map<String, V> createTargetMap(int size, int loadFactor) {
+		return new HashMap<String, V>(size, loadFactor);
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean equals(Object o) {
 		if (!(o instanceof LocalAttributeMap)) {
 			return false;
 		}
-		LocalAttributeMap other = (LocalAttributeMap) o;
+		LocalAttributeMap<V> other = (LocalAttributeMap<V>) o;
 		return getMapInternal().equals(other.getMapInternal());
 	}
 
@@ -333,7 +337,7 @@ public class LocalAttributeMap implements MutableAttributeMap, Serializable {
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
-		attributeAccessor = new MapAccessor<String, Object>(attributes);
+		attributeAccessor = new MapAccessor<String, V>(attributes);
 	}
 
 	public String toString() {

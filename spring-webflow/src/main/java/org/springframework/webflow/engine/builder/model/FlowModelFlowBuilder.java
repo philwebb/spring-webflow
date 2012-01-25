@@ -155,7 +155,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	protected Flow createFlow() {
 		String flowId = getContext().getFlowId();
-		AttributeMap flowAttributes = parseFlowMetaAttributes(flowModel);
+		AttributeMap<Object> flowAttributes = parseFlowMetaAttributes(flowModel);
 		flowAttributes = getContext().getFlowAttributes().union(flowAttributes);
 		Flow flow = getLocalContext().getFlowArtifactFactory().createFlow(flowId, flowAttributes);
 		flow.setApplicationContext(getLocalContext().getApplicationContext());
@@ -378,8 +378,8 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 		}
 	}
 
-	private AttributeMap parseFlowMetaAttributes(FlowModel flow) {
-		MutableAttributeMap flowAttributes = parseMetaAttributes(flow.getAttributes());
+	private AttributeMap<Object> parseFlowMetaAttributes(FlowModel flow) {
+		MutableAttributeMap<Object> flowAttributes = parseMetaAttributes(flow.getAttributes());
 		parseAndPutPersistenceContext(flow.getPersistenceContext(), flowAttributes);
 		parseAndPutSecured(flow.getSecured(), flowAttributes);
 		return flowAttributes;

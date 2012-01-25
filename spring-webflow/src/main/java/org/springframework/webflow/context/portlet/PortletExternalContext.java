@@ -83,7 +83,7 @@ public class PortletExternalContext implements ExternalContext {
 	/**
 	 * An accessor for the HTTP request attribute map.
 	 */
-	private MutableAttributeMap requestMap;
+	private MutableAttributeMap<Object> requestMap;
 
 	/**
 	 * An accessor for the HTTP session map.
@@ -116,7 +116,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * Input to pass the flow definition upon redirecting. May be null. Never set unless
 	 * {@link #flowDefinitionRedirectFlowId} has been set.
 	 */
-	private MutableAttributeMap flowDefinitionRedirectFlowInput;
+	private MutableAttributeMap<Object> flowDefinitionRedirectFlowInput;
 
 	/**
 	 * A string specifying an arbitrary
@@ -166,7 +166,7 @@ public class PortletExternalContext implements ExternalContext {
 		return requestParameterMap;
 	}
 
-	public MutableAttributeMap getRequestMap() {
+	public MutableAttributeMap<Object> getRequestMap() {
 		return requestMap;
 	}
 
@@ -250,10 +250,11 @@ public class PortletExternalContext implements ExternalContext {
 		recordResponseComplete();
 	}
 
-	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap input) throws IllegalStateException {
+	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException {
 		assertRedirectResponseAllowed();
 		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = input != null ? input : new LocalAttributeMap();
+		flowDefinitionRedirectFlowInput = (input != null ? (MutableAttributeMap<Object>) input
+				: new LocalAttributeMap<Object>());
 		recordResponseComplete();
 	}
 

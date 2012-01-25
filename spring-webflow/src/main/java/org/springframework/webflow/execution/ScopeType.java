@@ -96,6 +96,6 @@ public enum ScopeType {
 	 * @param context the context representing an executing request
 	 * @return the scope map of this type for that request, allowing attributes to be accessed and set
 	 */
-	public abstract MutableAttributeMap getScope(RequestContext context);
+	public abstract MutableAttributeMap<Object> getScope(RequestContext context);
 
 }

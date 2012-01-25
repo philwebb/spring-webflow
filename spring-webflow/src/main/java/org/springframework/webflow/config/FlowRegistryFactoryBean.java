@@ -176,7 +176,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 			for (int i = 0; i < flowLocationPatterns.length; i++) {
 				String pattern = flowLocationPatterns[i];
 				FlowDefinitionResource[] resources;
-				AttributeMap attributes = getFlowAttributes(Collections.<FlowElementAttribute> emptySet());
+				AttributeMap<Object> attributes = getFlowAttributes(Collections.<FlowElementAttribute> emptySet());
 				try {
 					resources = flowResourceFactory.createResources(pattern, attributes);
 				} catch (IOException e) {
@@ -210,19 +210,19 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 	}
 
 	private FlowDefinitionResource createResource(FlowLocation location) {
-		AttributeMap flowAttributes = getFlowAttributes(location.getAttributes());
+		AttributeMap<Object> flowAttributes = getFlowAttributes(location.getAttributes());
 		return flowResourceFactory.createResource(location.getPath(), flowAttributes, location.getId());
 	}
 
-	private AttributeMap getFlowAttributes(Set<FlowElementAttribute> attributes) {
-		MutableAttributeMap flowAttributes = null;
+	private AttributeMap<Object> getFlowAttributes(Set<FlowElementAttribute> attributes) {
+		MutableAttributeMap<Object> flowAttributes = null;
 		if (flowBuilderServices.getDevelopment()) {
-			flowAttributes = new LocalAttributeMap(1 + attributes.size(), 1);
+			flowAttributes = new LocalAttributeMap<Object>(1 + attributes.size(), 1);
 			flowAttributes.put("development", Boolean.TRUE);
 		}
 		if (!attributes.isEmpty()) {
 			if (flowAttributes == null) {
-				flowAttributes = new LocalAttributeMap(attributes.size(), 1);
+				flowAttributes = new LocalAttributeMap<Object>(attributes.size(), 1);
 			}
 			for (Iterator<FlowElementAttribute> it = attributes.iterator(); it.hasNext();) {
 				FlowElementAttribute attribute = it.next();
@@ -289,7 +289,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 		try {
 			Class<?> flowBuilderClass = loadClass(builderInfo.getClassName());
 			FlowBuilder builder = (FlowBuilder) flowBuilderClass.newInstance();
-			AttributeMap flowAttributes = getFlowAttributes(builderInfo.getAttributes());
+			AttributeMap<Object> flowAttributes = getFlowAttributes(builderInfo.getAttributes());
 			FlowBuilderContext builderContext = new FlowBuilderContextImpl(builderInfo.getId(), flowAttributes,
 					flowRegistry, flowBuilderServices);
 			FlowAssembler assembler = new FlowAssembler(builder, builderContext);

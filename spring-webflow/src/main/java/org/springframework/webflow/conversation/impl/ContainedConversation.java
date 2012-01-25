@@ -104,7 +104,7 @@ class ContainedConversation implements Conversation, Serializable {
 		// a clustered environment
 		// we do this after releasing the lock since we're no longer
 		// manipulating the contents of the conversation
-		SharedAttributeMap sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
+		SharedAttributeMap<Object> sessionMap = ExternalContextHolder.getExternalContext().getSessionMap();
 		synchronized (sessionMap.getMutex()) {
 			sessionMap.put(container.getSessionKey(), container);
 		}

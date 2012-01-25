@@ -64,8 +64,8 @@ public abstract class TransitionableState extends State implements Transitionabl
 	}
 
 	public TransitionDefinition getTransition(String eventId) {
-		for (Iterator it = transitions.iterator(); it.hasNext();) {
-			Transition transition = (Transition) it.next();
+		for (Iterator<Transition> it = transitions.iterator(); it.hasNext();) {
+			Transition transition = it.next();
 			if (transition.getId().equals(eventId)) {
 				return transition;
 			}
