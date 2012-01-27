@@ -33,19 +33,19 @@ import org.springframework.webflow.mvc.view.FlowViewResolver;
  */
 public class DelegatingFlowViewResolver implements FlowViewResolver {
 
-	private List viewResolvers;
+	private List<ViewResolver> viewResolvers;
 
 	/**
 	 * Creates a new flow view resolver.
 	 * @param viewResolvers the Spring MVC view resolver chain to delegate to
 	 */
-	public DelegatingFlowViewResolver(List viewResolvers) {
-		this.viewResolvers = viewResolvers != null ? viewResolvers : Collections.EMPTY_LIST;
+	public DelegatingFlowViewResolver(List<ViewResolver> viewResolvers) {
+		this.viewResolvers = viewResolvers != null ? viewResolvers : Collections.<ViewResolver> emptyList();
 	}
 
 	public View resolveView(String viewId, RequestContext context) {
-		for (Iterator it = viewResolvers.iterator(); it.hasNext();) {
-			ViewResolver viewResolver = (ViewResolver) it.next();
+		for (Iterator<ViewResolver> it = viewResolvers.iterator(); it.hasNext();) {
+			ViewResolver viewResolver = it.next();
 			try {
 				View view = viewResolver.resolveViewName(viewId, context.getExternalContext().getLocale());
 				if (view != null) {

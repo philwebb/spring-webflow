@@ -112,7 +112,7 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that a flow execution session has been activated (created, on the stack and about
 	 * to start).
 	 */
-	public void fireSessionStarting(RequestContext context, FlowSession session, MutableAttributeMap input) {
+	public void fireSessionStarting(RequestContext context, FlowSession session, MutableAttributeMap<?> input) {
 		for (int i = 0; i < listeners.length; i++) {
 			listeners[i].sessionStarting(context, session, input);
 		}
@@ -203,7 +203,7 @@ class FlowExecutionListeners {
 	 * Notify all interested listeners that the active flow execution session is ending.
 	 */
 	public void fireSessionEnding(RequestContext context, FlowSession session, String outcomeId,
-			MutableAttributeMap output) {
+			MutableAttributeMap<?> output) {
 		for (int i = 0; i < listeners.length; i++) {
 			listeners[i].sessionEnding(context, session, outcomeId, output);
 		}
@@ -212,7 +212,7 @@ class FlowExecutionListeners {
 	/**
 	 * Notify all interested listeners that a flow execution session has ended.
 	 */
-	public void fireSessionEnded(RequestContext context, FlowSession session, String outcomeId, AttributeMap output) {
+	public void fireSessionEnded(RequestContext context, FlowSession session, String outcomeId, AttributeMap<?> output) {
 		for (int i = 0; i < listeners.length; i++) {
 			listeners[i].sessionEnded(context, session, outcomeId, output);
 		}

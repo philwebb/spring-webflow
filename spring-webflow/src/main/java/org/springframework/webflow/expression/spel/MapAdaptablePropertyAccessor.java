@@ -30,7 +30,7 @@ import org.springframework.webflow.core.collection.MutableAttributeMap;
  */
 public class MapAdaptablePropertyAccessor implements PropertyAccessor {
 
-	public Class[] getSpecificTargetClasses() {
+	public Class<?>[] getSpecificTargetClasses() {
 		return new Class[] { MapAdaptable.class };
 	}
 

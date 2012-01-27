@@ -88,12 +88,12 @@ public class PortletExternalContext implements ExternalContext {
 	/**
 	 * An accessor for the HTTP session map.
 	 */
-	private SharedAttributeMap sessionMap;
+	private SharedAttributeMap<Object> sessionMap;
 
 	/**
 	 * An accessor for the servlet context application map.
 	 */
-	private SharedAttributeMap applicationMap;
+	private SharedAttributeMap<Object> applicationMap;
 
 	/**
 	 * A flag indicating if the flow committed the response. Set to true by requesting an execution redirect, definition
@@ -170,15 +170,15 @@ public class PortletExternalContext implements ExternalContext {
 		return requestMap;
 	}
 
-	public SharedAttributeMap getSessionMap() {
+	public SharedAttributeMap<Object> getSessionMap() {
 		return sessionMap;
 	}
 
-	public SharedAttributeMap getGlobalSessionMap() {
+	public SharedAttributeMap<Object> getGlobalSessionMap() {
 		return getSessionMap();
 	}
 
-	public SharedAttributeMap getApplicationMap() {
+	public SharedAttributeMap<Object> getApplicationMap() {
 		return applicationMap;
 	}
 
@@ -301,7 +301,7 @@ public class PortletExternalContext implements ExternalContext {
 	 * Returns the input to pass the flow definition through the redirect. Only set when
 	 * {@link #getFlowDefinitionRedirectRequested()} returns true.
 	 */
-	public MutableAttributeMap getFlowRedirectFlowInput() {
+	public MutableAttributeMap<Object> getFlowRedirectFlowInput() {
 		return flowDefinitionRedirectFlowInput;
 	}
 
@@ -355,9 +355,9 @@ public class PortletExternalContext implements ExternalContext {
 		this.request = request;
 		this.response = response;
 		this.requestParameterMap = new LocalParameterMap(new PortletRequestParameterMap(request));
-		this.requestMap = new LocalAttributeMap(new PortletRequestMap(request));
-		this.sessionMap = new LocalSharedAttributeMap(new PortletSessionMap(request));
-		this.applicationMap = new LocalSharedAttributeMap(new PortletContextMap(context));
+		this.requestMap = new LocalAttributeMap<Object>(new PortletRequestMap(request));
+		this.sessionMap = new LocalSharedAttributeMap<Object>(new PortletSessionMap(request));
+		this.applicationMap = new LocalSharedAttributeMap<Object>(new PortletContextMap(context));
 		this.flowUrlHandler = flowUrlHandler;
 		if (request instanceof ActionRequest && response instanceof ActionResponse) {
 			requestPhase = ACTION_PHASE;

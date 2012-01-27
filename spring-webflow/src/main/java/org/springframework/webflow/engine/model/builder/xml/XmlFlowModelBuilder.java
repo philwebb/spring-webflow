@@ -625,9 +625,9 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 
 	private void mergeFlows() {
 		if (flowModel.getParent() != null) {
-			List parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
-			for (Iterator it = parents.iterator(); it.hasNext();) {
-				String parentFlowId = (String) it.next();
+			List<String> parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
+			for (Iterator<String> it = parents.iterator(); it.hasNext();) {
+				String parentFlowId = it.next();
 				if (StringUtils.hasText(parentFlowId)) {
 					try {
 						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
@@ -644,8 +644,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (flowModel.getStates() == null) {
 			return;
 		}
-		for (Iterator it = flowModel.getStates().iterator(); it.hasNext();) {
-			AbstractStateModel childState = (AbstractStateModel) it.next();
+		for (Iterator<AbstractStateModel> it = flowModel.getStates().iterator(); it.hasNext();) {
+			AbstractStateModel childState = it.next();
 			String parent = childState.getParent();
 			if (childState.getParent() != null) {
 				String flowId;

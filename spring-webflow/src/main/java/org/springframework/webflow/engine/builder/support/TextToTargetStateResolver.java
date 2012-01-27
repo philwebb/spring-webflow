@@ -31,7 +31,7 @@ import org.springframework.webflow.execution.RequestContext;
  * <p>
  * This converter supports the following encoded forms:
  * <ul>
- * <li>"stateId" - will result in a TargetStateResolver that always resolves the same state. </li>
+ * <li>"stateId" - will result in a TargetStateResolver that always resolves the same state.</li>
  * <li>"${stateIdExpression} - will result in a TargetStateResolver that resolves the target state by evaluating an
  * expression against the request context. The resolved value can be a target state identifier or a custom
  * TargetStateResolver to delegate to.</li>
@@ -55,11 +55,11 @@ class TextToTargetStateResolver implements Converter {
 		this.flowBuilderContext = flowBuilderContext;
 	}
 
-	public Class getSourceClass() {
+	public Class<?> getSourceClass() {
 		return String.class;
 	}
 
-	public Class getTargetClass() {
+	public Class<?> getTargetClass() {
 		return TargetStateResolver.class;
 	}
 
@@ -69,8 +69,8 @@ class TextToTargetStateResolver implements Converter {
 			return null;
 		}
 		ExpressionParser parser = flowBuilderContext.getExpressionParser();
-		Expression expression = parser.parseExpression(targetStateId, new FluentParserContext().template().evaluate(
-				RequestContext.class).expectResult(String.class));
+		Expression expression = parser.parseExpression(targetStateId,
+				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class));
 		return new DefaultTargetStateResolver(expression);
 
 	}

@@ -84,7 +84,8 @@ public abstract class AbstractSnapshottingFlowExecutionRepository extends Abstra
 	 */
 	protected FlowExecution restoreFlowExecution(FlowExecutionSnapshot snapshot, FlowExecutionKey key,
 			Conversation conversation) {
-		MutableAttributeMap conversationScope = (MutableAttributeMap) conversation.getAttribute("scope");
+		MutableAttributeMap<Object> conversationScope = (MutableAttributeMap<Object>) conversation
+				.getAttribute("scope");
 		String flowId = (String) conversation.getAttribute("name");
 		return snapshotFactory.restoreExecution(snapshot, flowId, key, conversationScope, this);
 	}

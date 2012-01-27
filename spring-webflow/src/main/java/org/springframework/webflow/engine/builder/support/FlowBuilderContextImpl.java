@@ -40,7 +40,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 
 	private String flowId;
 
-	private AttributeMap flowAttributes;
+	private AttributeMap<Object> flowAttributes;
 
 	private FlowDefinitionLocator flowDefinitionLocator;
 
@@ -55,7 +55,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * @param flowDefinitionLocator a locator to find dependent subflows
 	 * @param flowBuilderServices a parameter object providing access to additional services needed by the flow builder
 	 */
-	public FlowBuilderContextImpl(String flowId, AttributeMap flowAttributes,
+	public FlowBuilderContextImpl(String flowId, AttributeMap<Object> flowAttributes,
 			FlowDefinitionLocator flowDefinitionLocator, FlowBuilderServices flowBuilderServices) {
 		Assert.hasText(flowId, "The flow id is required");
 		Assert.notNull(flowDefinitionLocator, "The flow definition locator is required");
@@ -77,7 +77,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return flowId;
 	}
 
-	public AttributeMap getFlowAttributes() {
+	public AttributeMap<Object> getFlowAttributes() {
 		return flowAttributes;
 	}
 
@@ -124,7 +124,7 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		return service;
 	}
 
-	private void initFlowAttributes(AttributeMap flowAttributes) {
+	private void initFlowAttributes(AttributeMap<Object> flowAttributes) {
 		if (flowAttributes != null) {
 			this.flowAttributes = flowAttributes;
 		} else {
@@ -161,7 +161,5 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 		public org.springframework.core.convert.ConversionService getDelegateConversionService() {
 			return getFlowBuilderServices().getConversionService().getDelegateConversionService();
 		}
-
 	}
-
 }

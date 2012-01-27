@@ -278,7 +278,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param model the view model data
 	 * @throws Exception an exception occurred rendering the view
 	 */
-	protected abstract void doRender(Map model) throws Exception;
+	protected abstract void doRender(Map<String, Object> model) throws Exception;
 
 	/**
 	 * Returns the id of the user event being processed.
