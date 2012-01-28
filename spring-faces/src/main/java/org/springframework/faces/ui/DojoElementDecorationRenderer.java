@@ -63,7 +63,7 @@ public class DojoElementDecorationRenderer extends BaseSpringJavascriptDecoratio
 			if (component.getChildCount() == 0)
 				throw new FacesException(
 						"A Spring Faces elementDecoration expects either have a specified selector or at least one child component.");
-			selector = "dojo.byId('" + ((UIComponent) component.getChildren().get(0)).getClientId(context) + "')";
+			selector = "dojo.byId('" + component.getChildren().get(0).getClientId(context) + "')";
 		}
 
 		ResourceHelper.beginScriptBlock(context);

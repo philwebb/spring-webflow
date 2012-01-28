@@ -170,7 +170,7 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	public void render() throws IOException {
-		Map model = new HashMap();
+		Map<String, Object> model = new HashMap<String, Object>();
 		model.putAll(flowScopes());
 		exposeBindingModel(model);
 		model.put("flowRequestContext", requestContext);
@@ -278,7 +278,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param model the view model data
 	 * @throws Exception an exception occurred rendering the view
 	 */
-	protected abstract void doRender(Map<String, Object> model) throws Exception;
+	protected abstract void doRender(Map<String, ?> model) throws Exception;
 
 	/**
 	 * Returns the id of the user event being processed.
@@ -386,10 +386,10 @@ public abstract class AbstractMvcView implements View {
 	 * @param parameterNames the request parameters
 	 * @param model the model
 	 */
-	protected void addModelBindings(DefaultMapper mapper, Set parameterNames, Object model) {
-		Iterator it = binderConfiguration.getBindings().iterator();
+	protected void addModelBindings(DefaultMapper mapper, Set<String> parameterNames, Object model) {
+		Iterator<Binding> it = binderConfiguration.getBindings().iterator();
 		while (it.hasNext()) {
-			Binding binding = (Binding) it.next();
+			Binding binding = it.next();
 			String parameterName = binding.getProperty();
 			if (parameterNames.contains(parameterName)) {
 				addMapping(mapper, binding, model);
@@ -445,9 +445,9 @@ public abstract class AbstractMvcView implements View {
 	 * @param parameterNames the request parameter names
 	 * @param model the model
 	 */
-	protected void addDefaultMappings(DefaultMapper mapper, Set parameterNames, Object model) {
-		for (Iterator it = parameterNames.iterator(); it.hasNext();) {
-			String parameterName = (String) it.next();
+	protected void addDefaultMappings(DefaultMapper mapper, Set<String> parameterNames, Object model) {
+		for (Iterator<String> it = parameterNames.iterator(); it.hasNext();) {
+			String parameterName = it.next();
 			if (fieldMarkerPrefix != null && parameterName.startsWith(fieldMarkerPrefix)) {
 				String field = parameterName.substring(fieldMarkerPrefix.length());
 				if (!parameterNames.contains(field)) {
@@ -471,7 +471,7 @@ public abstract class AbstractMvcView implements View {
 		ParserContext parserContext = new FluentParserContext().evaluate(model.getClass());
 		Expression target = expressionParser.parseExpression(field, parserContext);
 		try {
-			Class propertyType = target.getValueType(model);
+			Class<?> propertyType = target.getValueType(model);
 			Expression source = new StaticExpression(getEmptyValue(propertyType));
 			DefaultMapping mapping = new DefaultMapping(source, target);
 			if (logger.isDebugEnabled()) {
@@ -526,7 +526,7 @@ public abstract class AbstractMvcView implements View {
 		if (validateAttribute != null) {
 			return validateAttribute.booleanValue();
 		} else {
-			AttributeMap flowExecutionAttributes = requestContext.getFlowExecutionContext().getAttributes();
+			AttributeMap<Object> flowExecutionAttributes = requestContext.getFlowExecutionContext().getAttributes();
 			Boolean validateOnBindingErrors = flowExecutionAttributes.getBoolean("validateOnBindingErrors");
 			if (validateOnBindingErrors != null) {
 				if (!validateOnBindingErrors.booleanValue() && mappingResults.hasErrorResults()) {
@@ -539,7 +539,7 @@ public abstract class AbstractMvcView implements View {
 
 	// internal helpers
 
-	private Map flowScopes() {
+	private Map<String, Object> flowScopes() {
 		if (requestContext.getCurrentState().isViewState()) {
 			return requestContext.getConversationScope().union(requestContext.getFlowScope())
 					.union(requestContext.getViewScope()).union(requestContext.getFlashScope())
@@ -550,7 +550,7 @@ public abstract class AbstractMvcView implements View {
 		}
 	}
 
-	private void exposeBindingModel(Map model) {
+	private void exposeBindingModel(Map<String, Object> model) {
 		Object modelObject = getModelObject();
 		if (modelObject != null) {
 			BindingModel bindingModel = new BindingModel(getModelExpression().getExpressionString(), modelObject,
@@ -578,7 +578,7 @@ public abstract class AbstractMvcView implements View {
 		return (Expression) requestContext.getCurrentState().getAttributes().get("model");
 	}
 
-	private Object getEmptyValue(Class fieldType) {
+	private Object getEmptyValue(Class<?> fieldType) {
 		if (fieldType != null && boolean.class.equals(fieldType) || Boolean.class.equals(fieldType)) {
 			// Special handling of boolean property.
 			return Boolean.FALSE;
@@ -600,9 +600,9 @@ public abstract class AbstractMvcView implements View {
 	}
 
 	private void addErrorMessages(MappingResults results) {
-		List errors = results.getResults(MAPPING_ERROR);
-		for (Iterator it = errors.iterator(); it.hasNext();) {
-			MappingResult error = (MappingResult) it.next();
+		List<MappingResult> errors = results.getResults(MAPPING_ERROR);
+		for (Iterator<MappingResult> it = errors.iterator(); it.hasNext();) {
+			MappingResult error = it.next();
 			requestContext.getMessageContext().addMessage(createMessageResolver(error));
 		}
 	}
@@ -610,7 +610,7 @@ public abstract class AbstractMvcView implements View {
 	private MessageResolver createMessageResolver(MappingResult error) {
 		String model = getModelExpression().getExpressionString();
 		String field = error.getMapping().getTargetExpression().getExpressionString();
-		Class fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
+		Class<?> fieldType = error.getMapping().getTargetExpression().getValueType(getModelObject());
 		String[] messageCodes = messageCodesResolver.resolveMessageCodes(error.getCode(), model, field, fieldType);
 		return new MessageBuilder().error().source(field).codes(messageCodes).resolvableArg(field)
 				.defaultText(error.getCode() + " on " + field).build();
@@ -663,7 +663,7 @@ public abstract class AbstractMvcView implements View {
 			return parameters.asMap().get(parameterName);
 		}
 
-		public Class getValueType(Object context) {
+		public Class<?> getValueType(Object context) {
 			return String.class;
 		}
 

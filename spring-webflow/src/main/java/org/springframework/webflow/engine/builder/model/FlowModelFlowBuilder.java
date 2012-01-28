@@ -762,7 +762,7 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 
 	private FlowExecutionExceptionHandler parseTransitionExecutingExceptionHandler(TransitionModel transition) {
 		TransitionExecutingFlowExecutionExceptionHandler handler = new TransitionExecutingFlowExecutionExceptionHandler();
-		Class<?> exceptionClass = toClass(transition.getOnException());
+		Class<Throwable> exceptionClass = toClass(transition.getOnException(), Throwable.class);
 		TargetStateResolver targetStateResolver = (TargetStateResolver) fromStringTo(TargetStateResolver.class)
 				.execute(transition.getTo());
 		handler.add(exceptionClass, targetStateResolver);
@@ -962,6 +962,13 @@ public class FlowModelFlowBuilder extends AbstractFlowBuilder {
 				throw new IllegalArgumentException("Unable to load class '" + name + "'");
 			}
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T> Class<T> toClass(String name, Class<T> superType) {
+		Class<?> clazz = toClass(name);
+		Assert.isAssignable(superType, clazz);
+		return (Class<T>) clazz;
 	}
 
 	public String toString() {

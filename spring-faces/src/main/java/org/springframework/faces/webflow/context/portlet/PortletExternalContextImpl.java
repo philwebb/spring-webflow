@@ -122,7 +122,6 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getApplicationMap() {
 		if (applicationMap == null) {
 			applicationMap = new PortletContextMap(portletContext);
@@ -208,13 +207,11 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<Locale> getRequestLocales() {
 		return CollectionUtils.toIterator(portletRequest.getLocales());
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getRequestMap() {
 		if (requestMap == null) {
 			requestMap = new PortletRequestMap(portletRequest);
@@ -228,13 +225,12 @@ public class PortletExternalContextImpl extends ExternalContext {
 		if (requestParameterMap == null) {
 			RequestParameterMap map = new RequestParameterMap(portletRequest);
 			map.setUseArrayForMultiValueAttributes(Boolean.FALSE);
-			requestParameterMap = map;
+			requestParameterMap = (Map) map;
 		}
 		return requestParameterMap;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Iterator<String> getRequestParameterNames() {
 		return CollectionUtils.toIterator(portletRequest.getParameterNames());
 	}
@@ -245,7 +241,7 @@ public class PortletExternalContextImpl extends ExternalContext {
 		if (requestParameterValuesMap == null) {
 			RequestParameterMap map = new RequestParameterMap(portletRequest);
 			map.setUseArrayForMultiValueAttributes(Boolean.TRUE);
-			requestParameterValuesMap = map;
+			requestParameterValuesMap = (Map) map;
 		}
 		return requestParameterValuesMap;
 	}

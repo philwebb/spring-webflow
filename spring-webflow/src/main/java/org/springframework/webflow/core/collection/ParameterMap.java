@@ -80,8 +80,7 @@ public interface ParameterMap extends MapAdaptable<String, Object> {
 	 * @return the converterd parameter value array
 	 * @throws ConversionExecutionException when the value could not be converted
 	 */
-	public <T> T[] getArray(String parameterName, Class<? extends T[]> targetElementType)
-			throws ConversionExecutionException;
+	public <T> T[] getArray(String parameterName, Class<T> targetElementType) throws ConversionExecutionException;
 
 	/**
 	 * Get a parameter value, converting it from <code>String</code> to the target type.
@@ -126,8 +125,8 @@ public interface ParameterMap extends MapAdaptable<String, Object> {
 	 * @throws IllegalArgumentException when the parameter is not found
 	 * @throws ConversionExecutionException when a value could not be converted
 	 */
-	public <T> T[] getRequiredArray(String parameterName, Class<? extends T[]> targetElementType)
-			throws IllegalArgumentException, ConversionExecutionException;
+	public <T> T[] getRequiredArray(String parameterName, Class<T> targetElementType) throws IllegalArgumentException,
+			ConversionExecutionException;
 
 	/**
 	 * Get the value of a required parameter and convert it to the target type.

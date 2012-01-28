@@ -18,6 +18,7 @@ package org.springframework.webflow.mvc.servlet;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -238,12 +239,12 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		if (parameterMap.size() == 0) {
 			return null;
 		}
-		LocalAttributeMap<Object> inputMap = new LocalAttributeMap(parameterMap.size(), 1);
-		Iterator it = parameterMap.entrySet().iterator();
+		LocalAttributeMap<Object> inputMap = new LocalAttributeMap<Object>(parameterMap.size(), 1);
+		Iterator<Map.Entry<String, String[]>> it = parameterMap.entrySet().iterator();
 		while (it.hasNext()) {
-			Map.Entry entry = (Map.Entry) it.next();
-			String name = (String) entry.getKey();
-			String[] values = (String[]) entry.getValue();
+			Entry<String, String[]> entry = it.next();
+			String name = entry.getKey();
+			String[] values = entry.getValue();
 			if (values.length == 1) {
 				inputMap.put(name, values[0]);
 			} else {

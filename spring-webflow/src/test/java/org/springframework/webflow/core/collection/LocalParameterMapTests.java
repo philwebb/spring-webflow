@@ -31,7 +31,7 @@ public class LocalParameterMapTests extends TestCase {
 	private LocalParameterMap parameterMap;
 
 	public void setUp() {
-		Map map = new HashMap();
+		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("string", "A string");
 		map.put("integer", "12345");
 		map.put("boolean", "true");
@@ -62,7 +62,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetRequiredWithConversion() {
-		Integer value = (Integer) parameterMap.getRequired("integer", Integer.class);
+		Integer value = parameterMap.getRequired("integer", Integer.class);
 		assertEquals(new Integer(12345), value);
 	}
 
@@ -91,7 +91,7 @@ public class LocalParameterMapTests extends TestCase {
 
 	public void testGetWithDefaultAndConversionNotAssignable() {
 		try {
-			parameterMap.get("bogus", Integer.class, "1");
+			parameterMap.get("bogus", (Class) Integer.class, "1");
 			fail("'1' isn't a integer");
 		} catch (IllegalArgumentException e) {
 

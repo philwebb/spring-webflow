@@ -53,8 +53,8 @@ public class JsfView extends AbstractUrlBasedView {
 		facesLifecycle = createFacesLifecycle();
 	}
 
-	protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response)
-			throws Exception {
+	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 
 		FacesContextHelper facesContextHelper = new FacesContextHelper();
 		FacesContext facesContext = facesContextHelper.getFacesContext(getServletContext(), request, response);
@@ -89,8 +89,8 @@ public class JsfView extends AbstractUrlBasedView {
 		}
 	}
 
-	private void populateRequestMap(FacesContext facesContext, Map model) {
-		Iterator i = model.keySet().iterator();
+	private void populateRequestMap(FacesContext facesContext, Map<String, Object> model) {
+		Iterator<String> i = model.keySet().iterator();
 		while (i.hasNext()) {
 			String key = i.next().toString();
 			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));

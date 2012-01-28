@@ -29,7 +29,7 @@ import org.springframework.webflow.execution.RequestContext;
  * Helper delegate class for use with the {@link FlowFacesContext} that handles all faces message methods.
  * 
  * @author Jeremy Grelle
- * @author Phil Webb
+ * @author Phillip Webb
  */
 public class FlowFacesContextMessageDelegate {
 

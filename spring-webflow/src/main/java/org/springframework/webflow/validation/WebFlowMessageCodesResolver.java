@@ -83,20 +83,19 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 	 * @return the list of codes
 	 */
 	public String[] resolveMessageCodes(String errorCode, String objectName, String field, Class fieldType) {
-		List codeList = new ArrayList();
-		List fieldList = new ArrayList();
+		List<String> codeList = new ArrayList<String>();
+		List<String> fieldList = new ArrayList<String>();
 		buildFieldList(field, fieldList);
-		for (Iterator it = fieldList.iterator(); it.hasNext();) {
-			String fieldInList = (String) it.next();
-			codeList
-					.add(postProcessMessageCode(objectName + CODE_SEPARATOR + fieldInList + CODE_SEPARATOR + errorCode));
+		for (Iterator<String> it = fieldList.iterator(); it.hasNext();) {
+			String fieldInList = it.next();
+			codeList.add(postProcessMessageCode(objectName + CODE_SEPARATOR + fieldInList + CODE_SEPARATOR + errorCode));
 		}
 		int dotIndex = field.lastIndexOf('.');
 		if (dotIndex != -1) {
 			buildFieldList(field.substring(dotIndex + 1), fieldList);
 		}
-		for (Iterator it = fieldList.iterator(); it.hasNext();) {
-			String fieldInList = (String) it.next();
+		for (Iterator<String> it = fieldList.iterator(); it.hasNext();) {
+			String fieldInList = it.next();
 			codeList.add(postProcessMessageCode(fieldInList + CODE_SEPARATOR + errorCode));
 		}
 		if (fieldType != null) {
@@ -109,7 +108,7 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 	/**
 	 * Add both keyed and non-keyed entries for the supplied <code>field</code> to the supplied field list.
 	 */
-	protected void buildFieldList(String field, List fieldList) {
+	protected void buildFieldList(String field, List<String> fieldList) {
 		fieldList.add(field);
 		String plainField = field;
 		int keyIndex = plainField.lastIndexOf('[');

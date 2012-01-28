@@ -279,16 +279,16 @@ public class ValidationHelper {
 		return false;
 	}
 
-	private Method findValidationMethod(Object model, Object validator, String methodName, Class context) {
-		Class modelClass = AopUtils.getTargetClass(model);
+	private Method findValidationMethod(Object model, Object validator, String methodName, Class<?> context) {
+		Class<?> modelClass = AopUtils.getTargetClass(model);
 
-		List modelSearchClasses = new ArrayList();
+		List<Class<?>> modelSearchClasses = new ArrayList<Class<?>>();
 		while (modelClass != null) {
 			modelSearchClasses.add(modelClass);
 			modelClass = modelClass.getSuperclass();
 		}
-		for (Iterator iterator = modelSearchClasses.iterator(); iterator.hasNext();) {
-			Class searchClass = (Class) iterator.next();
+		for (Iterator<Class<?>> iterator = modelSearchClasses.iterator(); iterator.hasNext();) {
+			Class<?> searchClass = iterator.next();
 			Method method = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] { searchClass,
 					context });
 			if (method != null) {

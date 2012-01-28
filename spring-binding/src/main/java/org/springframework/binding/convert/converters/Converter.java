@@ -17,8 +17,8 @@ package org.springframework.binding.convert.converters;
 
 /**
  * A converter is capable of converting a source object of type {@link #getSourceClass()} to a target type of type
- * {@link #getTargetClass()}. If the converter is a {@link TwoWayConverter}, it can also convert from the target back
- * to the source.
+ * {@link #getTargetClass()}. If the converter is a {@link TwoWayConverter}, it can also convert from the target back to
+ * the source.
  * <p>
  * Implementations of this interface are thread-safe and can be shared.
  * </p>

@@ -151,8 +151,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		}
 	}
 
-	public <T> T[] getArray(String parameterName, Class<? extends T[]> targetElementType)
-			throws ConversionExecutionException {
+	public <T> T[] getArray(String parameterName, Class<T> targetElementType) throws ConversionExecutionException {
 		String[] parameters = getArray(parameterName);
 		return parameters != null ? convert(parameters, targetElementType) : null;
 	}
@@ -179,8 +178,8 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 		return getArray(parameterName);
 	}
 
-	public <T> T[] getRequiredArray(String parameterName, Class<? extends T[]> targetElementType)
-			throws IllegalArgumentException, ConversionExecutionException {
+	public <T> T[] getRequiredArray(String parameterName, Class<T> targetElementType) throws IllegalArgumentException,
+			ConversionExecutionException {
 		String[] parameters = getRequiredArray(parameterName);
 		return convert(parameters, targetElementType);
 	}
@@ -286,7 +285,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	/**
 	 * Convert given array of String parameters to specified target type and return the resulting array.
 	 */
-	private <T> T[] convert(String[] parameters, Class<? extends T[]> targetElementType)
+	private <T> T[] convert(String[] parameters, Class<? extends T> targetElementType)
 			throws ConversionExecutionException {
 		List<T> list = new ArrayList<T>(parameters.length);
 		ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetElementType);

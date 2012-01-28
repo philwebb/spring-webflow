@@ -35,10 +35,10 @@ public class FlowExecutionOutcome {
 	 * @param id the outcome id
 	 * @param output the output returned by the execution
 	 */
-	public FlowExecutionOutcome(String id, AttributeMap<Object> output) {
+	public FlowExecutionOutcome(String id, AttributeMap<?> output) {
 		super();
 		this.id = id;
-		this.output = (output != null ? output : CollectionUtils.EMPTY_ATTRIBUTE_MAP);
+		this.output = (output != null ? (AttributeMap) output : CollectionUtils.EMPTY_ATTRIBUTE_MAP);
 	}
 
 	/**
