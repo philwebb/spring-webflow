@@ -25,9 +25,11 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.visit.VisitContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
 import javax.faces.event.PhaseId;
+import javax.faces.event.PostRestoreStateEvent;
 import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
 import org.springframework.faces.ui.AjaxViewRoot;
+import org.springframework.faces.webflow.JsfUtils.ComponentEventFactory;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.webflow.context.ExternalContext;
 import org.springframework.webflow.execution.RequestContext;
@@ -130,6 +133,17 @@ public class JsfViewFactory implements ViewFactory {
 		}
 		if (!facesContext.getRenderResponse()) {
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+		}
+		if (isAtLeastJsf20()) {
+			JsfUtils.deliverComponentSystemEvent(facesContext, new ComponentEventFactory<PostRestoreStateEvent>() {
+				public PostRestoreStateEvent createEvent(UIViewRoot root) {
+					return new PostRestoreStateEvent(root);
+				}
+
+				public void beforeVisit(PostRestoreStateEvent event, VisitContext context, UIComponent target) {
+					event.setComponent(target);
+				}
+			});
 		}
 		return view;
 	}
