@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
@@ -46,9 +47,9 @@ class OgnlExpression implements Expression {
 
 	private Object expression;
 
-	private Map variableExpressions;
+	private Map<String, Expression> variableExpressions;
 
-	private Class expectedResultType;
+	private Class<?> expectedResultType;
 
 	private String expressionString;
 
@@ -57,7 +58,7 @@ class OgnlExpression implements Expression {
 	/**
 	 * Creates a new OGNL expression.
 	 */
-	public OgnlExpression(Object expression, Map variableExpressions, Class expectedResultType,
+	public OgnlExpression(Object expression, Map<String, Expression> variableExpressions, Class<?> expectedResultType,
 			String expressionString, ConversionService conversionService) {
 		this.expression = expression;
 		this.variableExpressions = variableExpressions;
@@ -78,6 +79,7 @@ class OgnlExpression implements Expression {
 		return expressionString.hashCode();
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Object getValue(Object context) throws EvaluationException {
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
@@ -96,6 +98,7 @@ class OgnlExpression implements Expression {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public void setValue(Object context, Object value) {
 		try {
 			Map evaluationContext = Ognl.addDefaultContext(context, getVariables(context));
@@ -114,7 +117,7 @@ class OgnlExpression implements Expression {
 		}
 	}
 
-	public Class getValueType(Object context) {
+	public Class<?> getValueType(Object context) {
 		try {
 			// OGNL has no native way to get this information
 			return new BeanWrapperImpl(context).getPropertyType(expressionString);
@@ -148,6 +151,7 @@ class OgnlExpression implements Expression {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private TypeConverter createTypeConverter() {
 		return new TypeConverter() {
 			public Object convertValue(Map context, Object target, Member member, String propertyName, Object value,
@@ -161,14 +165,14 @@ class OgnlExpression implements Expression {
 		};
 	}
 
-	private Map getVariables(Object context) {
+	private Map<String, Object> getVariables(Object context) {
 		if (variableExpressions == null) {
-			return Collections.EMPTY_MAP;
+			return Collections.emptyMap();
 		}
-		Map variables = new HashMap(variableExpressions.size(), 1);
-		for (Iterator it = variableExpressions.entrySet().iterator(); it.hasNext();) {
-			Map.Entry var = (Map.Entry) it.next();
-			Expression valueExpression = (Expression) var.getValue();
+		Map<String, Object> variables = new HashMap<String, Object>(variableExpressions.size(), 1);
+		for (Iterator<Map.Entry<String, Expression>> it = variableExpressions.entrySet().iterator(); it.hasNext();) {
+			Entry<String, Expression> var = it.next();
+			Expression valueExpression = var.getValue();
 			variables.put(var.getKey(), valueExpression.getValue(context));
 		}
 		return variables;

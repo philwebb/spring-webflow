@@ -48,9 +48,9 @@ public class FlowFacesContextMessageDelegate {
 	/**
 	 * Mappings between {@link FacesMessage} and {@link Severity}.
 	 */
-	private static final Map FACESSEVERITY_TO_SPRINGSEVERITY;
+	private static final Map<FacesMessage.Severity, Severity> FACESSEVERITY_TO_SPRINGSEVERITY;
 	static {
-		FACESSEVERITY_TO_SPRINGSEVERITY = new HashMap();
+		FACESSEVERITY_TO_SPRINGSEVERITY = new HashMap<FacesMessage.Severity, Severity>();
 		FACESSEVERITY_TO_SPRINGSEVERITY.put(FacesMessage.SEVERITY_INFO, Severity.INFO);
 		FACESSEVERITY_TO_SPRINGSEVERITY.put(FacesMessage.SEVERITY_WARN, Severity.WARNING);
 		FACESSEVERITY_TO_SPRINGSEVERITY.put(FacesMessage.SEVERITY_ERROR, Severity.ERROR);
@@ -336,7 +336,7 @@ public class FlowFacesContextMessageDelegate {
 			String detail = (String) ois.readObject();
 			int severityOrdinal = ois.readInt();
 			FacesMessage.Severity severity = FacesMessage.SEVERITY_INFO;
-			for (Iterator iterator = FacesMessage.VALUES.iterator(); iterator.hasNext();) {
+			for (Iterator<?> iterator = FacesMessage.VALUES.iterator(); iterator.hasNext();) {
 				FacesMessage.Severity value = (FacesMessage.Severity) iterator.next();
 				if (value.getOrdinal() == severityOrdinal) {
 					severity = value;
@@ -381,7 +381,7 @@ public class FlowFacesContextMessageDelegate {
 		public Severity getSeverity() {
 			Severity severity = null;
 			if (facesMessage.getSeverity() != null) {
-				severity = (Severity) FACESSEVERITY_TO_SPRINGSEVERITY.get(facesMessage.getSeverity());
+				severity = FACESSEVERITY_TO_SPRINGSEVERITY.get(facesMessage.getSeverity());
 			}
 			return (severity == null ? Severity.INFO : severity);
 		}

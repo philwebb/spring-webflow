@@ -46,6 +46,7 @@ public class CollectionAddingExpression implements Expression {
 		return collectionExpression.getValue(context);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void setValue(Object context, Object value) throws EvaluationException {
 		Object result = getValue(context);
 		if (result == null) {
@@ -57,7 +58,7 @@ public class CollectionAddingExpression implements Expression {
 		Assert.isInstanceOf(Collection.class, result, "Not a collection: ");
 		if (value != null) {
 			// add the value to the collection
-			((Collection) result).add(value);
+			((Collection<Object>) result).add(value);
 		}
 	}
 

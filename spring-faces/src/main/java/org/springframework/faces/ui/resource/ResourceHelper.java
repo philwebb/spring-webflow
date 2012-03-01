@@ -17,6 +17,7 @@ package org.springframework.faces.ui.resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -205,4 +206,8 @@ public class ResourceHelper {
 		return renderedResources != null && renderedResources.contains(scriptPath);
 	}
 
+	private <T extends Collection<E>, E> T getStringCollectionFromRequestMap(FacesContext facesContext, String key,
+			Class<T> collectionClass, Class<E> elementClass) {
+		return (T) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
+	}
 }

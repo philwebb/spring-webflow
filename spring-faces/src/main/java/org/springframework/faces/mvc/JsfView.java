@@ -25,7 +25,6 @@ import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
-import javax.faces.context.FacesContextFactory;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 import javax.faces.lifecycle.LifecycleFactory;
@@ -95,12 +94,6 @@ public class JsfView extends AbstractUrlBasedView {
 			String key = i.next().toString();
 			facesContext.getExternalContext().getRequestMap().put(key, model.get(key));
 		}
-	}
-
-	private FacesContext createFacesContext(HttpServletRequest request, HttpServletResponse response) {
-		FacesContextFactory facesContextFactory = (FacesContextFactory) FactoryFinder
-				.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
-		return facesContextFactory.getFacesContext(getServletContext(), request, response, facesLifecycle);
 	}
 
 	private Lifecycle createFacesLifecycle() {
