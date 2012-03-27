@@ -112,7 +112,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 	}
 
 	public List<ObjectError> getGlobalErrors() {
-		return toErrors(messageContext.getMessagesByCriteria(ERRORS_WITHOUT_FIELD_SOURCE));
+		return toErrors(messageContext.getMessagesByCriteria(ERRORS_WITHOUT_FIELD_SOURCE), ALL_ERRORS);
 	}
 
 	public List<FieldError> getFieldErrors(String field) {

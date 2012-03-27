@@ -174,29 +174,22 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getRequestCookieMap() {
-		return Collections.EMPTY_MAP;
+		return Collections.emptyMap();
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getRequestHeaderMap() {
 		if (requestHeaderMap == null) {
-			RequestPropertyMap map = new RequestPropertyMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.FALSE);
-			requestHeaderMap = map;
+			requestHeaderMap = new SingleValueRequestPropertyMap(portletRequest);
 		}
 		return requestHeaderMap;
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String[]> getRequestHeaderValuesMap() {
 		if (requestHeaderValuesMap == null) {
-			RequestPropertyMap map = new RequestPropertyMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.TRUE);
-			requestHeaderValuesMap = map;
+			requestHeaderValuesMap = new MultiValueRequestPropertyMap(portletRequest);
 		}
 		return requestHeaderValuesMap;
 	}
