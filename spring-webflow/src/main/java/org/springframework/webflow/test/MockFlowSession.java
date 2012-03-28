@@ -92,6 +92,7 @@ public class MockFlowSession implements FlowSession {
 		return scope;
 	}
 
+	@SuppressWarnings("unchecked")
 	public MutableAttributeMap<Object> getViewScope() throws IllegalStateException {
 		if (state == null) {
 			throw new IllegalStateException("The current state of this flow '" + definition.getId()
@@ -101,7 +102,7 @@ public class MockFlowSession implements FlowSession {
 			throw new IllegalStateException("The current state '" + state.getId() + "' of this flow '"
 					+ definition.getId() + "' is not a view state - view scope not accessible");
 		}
-		return (MutableAttributeMap) scope.get(VIEW_MAP_ATTRIBUTE);
+		return (MutableAttributeMap<Object>) scope.get(VIEW_MAP_ATTRIBUTE);
 	}
 
 	public boolean isEmbeddedMode() {
@@ -180,7 +181,7 @@ public class MockFlowSession implements FlowSession {
 	// internal helpers
 
 	private void initViewScope() {
-		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap());
+		scope.put(VIEW_MAP_ATTRIBUTE, new LocalAttributeMap<Object>());
 	}
 
 	private void destroyViewScope() {

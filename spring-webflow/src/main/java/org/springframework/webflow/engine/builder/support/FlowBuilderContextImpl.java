@@ -136,25 +136,25 @@ public class FlowBuilderContextImpl implements FlowBuilderContext {
 	 * A little proxy that refreshes the externally configured conversion service reference on each invocation.
 	 */
 	private class ParentConversionServiceProxy implements ConversionService {
-		public Object executeConversion(Object source, Class targetClass) throws ConversionException {
+		public Object executeConversion(Object source, Class<?> targetClass) throws ConversionException {
 			return getFlowBuilderServices().getConversionService().executeConversion(source, targetClass);
 		}
 
-		public Object executeConversion(String converterId, Object source, Class targetClass) {
+		public Object executeConversion(String converterId, Object source, Class<?> targetClass) {
 			return getFlowBuilderServices().getConversionService().executeConversion(converterId, source, targetClass);
 		}
 
-		public ConversionExecutor getConversionExecutor(Class sourceClass, Class targetClass)
+		public ConversionExecutor getConversionExecutor(Class<?> sourceClass, Class<?> targetClass)
 				throws ConversionExecutionException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(sourceClass, targetClass);
 		}
 
-		public ConversionExecutor getConversionExecutor(String id, Class sourceClass, Class targetClass)
+		public ConversionExecutor getConversionExecutor(String id, Class<?> sourceClass, Class<?> targetClass)
 				throws ConversionExecutorNotFoundException {
 			return getFlowBuilderServices().getConversionService().getConversionExecutor(id, sourceClass, targetClass);
 		}
 
-		public Class getClassForAlias(String name) {
+		public Class<?> getClassForAlias(String name) {
 			return getFlowBuilderServices().getConversionService().getClassForAlias(name);
 		}
 

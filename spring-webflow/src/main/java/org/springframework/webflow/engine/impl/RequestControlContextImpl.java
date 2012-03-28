@@ -234,7 +234,7 @@ class RequestControlContextImpl implements RequestControlContext {
 		flowExecution.start(flow, input, this);
 	}
 
-	public void endActiveFlowSession(String outcome, MutableAttributeMap<?> output) throws IllegalStateException {
+	public void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output) throws IllegalStateException {
 		flowExecution.endActiveFlowSession(outcome, output, this);
 	}
 

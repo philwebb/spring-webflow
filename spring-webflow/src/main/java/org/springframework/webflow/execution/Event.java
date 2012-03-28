@@ -69,11 +69,11 @@ public class Event extends EventObject {
 	 * @param id the event identifier (required)
 	 * @param attributes additional event attributes
 	 */
-	public Event(Object source, String id, AttributeMap<?> attributes) {
+	public Event(Object source, String id, AttributeMap<Object> attributes) {
 		super(source);
 		Assert.hasText(id, "The event id is required: please set this event's id to a non-blank string identifier");
 		this.id = id;
-		this.attributes = attributes != null ? (AttributeMap) attributes : CollectionUtils.EMPTY_ATTRIBUTE_MAP;
+		this.attributes = attributes != null ? attributes : CollectionUtils.EMPTY_ATTRIBUTE_MAP;
 	}
 
 	/**

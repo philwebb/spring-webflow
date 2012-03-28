@@ -227,7 +227,7 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 		}
 	}
 
-	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap<?> executionAttributes) {
+	private FlowExecutionImplFactory createFlowExecutionFactory(AttributeMap<Object> executionAttributes) {
 		FlowExecutionImplFactory executionFactory = new FlowExecutionImplFactory();
 		executionFactory.setExecutionAttributes(executionAttributes);
 		if (flowExecutionListenerLoader != null) {

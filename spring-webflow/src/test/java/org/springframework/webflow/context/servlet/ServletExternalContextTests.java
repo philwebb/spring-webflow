@@ -117,7 +117,7 @@ public class ServletExternalContextTests extends TestCase {
 		assertEquals("foo", context.getFlowRedirectFlowId());
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
-		assertSame(input, context.getFlowRedirectFlowInput());
+		assertEquals(input, context.getFlowRedirectFlowInput());
 	}
 
 	public void testCommitExternalRedirect() {

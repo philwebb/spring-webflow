@@ -31,7 +31,7 @@ public class LocalSharedAttributeMap<V> extends LocalAttributeMap<V> implements 
 	 * Creates a new shared attribute map.
 	 * @param sharedMap the shared map
 	 */
-	public LocalSharedAttributeMap(SharedMap<String, ? extends V> sharedMap) {
+	public LocalSharedAttributeMap(SharedMap<String, V> sharedMap) {
 		super(sharedMap);
 	}
 

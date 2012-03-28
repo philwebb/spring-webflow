@@ -82,6 +82,7 @@ public abstract class AbstractSnapshottingFlowExecutionRepository extends Abstra
 	 * @param conversation the governing conversation
 	 * @return the restored flow execution
 	 */
+	@SuppressWarnings("unchecked")
 	protected FlowExecution restoreFlowExecution(FlowExecutionSnapshot snapshot, FlowExecutionKey key,
 			Conversation conversation) {
 		MutableAttributeMap<Object> conversationScope = (MutableAttributeMap<Object>) conversation

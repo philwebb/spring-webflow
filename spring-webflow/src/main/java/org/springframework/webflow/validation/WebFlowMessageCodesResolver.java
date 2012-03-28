@@ -82,7 +82,7 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 	 * See the {@link DefaultMessageCodesResolver class level Javadoc} for details on the generated codes.
 	 * @return the list of codes
 	 */
-	public String[] resolveMessageCodes(String errorCode, String objectName, String field, Class fieldType) {
+	public String[] resolveMessageCodes(String errorCode, String objectName, String field, Class<?> fieldType) {
 		List<String> codeList = new ArrayList<String>();
 		List<String> fieldList = new ArrayList<String>();
 		buildFieldList(field, fieldList);

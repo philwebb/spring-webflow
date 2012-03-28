@@ -177,7 +177,7 @@ public class BindingModel extends AbstractErrors implements BindingResult {
 		return parseFieldExpression(fixedField(field), false).getValue(boundObject);
 	}
 
-	public PropertyEditor findEditor(String field, Class valueType) {
+	public PropertyEditor findEditor(String field, Class<?> valueType) {
 		if (field != null) {
 			field = fixedField(field);
 		}

@@ -182,7 +182,10 @@ public class MockExternalContext implements ExternalContext {
 
 	public void requestFlowDefinitionRedirect(String flowId, MutableAttributeMap<?> input) throws IllegalStateException {
 		flowDefinitionRedirectFlowId = flowId;
-		flowDefinitionRedirectFlowInput = (MutableAttributeMap<Object>) input;
+		flowDefinitionRedirectFlowInput = new LocalAttributeMap<Object>();
+		if (input != null) {
+			flowDefinitionRedirectFlowInput.putAll(input);
+		}
 		recordResponseComplete();
 	}
 

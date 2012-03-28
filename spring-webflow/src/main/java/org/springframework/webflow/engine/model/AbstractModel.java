@@ -92,6 +92,7 @@ public abstract class AbstractModel implements Model {
 	 * @param addAtEnd if true new items will be added at the end of the list, otherwise the beginning
 	 * @return the merged list
 	 */
+	@SuppressWarnings("unchecked")
 	protected <T extends Model> LinkedList<T> merge(LinkedList<T> child, LinkedList<T> parent, boolean addAtEnd) {
 		if (child == null) {
 			if (parent == null) {
@@ -135,6 +136,7 @@ public abstract class AbstractModel implements Model {
 		return model.createCopy();
 	}
 
+	@SuppressWarnings("unchecked")
 	protected <T extends Model> LinkedList<T> copyList(LinkedList<T> list) {
 		if (list == null) {
 			return null;

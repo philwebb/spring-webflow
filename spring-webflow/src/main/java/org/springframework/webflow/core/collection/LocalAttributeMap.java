@@ -72,7 +72,7 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 	/**
 	 * Creates a new attribute map wrapping the specified map.
 	 */
-	public LocalAttributeMap(Map<String, ? extends V> map) {
+	public LocalAttributeMap(Map<String, V> map) {
 		Assert.notNull(map, "The target map is required");
 		initAttributes(map);
 	}
@@ -284,8 +284,8 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 	 * Initializes this attribute map.
 	 * @param attributes the attributes
 	 */
-	protected void initAttributes(Map<String, ? extends V> attributes) {
-		this.attributes = (Map<String, V>) attributes;
+	protected void initAttributes(Map<String, V> attributes) {
+		this.attributes = attributes;
 		attributeAccessor = new MapAccessor<String, V>(this.attributes);
 	}
 

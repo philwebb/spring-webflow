@@ -395,7 +395,7 @@ public class FlowExecutionImpl implements FlowExecution, Externalizable {
 		return transition.execute((State) getActiveSession().getState(), context);
 	}
 
-	void endActiveFlowSession(String outcome, MutableAttributeMap<?> output, RequestControlContext context) {
+	void endActiveFlowSession(String outcome, MutableAttributeMap<Object> output, RequestControlContext context) {
 		FlowSessionImpl session = getActiveSessionInternal();
 		listeners.fireSessionEnding(context, session, outcome, output);
 		session.getFlow().end(context, outcome, output);

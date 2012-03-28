@@ -63,7 +63,7 @@ class TextToTargetStateResolver implements Converter {
 		return TargetStateResolver.class;
 	}
 
-	public Object convertSourceToTargetClass(Object source, Class targetClass) throws Exception {
+	public Object convertSourceToTargetClass(Object source, Class<?> targetClass) throws Exception {
 		String targetStateId = (String) source;
 		if (!StringUtils.hasText(targetStateId)) {
 			return null;

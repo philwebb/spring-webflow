@@ -66,7 +66,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * have string keys, string values, and remain unmodifiable.
 	 * @param parameters the contents of this parameter map
 	 */
-	public LocalParameterMap(Map<String, ?> parameters) {
+	public LocalParameterMap(Map<String, Object> parameters) {
 		this(parameters, DEFAULT_CONVERSION_SERVICE);
 	}
 
@@ -78,7 +78,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * @param parameters the contents of this parameter map
 	 * @param conversionService a helper for performing type conversion of map entry values
 	 */
-	public LocalParameterMap(Map<String, ?> parameters, ConversionService conversionService) {
+	public LocalParameterMap(Map<String, Object> parameters, ConversionService conversionService) {
 		initParameters(parameters);
 		this.conversionService = conversionService;
 	}
@@ -261,8 +261,8 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	 * Initializes this parameter map.
 	 * @param parameters the parameters
 	 */
-	protected void initParameters(Map<String, ?> parameters) {
-		this.parameters = (Map<String, Object>) parameters;
+	protected void initParameters(Map<String, Object> parameters) {
+		this.parameters = parameters;
 		parameterAccessor = new MapAccessor<String, Object>(this.parameters);
 	}
 
@@ -278,6 +278,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	/**
 	 * Convert given String parameter to specified target type.
 	 */
+	@SuppressWarnings("unchecked")
 	private <T> T convert(String parameter, Class<T> targetType) throws ConversionExecutionException {
 		return (T) conversionService.getConversionExecutor(String.class, targetType).execute(parameter);
 	}
@@ -285,6 +286,7 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 	/**
 	 * Convert given array of String parameters to specified target type and return the resulting array.
 	 */
+	@SuppressWarnings("unchecked")
 	private <T> T[] convert(String[] parameters, Class<? extends T> targetElementType)
 			throws ConversionExecutionException {
 		List<T> list = new ArrayList<T>(parameters.length);

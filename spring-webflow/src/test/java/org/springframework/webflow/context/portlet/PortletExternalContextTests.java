@@ -122,7 +122,7 @@ public class PortletExternalContextTests extends TestCase {
 		assertTrue(context.isResponseComplete());
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 		assertFalse(context.isResponseAllowed());
-		assertSame(input, context.getFlowRedirectFlowInput());
+		assertEquals(input, context.getFlowRedirectFlowInput());
 	}
 
 	public void testCommitFlowRedirectRenderRequest() {

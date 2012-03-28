@@ -167,7 +167,7 @@ public abstract class AbstractAction implements Action, InitializingBean {
 	 * @param resultAttributes the event attributes
 	 * @return the action result event
 	 */
-	protected Event result(String eventId, AttributeMap<?> resultAttributes) {
+	protected Event result(String eventId, AttributeMap<Object> resultAttributes) {
 		return getEventFactorySupport().event(this, eventId, resultAttributes);
 	}
 

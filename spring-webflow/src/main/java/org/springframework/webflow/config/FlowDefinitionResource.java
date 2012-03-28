@@ -41,10 +41,10 @@ public class FlowDefinitionResource {
 	 * @param path the location of the resource
 	 * @param attributes meta-attributes describing the flow resource
 	 */
-	public FlowDefinitionResource(String flowId, Resource path, AttributeMap<?> attributes) {
+	public FlowDefinitionResource(String flowId, Resource path, AttributeMap<Object> attributes) {
 		this.id = flowId;
 		this.path = path;
-		this.attributes = (AttributeMap<Object>) attributes;
+		this.attributes = attributes;
 	}
 
 	/**

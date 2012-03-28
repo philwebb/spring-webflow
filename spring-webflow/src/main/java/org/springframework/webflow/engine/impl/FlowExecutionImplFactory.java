@@ -53,8 +53,8 @@ public class FlowExecutionImplFactory implements FlowExecutionFactory {
 	 * execution behavior.
 	 * @param executionAttributes flow execution system attributes
 	 */
-	public void setExecutionAttributes(AttributeMap<?> executionAttributes) {
-		this.executionAttributes = (AttributeMap<Object>) executionAttributes;
+	public void setExecutionAttributes(AttributeMap<Object> executionAttributes) {
+		this.executionAttributes = executionAttributes;
 	}
 
 	/**
