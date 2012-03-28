@@ -17,7 +17,6 @@ package org.springframework.faces.ui.resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -155,14 +154,12 @@ public class ResourceHelper {
 	}
 
 	private static void addStyle(FacesContext facesContext, String stylePath) {
-		List<String> combinedResources = (List<String>) facesContext.getExternalContext().getRequestMap()
-				.get(COMBINED_RESOURCES_KEY);
+		List<String> combinedResources = getCombinedResources(facesContext);
 		combinedResources.add(stylePath);
 	}
 
 	public static void endCombineStyles(FacesContext facesContext) throws IOException {
-		List<String> combinedResources = (List<String>) facesContext.getExternalContext().getRequestMap()
-				.remove(COMBINED_RESOURCES_KEY);
+		List<String> combinedResources = getCombinedResources(facesContext);
 		StringBuffer combinedPath = new StringBuffer();
 		for (int i = 0; i < combinedResources.size(); i++) {
 			String resourcePath = combinedResources.get(i);
@@ -191,8 +188,7 @@ public class ResourceHelper {
 	}
 
 	private static void markRendered(FacesContext facesContext, String scriptPath) {
-		Set<String> renderedResources = (Set<String>) facesContext.getExternalContext().getRequestMap()
-				.get(RENDERED_RESOURCES_KEY);
+		Set<String> renderedResources = getRenderedResources(facesContext);
 		if (renderedResources == null) {
 			renderedResources = new HashSet<String>();
 			facesContext.getExternalContext().getRequestMap().put(RENDERED_RESOURCES_KEY, renderedResources);
@@ -201,13 +197,19 @@ public class ResourceHelper {
 	}
 
 	private static boolean alreadyRendered(FacesContext facesContext, String scriptPath) {
-		Set<String> renderedResources = (Set<String>) facesContext.getExternalContext().getRequestMap()
-				.get(RENDERED_RESOURCES_KEY);
+		Set<String> renderedResources = getRenderedResources(facesContext);
 		return renderedResources != null && renderedResources.contains(scriptPath);
 	}
 
-	private <T extends Collection<E>, E> T getStringCollectionFromRequestMap(FacesContext facesContext, String key,
-			Class<T> collectionClass, Class<E> elementClass) {
-		return (T) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
+	@SuppressWarnings("unchecked")
+	private static List<String> getCombinedResources(FacesContext facesContext) {
+		return (List<String>) facesContext.getExternalContext().getRequestMap().get(COMBINED_RESOURCES_KEY);
 	}
+
+	@SuppressWarnings("unchecked")
+	private static Set<String> getRenderedResources(FacesContext facesContext) {
+		return (Set<String>) facesContext.getExternalContext().getRequestMap().get(RENDERED_RESOURCES_KEY);
+
+	}
+
 }

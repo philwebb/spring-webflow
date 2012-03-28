@@ -53,6 +53,7 @@ class ExternalContextWrapper extends ExternalContext {
 		return delegate.getInitParameter(name);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Map getInitParameterMap() {
 		return delegate.getInitParameterMap();
 	}

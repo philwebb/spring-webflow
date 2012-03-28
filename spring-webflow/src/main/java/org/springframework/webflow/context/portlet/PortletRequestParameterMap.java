@@ -22,6 +22,7 @@ import javax.portlet.PortletRequest;
 import org.springframework.binding.collection.CompositeIterator;
 import org.springframework.binding.collection.StringKeyedMapAdapter;
 import org.springframework.util.Assert;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.portlet.multipart.MultipartActionRequest;
 import org.springframework.webflow.core.collection.CollectionUtils;
 
@@ -50,7 +51,7 @@ public class PortletRequestParameterMap extends StringKeyedMapAdapter<Object> {
 	protected Object getAttribute(String key) {
 		if (request instanceof MultipartActionRequest) {
 			MultipartActionRequest multipartRequest = (MultipartActionRequest) request;
-			Object data = multipartRequest.getFileMap().get(key);
+			MultipartFile data = multipartRequest.getFileMap().get(key);
 			if (data != null) {
 				return data;
 			}

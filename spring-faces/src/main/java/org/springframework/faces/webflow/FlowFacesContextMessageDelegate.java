@@ -95,9 +95,9 @@ public class FlowFacesContextMessageDelegate {
 			return null;
 		}
 		FacesMessage.Severity max = FacesMessage.SEVERITY_INFO;
-		Iterator i = getMessages();
+		Iterator<FacesMessage> i = getMessages();
 		while (i.hasNext()) {
-			FacesMessage message = (FacesMessage) i.next();
+			FacesMessage message = i.next();
 			if (message.getSeverity().getOrdinal() > max.getOrdinal()) {
 				max = message.getSeverity();
 			}

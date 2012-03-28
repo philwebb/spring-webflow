@@ -79,7 +79,7 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	private Map<String, String[]> requestParameterValuesMap;
 
-	private MapAdaptable sessionMap;
+	private MapAdaptable<String, Object> sessionMap;
 
 	public PortletExternalContextImpl(PortletContext portletContext, PortletRequest portletRequest,
 			PortletResponse portletResponse) {
@@ -145,7 +145,6 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getInitParameterMap() {
 		if (initParameterMap == null) {
 			initParameterMap = new InitParameterMap(portletContext);
@@ -213,12 +212,9 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String> getRequestParameterMap() {
 		if (requestParameterMap == null) {
-			RequestParameterMap map = new RequestParameterMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.FALSE);
-			requestParameterMap = (Map) map;
+			requestParameterMap = new SingleValueRequestParameterMap(portletRequest);
 		}
 		return requestParameterMap;
 	}
@@ -229,12 +225,9 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, String[]> getRequestParameterValuesMap() {
 		if (requestParameterValuesMap == null) {
-			RequestParameterMap map = new RequestParameterMap(portletRequest);
-			map.setUseArrayForMultiValueAttributes(Boolean.TRUE);
-			requestParameterValuesMap = (Map) map;
+			requestParameterValuesMap = new MultiValueRequestParameterMap(portletRequest);
 		}
 		return requestParameterValuesMap;
 	}
@@ -291,10 +284,9 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<String, Object> getSessionMap() {
 		if (sessionMap == null) {
-			sessionMap = new LocalAttributeMap(new PortletSessionMap(portletRequest));
+			sessionMap = new LocalAttributeMap<Object>(new PortletSessionMap(portletRequest));
 		}
 		return sessionMap.asMap();
 	}
