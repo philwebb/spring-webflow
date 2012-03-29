@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.engine.model;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.springframework.util.StringUtils;
@@ -294,8 +293,7 @@ public class FlowModel extends AbstractModel {
 	 */
 	public AbstractStateModel getStateById(String id) {
 		if (states != null) {
-			for (Iterator<AbstractStateModel> it = states.iterator(); it.hasNext();) {
-				AbstractStateModel state = it.next();
+			for (AbstractStateModel state : states) {
 				if (id.equals(state.getId())) {
 					return state;
 				}

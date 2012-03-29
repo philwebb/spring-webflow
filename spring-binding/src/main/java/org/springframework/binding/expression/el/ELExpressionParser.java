@@ -172,8 +172,7 @@ public class ELExpressionParser implements ExpressionParser {
 		public void mapVariables(ExpressionVariable[] variables, ExpressionFactory expressionFactory) {
 			if (variables != null && variables.length > 0) {
 				variableMapper = new VariableMapperImpl();
-				for (int i = 0; i < variables.length; i++) {
-					ExpressionVariable var = variables[i];
+				for (ExpressionVariable var : variables) {
 					ParserContext context = var.getParserContext() != null ? var.getParserContext()
 							: NullParserContext.INSTANCE;
 					ValueExpression expr;

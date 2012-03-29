@@ -291,8 +291,8 @@ public class LocalParameterMap implements ParameterMap, Serializable {
 			throws ConversionExecutionException {
 		List<T> list = new ArrayList<T>(parameters.length);
 		ConversionExecutor converter = conversionService.getConversionExecutor(String.class, targetElementType);
-		for (int i = 0; i < parameters.length; i++) {
-			list.add((T) converter.execute(parameters[i]));
+		for (String parameter : parameters) {
+			list.add((T) converter.execute(parameter));
 		}
 		return list.toArray((T[]) Array.newInstance(targetElementType, parameters.length));
 	}

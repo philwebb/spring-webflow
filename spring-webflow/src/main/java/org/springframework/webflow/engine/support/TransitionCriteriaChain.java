@@ -90,8 +90,8 @@ public class TransitionCriteriaChain implements TransitionCriteria {
 			return WildcardTransitionCriteria.INSTANCE;
 		}
 		TransitionCriteriaChain chain = new TransitionCriteriaChain();
-		for (int i = 0; i < actions.length; i++) {
-			chain.add(new ActionTransitionCriteria(actions[i]));
+		for (Action action : actions) {
+			chain.add(new ActionTransitionCriteria(action));
 		}
 		return chain;
 	}

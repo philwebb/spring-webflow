@@ -121,10 +121,10 @@ public class MethodKey implements Serializable {
 	 */
 	protected Method findMethodConsiderAssignableParameterTypes() {
 		Method[] candidateMethods = getDeclaredType().getMethods();
-		for (int i = 0; i < candidateMethods.length; i++) {
-			if (candidateMethods[i].getName().equals(methodName)) {
+		for (Method candidateMethod : candidateMethods) {
+			if (candidateMethod.getName().equals(methodName)) {
 				// Check if the method has the correct number of parameters.
-				Class<?>[] candidateParameterTypes = candidateMethods[i].getParameterTypes();
+				Class<?>[] candidateParameterTypes = candidateMethod.getParameterTypes();
 				if (candidateParameterTypes.length == parameterTypes.length) {
 					int numberOfCorrectArguments = 0;
 					for (int j = 0; j < candidateParameterTypes.length; j++) {
@@ -142,7 +142,7 @@ public class MethodKey implements Serializable {
 						}
 					}
 					if (numberOfCorrectArguments == parameterTypes.length) {
-						return candidateMethods[i];
+						return candidateMethod;
 					}
 				}
 			}
@@ -183,10 +183,9 @@ public class MethodKey implements Serializable {
 			return 0;
 		}
 		int hash = 0;
-		for (int i = 0; i < parameterTypes.length; i++) {
-			Class<?> parameterType = parameterTypes[i];
+		for (Class<?> parameterType : parameterTypes) {
 			if (parameterType != null) {
-				hash += parameterTypes[i].hashCode();
+				hash += parameterType.hashCode();
 			}
 		}
 		return hash;

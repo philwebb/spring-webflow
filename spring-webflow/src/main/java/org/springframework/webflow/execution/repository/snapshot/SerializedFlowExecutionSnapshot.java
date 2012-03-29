@@ -120,8 +120,8 @@ public class SerializedFlowExecutionSnapshot extends FlowExecutionSnapshot imple
 
 	public int hashCode() {
 		int hashCode = 0;
-		for (int i = 0; i < flowExecutionData.length; i++) {
-			hashCode += flowExecutionData[i];
+		for (byte element : flowExecutionData) {
+			hashCode += element;
 		}
 		return hashCode;
 	}

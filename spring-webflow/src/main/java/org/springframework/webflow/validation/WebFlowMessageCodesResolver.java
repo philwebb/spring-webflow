@@ -1,7 +1,6 @@
 package org.springframework.webflow.validation;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.util.StringUtils;
@@ -86,16 +85,14 @@ public class WebFlowMessageCodesResolver implements MessageCodesResolver {
 		List<String> codeList = new ArrayList<String>();
 		List<String> fieldList = new ArrayList<String>();
 		buildFieldList(field, fieldList);
-		for (Iterator<String> it = fieldList.iterator(); it.hasNext();) {
-			String fieldInList = it.next();
+		for (String fieldInList : fieldList) {
 			codeList.add(postProcessMessageCode(objectName + CODE_SEPARATOR + fieldInList + CODE_SEPARATOR + errorCode));
 		}
 		int dotIndex = field.lastIndexOf('.');
 		if (dotIndex != -1) {
 			buildFieldList(field.substring(dotIndex + 1), fieldList);
 		}
-		for (Iterator<String> it = fieldList.iterator(); it.hasNext();) {
-			String fieldInList = it.next();
+		for (String fieldInList : fieldList) {
 			codeList.add(postProcessMessageCode(fieldInList + CODE_SEPARATOR + errorCode));
 		}
 		if (fieldType != null) {

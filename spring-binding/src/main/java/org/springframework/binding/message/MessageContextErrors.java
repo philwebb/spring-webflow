@@ -123,8 +123,7 @@ public class MessageContextErrors extends AbstractErrors {
 			return Collections.emptyList();
 		}
 		List<ObjectError> errors = new ArrayList<ObjectError>(messages.length);
-		for (int i = 0; i < messages.length; i++) {
-			Message message = messages[i];
+		for (Message message : messages) {
 			errors.add(new ObjectError(objectName, message.getText()));
 		}
 		return Collections.unmodifiableList(errors);
@@ -136,8 +135,7 @@ public class MessageContextErrors extends AbstractErrors {
 			return Collections.emptyList();
 		}
 		List<FieldError> errors = new ArrayList<FieldError>(messages.length);
-		for (int i = 0; i < messages.length; i++) {
-			Message message = messages[i];
+		for (Message message : messages) {
 			errors.add(new FieldError(objectName, (String) message.getSource(), message.getText()));
 		}
 		return Collections.unmodifiableList(errors);

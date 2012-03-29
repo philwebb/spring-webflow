@@ -16,7 +16,6 @@
 package org.springframework.webflow.mvc.builder;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.web.servlet.View;
@@ -44,8 +43,7 @@ public class DelegatingFlowViewResolver implements FlowViewResolver {
 	}
 
 	public View resolveView(String viewId, RequestContext context) {
-		for (Iterator<ViewResolver> it = viewResolvers.iterator(); it.hasNext();) {
-			ViewResolver viewResolver = it.next();
+		for (ViewResolver viewResolver : viewResolvers) {
 			try {
 				View view = viewResolver.resolveViewName(viewId, context.getExternalContext().getLocale());
 				if (view != null) {

@@ -17,7 +17,6 @@ package org.springframework.webflow.engine.model.builder.xml;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -219,8 +218,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<AttributeModel> attributes = new LinkedList<AttributeModel>();
-		for (Iterator<Element> it = attributeElements.iterator(); it.hasNext();) {
-			attributes.add(parseAttribute(it.next()));
+		for (Element element2 : attributeElements) {
+			attributes.add(parseAttribute(element2));
 		}
 		return attributes;
 	}
@@ -231,8 +230,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<VarModel> vars = new LinkedList<VarModel>();
-		for (Iterator<Element> it = varElements.iterator(); it.hasNext();) {
-			vars.add(parseVar(it.next()));
+		for (Element element2 : varElements) {
+			vars.add(parseVar(element2));
 		}
 		return vars;
 	}
@@ -243,8 +242,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<InputModel> inputs = new LinkedList<InputModel>();
-		for (Iterator<Element> it = inputElements.iterator(); it.hasNext();) {
-			inputs.add(parseInput(it.next()));
+		for (Element element2 : inputElements) {
+			inputs.add(parseInput(element2));
 		}
 		return inputs;
 	}
@@ -255,8 +254,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<OutputModel> outputs = new LinkedList<OutputModel>();
-		for (Iterator<Element> it = outputElements.iterator(); it.hasNext();) {
-			outputs.add(parseOutput(it.next()));
+		for (Element element2 : outputElements) {
+			outputs.add(parseOutput(element2));
 		}
 		return outputs;
 	}
@@ -268,8 +267,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<AbstractActionModel> actions = new LinkedList<AbstractActionModel>();
-		for (Iterator<Element> it = actionElements.iterator(); it.hasNext();) {
-			actions.add(parseAction(it.next()));
+		for (Element element2 : actionElements) {
+			actions.add(parseAction(element2));
 		}
 		return actions;
 	}
@@ -281,8 +280,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<AbstractStateModel> states = new LinkedList<AbstractStateModel>();
-		for (Iterator<Element> it = stateElements.iterator(); it.hasNext();) {
-			states.add(parseState(it.next()));
+		for (Element element2 : stateElements) {
+			states.add(parseState(element2));
 		}
 		return states;
 	}
@@ -293,8 +292,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<TransitionModel> transitions = new LinkedList<TransitionModel>();
-		for (Iterator<Element> it = transitionElements.iterator(); it.hasNext();) {
-			transitions.add(parseTransition(it.next()));
+		for (Element element2 : transitionElements) {
+			transitions.add(parseTransition(element2));
 		}
 		return transitions;
 	}
@@ -305,8 +304,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<ExceptionHandlerModel> exceptionHandlers = new LinkedList<ExceptionHandlerModel>();
-		for (Iterator<Element> it = exceptionHandlerElements.iterator(); it.hasNext();) {
-			exceptionHandlers.add(parseExceptionHandler(it.next()));
+		for (Element element2 : exceptionHandlerElements) {
+			exceptionHandlers.add(parseExceptionHandler(element2));
 		}
 		return exceptionHandlers;
 	}
@@ -317,8 +316,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<BeanImportModel> beanImports = new LinkedList<BeanImportModel>();
-		for (Iterator<Element> it = importElements.iterator(); it.hasNext();) {
-			beanImports.add(parseBeanImport(it.next()));
+		for (Element element2 : importElements) {
+			beanImports.add(parseBeanImport(element2));
 		}
 		return beanImports;
 	}
@@ -329,8 +328,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<IfModel> ifs = new LinkedList<IfModel>();
-		for (Iterator<Element> it = ifElements.iterator(); it.hasNext();) {
-			ifs.add(parseIf(it.next()));
+		for (Element element2 : ifElements) {
+			ifs.add(parseIf(element2));
 		}
 		return ifs;
 	}
@@ -501,8 +500,8 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 			return null;
 		}
 		LinkedList<BindingModel> bindings = new LinkedList<BindingModel>();
-		for (Iterator<Element> it = bindingElements.iterator(); it.hasNext();) {
-			bindings.add(parseBinding(it.next()));
+		for (Element element2 : bindingElements) {
+			bindings.add(parseBinding(element2));
 		}
 		return bindings;
 	}
@@ -626,8 +625,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 	private void mergeFlows() {
 		if (flowModel.getParent() != null) {
 			List<String> parents = Arrays.asList(StringUtils.trimArrayElements(flowModel.getParent().split(",")));
-			for (Iterator<String> it = parents.iterator(); it.hasNext();) {
-				String parentFlowId = it.next();
+			for (String parentFlowId : parents) {
 				if (StringUtils.hasText(parentFlowId)) {
 					try {
 						flowModel.merge(modelLocator.getFlowModel(parentFlowId));
@@ -644,8 +642,7 @@ public class XmlFlowModelBuilder implements FlowModelBuilder {
 		if (flowModel.getStates() == null) {
 			return;
 		}
-		for (Iterator<AbstractStateModel> it = flowModel.getStates().iterator(); it.hasNext();) {
-			AbstractStateModel childState = it.next();
+		for (AbstractStateModel childState : flowModel.getStates()) {
 			String parent = childState.getParent();
 			if (childState.getParent() != null) {
 				String flowId;

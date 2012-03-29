@@ -17,10 +17,8 @@ package org.springframework.faces.webflow;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.faces.FacesException;
 import javax.faces.component.UIComponent;
@@ -65,8 +63,7 @@ class TreeStructureManager {
 		Map<String, UIComponent> facetMap = component.getFacets();
 		if (!facetMap.isEmpty()) {
 			List<Object[]> structFacetList = new ArrayList<Object[]>();
-			for (Iterator<Map.Entry<String, UIComponent>> it = facetMap.entrySet().iterator(); it.hasNext();) {
-				Entry<String, UIComponent> entry = it.next();
+			for (Map.Entry<String, UIComponent> entry : facetMap.entrySet()) {
 				UIComponent child = entry.getValue();
 				if (!child.isTransient()) {
 					String facetName = entry.getKey();
@@ -104,8 +101,8 @@ class TreeStructureManager {
 		TreeStructComponent[] childArray = treeStructComp.getChildren();
 		if (childArray != null) {
 			List<UIComponent> childList = component.getChildren();
-			for (int i = 0, len = childArray.length; i < len; i++) {
-				UIComponent child = internalRestoreTreeStructure(childArray[i]);
+			for (TreeStructComponent element : childArray) {
+				UIComponent child = internalRestoreTreeStructure(element);
 				childList.add(child);
 			}
 		}
@@ -114,8 +111,8 @@ class TreeStructureManager {
 		Object[] facetArray = treeStructComp.getFacets();
 		if (facetArray != null) {
 			Map<String, UIComponent> facetMap = component.getFacets();
-			for (int i = 0, len = facetArray.length; i < len; i++) {
-				Object[] tuple = (Object[]) facetArray[i];
+			for (Object element : facetArray) {
+				Object[] tuple = (Object[]) element;
 				String facetName = (String) tuple[0];
 				TreeStructComponent structChild = (TreeStructComponent) tuple[1];
 				UIComponent child = internalRestoreTreeStructure(structChild);

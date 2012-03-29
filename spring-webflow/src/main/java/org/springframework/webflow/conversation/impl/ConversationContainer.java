@@ -119,8 +119,7 @@ class ConversationContainer implements Serializable {
 	 * @throws NoSuchConversationException if the conversation cannot be found
 	 */
 	public synchronized Conversation getConversation(ConversationId id) throws NoSuchConversationException {
-		for (Iterator<ContainedConversation> it = conversations.iterator(); it.hasNext();) {
-			ContainedConversation conversation = it.next();
+		for (ContainedConversation conversation : conversations) {
 			if (conversation.getId().equals(id)) {
 				return conversation;
 			}

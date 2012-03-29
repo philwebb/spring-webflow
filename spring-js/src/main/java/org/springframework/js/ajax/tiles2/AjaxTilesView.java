@@ -115,11 +115,11 @@ public class AjaxTilesView extends TilesView {
 				request.setAttribute(ServletUtil.FORCE_INCLUDE_ATTRIBUTE_NAME, true);
 			}
 
-			for (int i = 0; i < fragmentsToRender.length; i++) {
-				Attribute attributeToRender = flattenedAttributeMap.get(fragmentsToRender[i]);
+			for (String element : fragmentsToRender) {
+				Attribute attributeToRender = flattenedAttributeMap.get(element);
 
 				if (attributeToRender == null) {
-					throw new ServletException("No tiles attribute with a name of '" + fragmentsToRender[i]
+					throw new ServletException("No tiles attribute with a name of '" + element
 							+ "' could be found for the current view: " + this);
 				} else {
 					container.startContext(request, response).inheritCascadedAttributes(compositeDefinition);

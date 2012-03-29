@@ -77,8 +77,7 @@ public class ConditionalFlowExecutionListenerLoader implements FlowExecutionList
 	public FlowExecutionListener[] getListeners(FlowDefinition flowDefinition) {
 		Assert.notNull(flowDefinition, "The Flow to load listeners for cannot be null");
 		List<FlowExecutionListener> listenersToAttach = new LinkedList<FlowExecutionListener>();
-		for (Iterator<ConditionalFlowExecutionListenerHolder> it = listeners.iterator(); it.hasNext();) {
-			ConditionalFlowExecutionListenerHolder listenerHolder = it.next();
+		for (ConditionalFlowExecutionListenerHolder listenerHolder : listeners) {
 			if (listenerHolder.listenerAppliesTo(flowDefinition)) {
 				listenersToAttach.add(listenerHolder.getListener());
 			}

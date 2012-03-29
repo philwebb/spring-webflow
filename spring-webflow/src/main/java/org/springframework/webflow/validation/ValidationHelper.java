@@ -18,7 +18,6 @@ package org.springframework.webflow.validation;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -287,8 +286,7 @@ public class ValidationHelper {
 			modelSearchClasses.add(modelClass);
 			modelClass = modelClass.getSuperclass();
 		}
-		for (Iterator<Class<?>> iterator = modelSearchClasses.iterator(); iterator.hasNext();) {
-			Class<?> searchClass = iterator.next();
+		for (Class<?> searchClass : modelSearchClasses) {
 			Method method = ReflectionUtils.findMethod(validator.getClass(), methodName, new Class[] { searchClass,
 					context });
 			if (method != null) {

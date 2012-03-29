@@ -226,8 +226,7 @@ public abstract class AbstractExpressionParser implements ExpressionParser {
 			return null;
 		}
 		Map<String, Expression> variableExpressions = new HashMap<String, Expression>(variables.length, 1);
-		for (int i = 0; i < variables.length; i++) {
-			ExpressionVariable var = variables[i];
+		for (ExpressionVariable var : variables) {
 			variableExpressions.put(var.getName(), parseExpression(var.getValueExpression(), var.getParserContext()));
 		}
 		return variableExpressions;

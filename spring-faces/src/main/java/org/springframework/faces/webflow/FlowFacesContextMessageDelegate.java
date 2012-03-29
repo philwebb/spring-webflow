@@ -101,8 +101,9 @@ public class FlowFacesContextMessageDelegate {
 			if (message.getSeverity().getOrdinal() > max.getOrdinal()) {
 				max = message.getSeverity();
 			}
-			if (max.getOrdinal() == FacesMessage.SEVERITY_FATAL.getOrdinal())
+			if (max.getOrdinal() == FacesMessage.SEVERITY_FATAL.getOrdinal()) {
 				break;
+			}
 		}
 		return max;
 	}
@@ -174,8 +175,8 @@ public class FlowFacesContextMessageDelegate {
 			for (int i = 0; i < summaryMessages.length; i++) {
 				messages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
 			}
-			for (int z = 0; z < userMessages.length; z++) {
-				messages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			for (Message userMessage : userMessages) {
+				messages.add(toFacesMessage(userMessage, userMessage));
 			}
 		}
 
@@ -188,8 +189,8 @@ public class FlowFacesContextMessageDelegate {
 			for (int i = 0; i < summaryMessages.length; i++) {
 				messages.add(toFacesMessage(summaryMessages[i], detailMessages[i]));
 			}
-			for (int z = 0; z < userMessages.length; z++) {
-				messages.add(toFacesMessage(userMessages[z], userMessages[z]));
+			for (Message userMessage : userMessages) {
+				messages.add(toFacesMessage(userMessage, userMessage));
 			}
 		}
 

@@ -217,8 +217,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 
 	public String[] getPossibleOutcomes() {
 		List<String> possibleOutcomes = new ArrayList<String>();
-		for (Iterator<State> it = states.iterator(); it.hasNext();) {
-			State state = it.next();
+		for (State state : states) {
 			if (state instanceof EndState) {
 				possibleOutcomes.add(state.getId());
 			}
@@ -380,8 +379,8 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 		if (variables == null) {
 			return;
 		}
-		for (int i = 0; i < variables.length; i++) {
-			addVariable(variables[i]);
+		for (FlowVariable variable : variables) {
+			addVariable(variable);
 		}
 	}
 
@@ -476,8 +475,7 @@ public class Flow extends AnnotatedObject implements FlowDefinition {
 	 * @return the transition that matches, or null if no match is found.
 	 */
 	public TransitionDefinition getGlobalTransition(String eventId) {
-		for (Iterator<Transition> it = globalTransitionSet.iterator(); it.hasNext();) {
-			Transition transition = it.next();
+		for (Transition transition : globalTransitionSet) {
 			if (transition.getId().equals(eventId)) {
 				return transition;
 			}

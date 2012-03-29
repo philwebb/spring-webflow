@@ -131,8 +131,8 @@ public class ResourceServlet extends HttpServletBean {
 		OutputStream out = selectOutputStream(request, response);
 
 		try {
-			for (int i = 0; i < resources.length; i++) {
-				URLConnection resourceConn = resources[i].openConnection();
+			for (URL resource : resources) {
+				URLConnection resourceConn = resource.openConnection();
 				InputStream in = resourceConn.getInputStream();
 				try {
 					byte[] buffer = new byte[1024];
@@ -181,15 +181,15 @@ public class ResourceServlet extends HttpServletBean {
 		long lastModified = -1;
 		int contentLength = 0;
 		String mimeType = null;
-		for (int i = 0; i < resources.length; i++) {
-			URLConnection resourceConn = resources[i].openConnection();
+		for (URL resource : resources) {
+			URLConnection resourceConn = resource.openConnection();
 			if (resourceConn.getLastModified() > lastModified) {
 				lastModified = resourceConn.getLastModified();
 			}
 
-			String currentMimeType = getServletContext().getMimeType(resources[i].getPath());
+			String currentMimeType = getServletContext().getMimeType(resource.getPath());
 			if (currentMimeType == null) {
-				String extension = resources[i].getPath().substring(resources[i].getPath().lastIndexOf('.'));
+				String extension = resource.getPath().substring(resource.getPath().lastIndexOf('.'));
 				currentMimeType = defaultMimeTypes.get(extension);
 			}
 			if (mimeType == null) {
@@ -226,10 +226,10 @@ public class ResourceServlet extends HttpServletBean {
 
 		long lastModified = -1;
 
-		for (int i = 0; i < resources.length; i++) {
+		for (URL resource : resources) {
 			URLConnection resourceConn;
 			try {
-				resourceConn = resources[i].openConnection();
+				resourceConn = resource.openConnection();
 			} catch (IOException e) {
 				return -1;
 			}

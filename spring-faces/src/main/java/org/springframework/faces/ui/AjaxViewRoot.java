@@ -261,8 +261,9 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	private void broadCastEvents(FacesContext context, PhaseId phaseId) {
 		List<FacesEvent> processedEvents = new ArrayList<FacesEvent>();
-		if (events.size() == 0)
+		if (events.size() == 0) {
 			return;
+		}
 		boolean abort = false;
 		int phaseIdOrdinal = phaseId.getOrdinal();
 		Iterator<FacesEvent> i = events.iterator();

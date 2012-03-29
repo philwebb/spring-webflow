@@ -102,8 +102,7 @@ public class Parameters {
 	public Class<?>[] getTypesArray() {
 		int i = 0;
 		Class<?>[] types = new Class[parameters.size()];
-		for (Iterator<Parameter> it = parameters.iterator(); it.hasNext();) {
-			Parameter param = it.next();
+		for (Parameter param : parameters) {
 			types[i] = param.getType();
 			i++;
 		}

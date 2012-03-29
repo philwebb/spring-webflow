@@ -173,8 +173,8 @@ public class MessageBuilder {
 		if (args == null) {
 			return this;
 		}
-		for (int i = 0; i < args.length; i++) {
-			this.args.add(new ResolvableArgument(args[i]));
+		for (Object arg : args) {
+			this.args.add(new ResolvableArgument(arg));
 		}
 		return this;
 	}

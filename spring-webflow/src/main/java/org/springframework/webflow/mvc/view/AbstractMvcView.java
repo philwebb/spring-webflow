@@ -446,8 +446,7 @@ public abstract class AbstractMvcView implements View {
 	 * @param model the model
 	 */
 	protected void addDefaultMappings(DefaultMapper mapper, Set<String> parameterNames, Object model) {
-		for (Iterator<String> it = parameterNames.iterator(); it.hasNext();) {
-			String parameterName = it.next();
+		for (String parameterName : parameterNames) {
 			if (fieldMarkerPrefix != null && parameterName.startsWith(fieldMarkerPrefix)) {
 				String field = parameterName.substring(fieldMarkerPrefix.length());
 				if (!parameterNames.contains(field)) {
@@ -601,8 +600,7 @@ public abstract class AbstractMvcView implements View {
 
 	private void addErrorMessages(MappingResults results) {
 		List<MappingResult> errors = results.getResults(MAPPING_ERROR);
-		for (Iterator<MappingResult> it = errors.iterator(); it.hasNext();) {
-			MappingResult error = it.next();
+		for (MappingResult error : errors) {
 			requestContext.getMessageContext().addMessage(createMessageResolver(error));
 		}
 	}

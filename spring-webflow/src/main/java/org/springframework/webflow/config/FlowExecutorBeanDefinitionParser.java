@@ -16,7 +16,6 @@
 package org.springframework.webflow.config;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -107,8 +106,7 @@ class FlowExecutorBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			}
 			List<Element> attributeElements = DomUtils.getChildElementsByTagName(executionAttributesElement,
 					"attribute");
-			for (Iterator<Element> it = attributeElements.iterator(); it.hasNext();) {
-				Element attributeElement = it.next();
+			for (Element attributeElement : attributeElements) {
 				String name = attributeElement.getAttribute("name");
 				String value = attributeElement.getAttribute("value");
 				String type = attributeElement.getAttribute("type");

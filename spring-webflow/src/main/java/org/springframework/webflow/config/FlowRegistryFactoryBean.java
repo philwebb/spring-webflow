@@ -17,7 +17,6 @@ package org.springframework.webflow.config;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.factory.BeanClassLoaderAware;
@@ -164,8 +163,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 
 	private void registerFlowLocations() {
 		if (flowLocations != null) {
-			for (int i = 0; i < flowLocations.length; i++) {
-				FlowLocation location = flowLocations[i];
+			for (FlowLocation location : flowLocations) {
 				flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(createResource(location)));
 			}
 		}
@@ -173,8 +171,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 
 	private void registerFlowLocationPatterns() {
 		if (flowLocationPatterns != null) {
-			for (int i = 0; i < flowLocationPatterns.length; i++) {
-				String pattern = flowLocationPatterns[i];
+			for (String pattern : flowLocationPatterns) {
 				FlowDefinitionResource[] resources;
 				AttributeMap<Object> attributes = getFlowAttributes(Collections.<FlowElementAttribute> emptySet());
 				try {
@@ -185,8 +182,8 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 					ise.initCause(e);
 					throw ise;
 				}
-				for (int j = 0; j < resources.length; j++) {
-					flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(resources[j]));
+				for (FlowDefinitionResource resource : resources) {
+					flowRegistry.registerFlowDefinition(createFlowDefinitionHolder(resource));
 				}
 			}
 		}
@@ -194,8 +191,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 
 	private void registerFlowBuilders() {
 		if (flowBuilders != null) {
-			for (int i = 0; i < flowBuilders.length; i++) {
-				FlowBuilderInfo builderInfo = flowBuilders[i];
+			for (FlowBuilderInfo builderInfo : flowBuilders) {
 				flowRegistry.registerFlowDefinition(buildFlowDefinition(builderInfo));
 			}
 		}
@@ -224,8 +220,7 @@ class FlowRegistryFactoryBean implements FactoryBean<FlowDefinitionRegistry>, Be
 			if (flowAttributes == null) {
 				flowAttributes = new LocalAttributeMap<Object>(attributes.size(), 1);
 			}
-			for (Iterator<FlowElementAttribute> it = attributes.iterator(); it.hasNext();) {
-				FlowElementAttribute attribute = it.next();
+			for (FlowElementAttribute attribute : attributes) {
 				flowAttributes.put(attribute.getName(), getConvertedValue(attribute));
 			}
 		}

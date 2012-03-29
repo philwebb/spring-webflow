@@ -18,7 +18,6 @@ package org.springframework.webflow.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -83,8 +82,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			return Collections.emptyList();
 		}
 		List<FlowLocation> locations = new ArrayList<FlowLocation>(locationElements.size());
-		for (Iterator<Element> it = locationElements.iterator(); it.hasNext();) {
-			Element locationElement = it.next();
+		for (Element locationElement : locationElements) {
 			String id = locationElement.getAttribute("id");
 			String path = locationElement.getAttribute("path");
 			locations.add(new FlowLocation(id, path, parseAttributes(locationElement)));
@@ -98,8 +96,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			return Collections.emptyList();
 		}
 		List<String> locationPatterns = new ArrayList<String>(locationPatternElements.size());
-		for (Iterator<Element> it = locationPatternElements.iterator(); it.hasNext();) {
-			Element locationPatternElement = it.next();
+		for (Element locationPatternElement : locationPatternElements) {
 			String value = locationPatternElement.getAttribute("value");
 			locationPatterns.add(value);
 		}
@@ -112,8 +109,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			List<Element> attributeElements = DomUtils.getChildElementsByTagName(definitionAttributesElement,
 					"attribute");
 			Set<FlowElementAttribute> attributes = new HashSet<FlowElementAttribute>(attributeElements.size());
-			for (Iterator<Element> it = attributeElements.iterator(); it.hasNext();) {
-				Element attributeElement = it.next();
+			for (Element attributeElement : attributeElements) {
 				String name = attributeElement.getAttribute("name");
 				String value = attributeElement.getAttribute("value");
 				String type = attributeElement.getAttribute("type");
@@ -131,8 +127,7 @@ class FlowRegistryBeanDefinitionParser extends AbstractSingleBeanDefinitionParse
 			return Collections.emptyList();
 		}
 		List<FlowBuilderInfo> builders = new ArrayList<FlowBuilderInfo>(builderElements.size());
-		for (Iterator<Element> it = builderElements.iterator(); it.hasNext();) {
-			Element builderElement = it.next();
+		for (Element builderElement : builderElements) {
 			String id = builderElement.getAttribute("id");
 			String className = builderElement.getAttribute("class");
 			builders.add(new FlowBuilderInfo(id, className, parseAttributes(builderElement)));

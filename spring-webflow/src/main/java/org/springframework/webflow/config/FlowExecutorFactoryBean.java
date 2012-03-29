@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.config;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import org.springframework.beans.BeansException;
@@ -177,8 +176,7 @@ class FlowExecutorFactoryBean implements FactoryBean<FlowExecutor>, ApplicationC
 	private MutableAttributeMap<Object> createFlowExecutionAttributes() {
 		LocalAttributeMap<Object> executionAttributes = new LocalAttributeMap<Object>();
 		if (flowExecutionAttributes != null) {
-			for (Iterator<FlowElementAttribute> it = flowExecutionAttributes.iterator(); it.hasNext();) {
-				FlowElementAttribute attribute = it.next();
+			for (FlowElementAttribute attribute : flowExecutionAttributes) {
 				executionAttributes.put(attribute.getName(), getConvertedValue(attribute));
 			}
 		}

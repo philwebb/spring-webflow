@@ -18,9 +18,7 @@ package org.springframework.binding.expression.ognl;
 import java.lang.reflect.Member;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import ognl.NoSuchPropertyException;
 import ognl.Ognl;
@@ -170,8 +168,7 @@ class OgnlExpression implements Expression {
 			return Collections.emptyMap();
 		}
 		Map<String, Object> variables = new HashMap<String, Object>(variableExpressions.size(), 1);
-		for (Iterator<Map.Entry<String, Expression>> it = variableExpressions.entrySet().iterator(); it.hasNext();) {
-			Entry<String, Expression> var = it.next();
+		for (Map.Entry<String, Expression> var : variableExpressions.entrySet()) {
 			Expression valueExpression = var.getValue();
 			variables.put(var.getKey(), valueExpression.getValue(context));
 		}

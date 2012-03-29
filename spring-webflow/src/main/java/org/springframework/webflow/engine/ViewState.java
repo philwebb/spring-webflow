@@ -98,8 +98,8 @@ public class ViewState extends TransitionableState {
 	 * @param variables the variables
 	 */
 	public void addVariables(ViewVariable[] variables) {
-		for (int i = 0; i < variables.length; i++) {
-			addVariable(variables[i]);
+		for (ViewVariable variable : variables) {
+			addVariable(variable);
 		}
 	}
 

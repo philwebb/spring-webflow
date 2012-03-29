@@ -15,7 +15,6 @@
  */
 package org.springframework.webflow.config;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -54,8 +53,7 @@ class FlowExecutionListenerLoaderBeanDefinitionParser extends AbstractSingleBean
 	private Map<RuntimeBeanReference, String> parseListenersWithCriteria(List<Element> listeners) {
 		Map<RuntimeBeanReference, String> listenersWithCriteria = new ManagedMap<RuntimeBeanReference, String>(
 				listeners.size());
-		for (Iterator<Element> iterator = listeners.iterator(); iterator.hasNext();) {
-			Element listenerElement = iterator.next();
+		for (Element listenerElement : listeners) {
 			RuntimeBeanReference ref = new RuntimeBeanReference(listenerElement.getAttribute("ref"));
 			String criteria = listenerElement.getAttribute("criteria");
 			listenersWithCriteria.put(ref, criteria);

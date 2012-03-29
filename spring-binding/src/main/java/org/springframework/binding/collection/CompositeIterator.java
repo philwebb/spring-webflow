@@ -53,8 +53,8 @@ public class CompositeIterator<E> implements Iterator<E> {
 
 	public boolean hasNext() {
 		inUse = true;
-		for (Iterator<Iterator<E>> it = iterators.iterator(); it.hasNext();) {
-			if (it.next().hasNext()) {
+		for (Iterator<E> iterator : iterators) {
+			if (iterator.hasNext()) {
 				return true;
 			}
 		}
@@ -63,8 +63,7 @@ public class CompositeIterator<E> implements Iterator<E> {
 
 	public E next() {
 		inUse = true;
-		for (Iterator<Iterator<E>> it = iterators.iterator(); it.hasNext();) {
-			Iterator<E> iterator = it.next();
+		for (Iterator<E> iterator : iterators) {
 			if (iterator.hasNext()) {
 				return iterator.next();
 			}

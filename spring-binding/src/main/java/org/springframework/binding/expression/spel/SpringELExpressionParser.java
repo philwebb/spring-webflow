@@ -99,8 +99,7 @@ public class SpringELExpressionParser implements ExpressionParser {
 			return null;
 		}
 		Map<String, Expression> spelExpressionVariables = new HashMap<String, Expression>(expressionVariables.length);
-		for (int i = 0; i < expressionVariables.length; i++) {
-			ExpressionVariable var = expressionVariables[i];
+		for (ExpressionVariable var : expressionVariables) {
 			spelExpressionVariables.put(var.getName(),
 					parseExpression(var.getValueExpression(), var.getParserContext()));
 		}

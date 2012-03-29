@@ -83,8 +83,8 @@ public class SerializableListDataModel<T> extends DataModel<T> implements Serial
 			Object row = isRowAvailable() ? getRowData() : null;
 			DataModelEvent event = new DataModelEvent(this, rowIndex, row);
 			DataModelListener[] listeners = getDataModelListeners();
-			for (int i = 0; i < listeners.length; i++) {
-				listeners[i].rowSelected(event);
+			for (DataModelListener listener : listeners) {
+				listener.rowSelected(event);
 			}
 		}
 	}

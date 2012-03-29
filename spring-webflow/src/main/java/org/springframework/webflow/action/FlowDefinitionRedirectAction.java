@@ -56,8 +56,7 @@ public class FlowDefinitionRedirectAction extends AbstractAction {
 			flowDefinitionId = encodedRedirect.substring(0, index);
 			String[] parameters = StringUtils.delimitedListToStringArray(encodedRedirect.substring(index + 1), "&");
 			executionInput = new LocalAttributeMap<String>(parameters.length, 1);
-			for (int i = 0; i < parameters.length; i++) {
-				String nameAndValue = parameters[i];
+			for (String nameAndValue : parameters) {
 				index = nameAndValue.indexOf('=');
 				if (index != -1) {
 					executionInput.put(nameAndValue.substring(0, index), nameAndValue.substring(index + 1));

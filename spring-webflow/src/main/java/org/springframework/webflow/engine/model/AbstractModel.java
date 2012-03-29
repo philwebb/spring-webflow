@@ -142,8 +142,7 @@ public abstract class AbstractModel implements Model {
 			return null;
 		}
 		LinkedList<T> copy = new LinkedList<T>();
-		for (Iterator<T> it = list.iterator(); it.hasNext();) {
-			T model = it.next();
+		for (T model : list) {
 			copy.add((T) model.createCopy());
 		}
 		return copy;
