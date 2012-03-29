@@ -115,7 +115,7 @@ public class PortletExternalContextTests extends TestCase {
 
 	public void testCommitFlowRedirectWithInput() {
 		assertFalse(context.isResponseAllowed());
-		LocalAttributeMap input = new LocalAttributeMap();
+		LocalAttributeMap<Object> input = new LocalAttributeMap<Object>();
 		context.requestFlowDefinitionRedirect("foo", input);
 		assertTrue(context.getFlowDefinitionRedirectRequested());
 		assertEquals("foo", context.getFlowRedirectFlowId());

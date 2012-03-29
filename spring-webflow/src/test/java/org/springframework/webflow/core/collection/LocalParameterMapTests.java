@@ -89,6 +89,7 @@ public class LocalParameterMapTests extends TestCase {
 		assertEquals(new Integer(1), value);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testGetWithDefaultAndConversionNotAssignable() {
 		try {
 			parameterMap.get("bogus", (Class) Integer.class, "1");
@@ -119,7 +120,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void getArrayWithConversion() {
-		Integer[] values = (Integer[]) parameterMap.getArray("stringArray", Integer.class);
+		Integer[] values = parameterMap.getArray("stringArray", Integer.class);
 		assertEquals(new Integer(1), values[0]);
 		assertEquals(new Integer(2), values[1]);
 		assertEquals(new Integer(3), values[2]);
@@ -155,7 +156,7 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testGetArrayConversion() {
-		Integer[] i = (Integer[]) parameterMap.getArray("stringArray", Integer.class);
+		Integer[] i = parameterMap.getArray("stringArray", Integer.class);
 		assertEquals(i.length, 3);
 		assertEquals(new Integer(1), i[0]);
 		assertEquals(new Integer(2), i[1]);
@@ -163,24 +164,24 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void getRequiredArrayWithConversion() {
-		Integer[] values = (Integer[]) parameterMap.getRequiredArray("stringArray", Integer.class);
+		Integer[] values = parameterMap.getRequiredArray("stringArray", Integer.class);
 		assertEquals(new Integer(1), values[0]);
 		assertEquals(new Integer(2), values[1]);
 		assertEquals(new Integer(3), values[2]);
 	}
 
 	public void testGetNumber() {
-		Integer value = (Integer) parameterMap.getNumber("integer", Integer.class);
+		Integer value = parameterMap.getNumber("integer", Integer.class);
 		assertEquals(new Integer(12345), value);
 	}
 
 	public void testGetRequiredNumber() {
-		Integer value = (Integer) parameterMap.getRequiredNumber("integer", Integer.class);
+		Integer value = parameterMap.getRequiredNumber("integer", Integer.class);
 		assertEquals(new Integer(12345), value);
 	}
 
 	public void testGetNumberWithDefault() {
-		Integer value = (Integer) parameterMap.getNumber("bogus", Integer.class, new Integer(12345));
+		Integer value = parameterMap.getNumber("bogus", Integer.class, new Integer(12345));
 		assertEquals(new Integer(12345), value);
 	}
 
@@ -240,12 +241,12 @@ public class LocalParameterMapTests extends TestCase {
 	}
 
 	public void testEquality() {
-		LocalParameterMap map1 = new LocalParameterMap(new HashMap(parameterMap.asMap()));
+		LocalParameterMap map1 = new LocalParameterMap(new HashMap<String, Object>(parameterMap.asMap()));
 		assertEquals(parameterMap, map1);
 	}
 
 	public void testAsAttributeMap() {
-		AttributeMap map = parameterMap.asAttributeMap();
+		AttributeMap<Object> map = parameterMap.asAttributeMap();
 		assertEquals(map.asMap(), parameterMap.asMap());
 	}
 }

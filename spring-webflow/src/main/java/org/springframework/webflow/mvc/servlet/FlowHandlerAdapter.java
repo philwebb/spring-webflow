@@ -235,6 +235,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 * @param request the current request
 	 */
 	protected MutableAttributeMap<Object> defaultCreateFlowExecutionInputMap(HttpServletRequest request) {
+		@SuppressWarnings("unchecked")
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap.size() == 0) {
 			return null;

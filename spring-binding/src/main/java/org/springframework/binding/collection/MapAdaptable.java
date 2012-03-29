@@ -18,7 +18,7 @@ package org.springframework.binding.collection;
 import java.util.Map;
 
 /**
- * An object whose contents are capable of being exposed as an unmodifiable map.
+ * An object whose contents are capable of being exposed as a map.
  * 
  * @author Keith Donald
  */
