@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.JdkVersion;
 import org.springframework.webflow.conversation.Conversation;
 import org.springframework.webflow.conversation.ConversationId;
 import org.springframework.webflow.conversation.ConversationParameters;
@@ -110,11 +109,7 @@ class ConversationContainer implements Serializable {
 	}
 
 	private ConversationId nextId() {
-		if (JdkVersion.isAtLeastJava15()) {
-			return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
-		} else {
-			return new SimpleConversationId(new Integer(++conversationIdSequence));
-		}
+		return new SimpleConversationId(Integer.valueOf(++conversationIdSequence));
 	}
 
 	/**

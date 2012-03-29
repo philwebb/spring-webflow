@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import org.springframework.core.JdkVersion;
 import org.springframework.webflow.execution.repository.snapshot.FlowExecutionSnapshot;
 import org.springframework.webflow.execution.repository.snapshot.SnapshotNotFoundException;
 
@@ -109,12 +108,7 @@ class SimpleFlowExecutionSnapshotGroup implements FlowExecutionSnapshotGroup, Se
 	}
 
 	public Serializable nextSnapshotId() {
-		Integer nextSnapshotId;
-		if (JdkVersion.isAtLeastJava15()) {
-			nextSnapshotId = Integer.valueOf(snapshotIdSequence);
-		} else {
-			nextSnapshotId = new Integer(snapshotIdSequence);
-		}
+		Integer nextSnapshotId = Integer.valueOf(snapshotIdSequence);
 		snapshotIdSequence++;
 		return nextSnapshotId;
 	}
