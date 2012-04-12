@@ -25,8 +25,12 @@ import javax.faces.application.ViewHandler;
 import javax.faces.component.EditableValueHolder;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIViewRoot;
+import javax.faces.component.visit.VisitContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.faces.event.AbortProcessingException;
+import javax.faces.event.ExceptionQueuedEvent;
+import javax.faces.event.ExceptionQueuedEventContext;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
 import javax.servlet.ServletContext;
@@ -128,9 +132,7 @@ public class JsfViewFactory implements ViewFactory {
 				view = createJsfView(viewRoot, lifecycle, context);
 			}
 		}
-		if (isAtLeastJsf20()) {
-			JsfUtils.publishPostRestoreStateEvent();
-		}
+		publishPostRestoreStateEvent(facesContext);
 		if (!facesContext.getRenderResponse()) {
 			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 		}
@@ -183,6 +185,16 @@ public class JsfViewFactory implements ViewFactory {
 		while (it.hasNext()) {
 			UIComponent child = it.next();
 			processTree(context, child);
+		}
+	}
+
+	private void publishPostRestoreStateEvent(FacesContext facesContext) {
+		try {
+			facesContext.getViewRoot().visitTree(VisitContext.createVisitContext(facesContext),
+					new PostRestoreStateEventVisitCallback());
+		} catch (AbortProcessingException e) {
+			facesContext.getApplication().publishEvent(facesContext, ExceptionQueuedEvent.class,
+					new ExceptionQueuedEventContext(facesContext, e, null, facesContext.getCurrentPhaseId()));
 		}
 	}
 

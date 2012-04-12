@@ -41,6 +41,8 @@ import com.sun.faces.facelets.impl.DefaultResourceResolver;
  */
 public class Jsf2FlowResourceResolver extends ResourceResolver {
 
+	// FIXME PW review
+
 	ResourceResolver delegateResolver = new DefaultResourceResolver();
 
 	public URL resolveUrl(String path) {

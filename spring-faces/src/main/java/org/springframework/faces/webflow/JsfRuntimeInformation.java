@@ -52,14 +52,17 @@ public class JsfRuntimeInformation {
 		}
 	}
 
+	@Deprecated
 	public static boolean isAtLeastJsf20() {
 		return jsfVersion >= JSF_20;
 	}
 
+	@Deprecated
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
 	}
 
+	@Deprecated
 	public static boolean isLessThanJsf20() {
 		return jsfVersion < JSF_20;
 	}

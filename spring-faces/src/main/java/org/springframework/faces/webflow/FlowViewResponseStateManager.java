@@ -18,7 +18,6 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.Writer;
 
-import javax.faces.application.StateManager.SerializedView;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKitFactory;
@@ -26,14 +25,13 @@ import javax.faces.render.ResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.faces.util.ResponseStateManagerWrapper;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * <p>
  * A custom ResponseStateManager that writes JSF state to a Web Flow managed view-scoped variable. This class is plugged
- * in via {@link FlowRenderKit} in JSF 2 runtime environments only.
- * </p>
+ * in via {@link FlowRenderKit} in JSF 2 runtime environments only. </p>
  * 
  * <p>
  * In JSF 2 where a partial state saving algorithm is used, Web Flow delegates to the JSF 2 runtime to handle state
@@ -42,21 +40,27 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * </p>
  * 
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
+ * 
  * @since 2.2.0
  */
-public class FlowViewResponseStateManager extends ResponseStateManager {
+public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 
 	private static final Log logger = LogFactory.getLog(FlowViewResponseStateManager.class);
 
-	private ResponseStateManager delegate;
+	private ResponseStateManager wrapped;
 
 	private char[] stateFieldStart = ("<input type=\"hidden\" name=\"" + ResponseStateManager.VIEW_STATE_PARAM
 			+ "\" id=\"" + ResponseStateManager.VIEW_STATE_PARAM + "\" value=\"").toCharArray();
 
 	private char[] stateFieldEnd = "\" />".toCharArray();
 
-	public FlowViewResponseStateManager(ResponseStateManager delegate) {
-		this.delegate = delegate;
+	public FlowViewResponseStateManager(ResponseStateManager wrapped) {
+		this.wrapped = wrapped;
+	}
+
+	public ResponseStateManager getWrapped() {
+		return wrapped;
 	}
 
 	/**
@@ -72,7 +76,7 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 	@Override
 	public void writeState(FacesContext facesContext, Object state) throws IOException {
 		if (!JsfUtils.isFlowRequest()) {
-			delegate.writeState(facesContext, state);
+			super.writeState(facesContext, state);
 		} else {
 			FlowSerializedView view = null;
 			if (state instanceof FlowSerializedView) {
@@ -100,7 +104,7 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 	@Override
 	public Object getState(FacesContext facesContext, String viewId) {
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.getState(facesContext, viewId);
+			return super.getState(facesContext, viewId);
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(
@@ -123,34 +127,10 @@ public class FlowViewResponseStateManager extends ResponseStateManager {
 	@Override
 	public String getViewState(FacesContext facesContext, Object state) {
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.getViewState(facesContext, state);
+			return super.getViewState(facesContext, state);
 		}
 		return getFlowExecutionKey();
 	}
-
-	// ------------------- Delegation methods ------------------//
-
-	@Override
-	public boolean isPostback(FacesContext context) {
-		return delegate.isPostback(context);
-	}
-
-	@Override
-	public Object getTreeStructureToRestore(FacesContext context, String viewId) {
-		return delegate.getTreeStructureToRestore(context, viewId);
-	}
-
-	@Override
-	public Object getComponentStateToRestore(FacesContext context) {
-		return delegate.getComponentStateToRestore(context);
-	}
-
-	@Override
-	public void writeState(FacesContext context, SerializedView state) throws IOException {
-		delegate.writeState(context, state);
-	}
-
-	// ------------------- Private helper methods ------------------//
 
 	private String getFlowExecutionKey() {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();

@@ -15,8 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
-
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 
@@ -29,32 +27,31 @@ import org.springframework.util.Assert;
  * @see FlowApplication
  * 
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
 public class FlowApplicationFactory extends ApplicationFactory {
 
-	private ApplicationFactory delegate;
+	private ApplicationFactory wrapped;
 
-	public FlowApplicationFactory(ApplicationFactory delegate) {
-		Assert.notNull(delegate, "The delegate ApplicationFactory instance must not be null!");
-		this.delegate = delegate;
+	public FlowApplicationFactory(ApplicationFactory wrapped) {
+		Assert.notNull(wrapped, "The wrapped ApplicationFactory instance must not be null!");
+		this.wrapped = wrapped;
 	}
 
 	public Application getApplication() {
-		Application delegateApplication = delegate.getApplication();
-		if (delegateApplication != null && (!(delegateApplication instanceof FlowApplication))) {
-			Application flowApplication = (isAtLeastJsf20()) ? new Jsf2FlowApplication(delegateApplication)
-					: new FlowApplication(delegateApplication);
-			setApplication(flowApplication);
+		Application application = wrapped.getApplication();
+		if (application != null && (!(application instanceof FlowApplication))) {
+			setApplication(new FlowApplication(application));
 		}
-		return delegate.getApplication();
+		return wrapped.getApplication();
 	}
 
 	public void setApplication(Application application) {
-		delegate.setApplication(application);
+		wrapped.setApplication(application);
 	}
 
 	public ApplicationFactory getWrapped() {
-		return delegate;
+		return wrapped;
 	}
 
 }

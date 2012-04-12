@@ -18,6 +18,7 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 
 import javax.faces.application.StateManager;
+import javax.faces.application.StateManagerWrapper;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
@@ -31,17 +32,22 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * 
  * @author Jeremy Grelle
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
  */
-public class FlowViewStateManager extends StateManager {
+public class FlowViewStateManager extends StateManagerWrapper {
 
 	private static final Log logger = LogFactory.getLog(FlowViewStateManager.class);
 
 	protected static final String SERIALIZED_VIEW_STATE = "flowSerializedViewState";
 
-	private StateManager delegate;
+	private StateManager wrapped;
 
-	public FlowViewStateManager(StateManager delegate) {
-		this.delegate = delegate;
+	public FlowViewStateManager(StateManager wrapped) {
+		this.wrapped = wrapped;
+	}
+
+	public StateManager getWrapped() {
+		return wrapped;
 	}
 
 	protected Object getComponentStateToSave(FacesContext context) {
@@ -101,19 +107,13 @@ public class FlowViewStateManager extends StateManager {
 		return viewRoot;
 	}
 
-	public void writeState(FacesContext context, javax.faces.application.StateManager.SerializedView state)
-			throws IOException {
-		// Ensures that javax.faces.ViewState hidden field always gets written - needed for third-party component
-		// compatibility
-		delegate.writeState(context, state);
-	}
-
 	public void writeState(FacesContext context, Object state) throws IOException {
+		// FIXME PW revisit
 		if (state instanceof Object[]) {
-			delegate.writeState(context, state); // MyFaces
+			super.writeState(context, state); // MyFaces
 		} else if (state instanceof FlowSerializedView) { // Mojarra
 			FlowSerializedView view = (FlowSerializedView) state;
-			delegate.writeState(context, view.asTreeStructAndCompStateArray());
+			super.writeState(context, view.asTreeStructAndCompStateArray());
 		} else {
 			super.writeState(context, state);
 		}
@@ -121,7 +121,7 @@ public class FlowViewStateManager extends StateManager {
 
 	public boolean isSavingStateInClient(FacesContext context) {
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.isSavingStateInClient(context);
+			return super.isSavingStateInClient(context);
 		} else {
 			return false;
 		}
@@ -135,7 +135,7 @@ public class FlowViewStateManager extends StateManager {
 			return null;
 		}
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.saveSerializedView(context);
+			return super.saveSerializedView(context);
 		}
 		Object state = saveView(context);
 		if (state instanceof FlowSerializedView) {
@@ -167,11 +167,11 @@ public class FlowViewStateManager extends StateManager {
 			return null;
 		}
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.saveView(context);
+			return super.saveView(context);
 		}
 		FlowSerializedView view = null;
 		if (JsfRuntimeInformation.isPartialStateSavingSupported()) {
-			Object[] state = (Object[]) delegate.saveView(context);
+			Object[] state = (Object[]) super.saveView(context);
 			view = new FlowSerializedView(context.getViewRoot().getViewId(), state[0], state[1]);
 		} else {
 			view = new FlowSerializedView(context.getViewRoot().getViewId(), getTreeStructureToSave(context),
@@ -195,7 +195,7 @@ public class FlowViewStateManager extends StateManager {
 	 */
 	public UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId) {
 		if ((!JsfUtils.isFlowRequest()) || JsfRuntimeInformation.isPartialStateSavingSupported()) {
-			return delegate.restoreView(context, viewId, renderKitId);
+			return super.restoreView(context, viewId, renderKitId);
 		} else {
 			UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
 			if (viewRoot != null) {
@@ -209,7 +209,7 @@ public class FlowViewStateManager extends StateManager {
 	@Override
 	public String getViewState(FacesContext context) {
 		if (!JsfUtils.isFlowRequest()) {
-			return delegate.getViewState(context);
+			return super.getViewState(context);
 		}
 		/*
 		 * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. We

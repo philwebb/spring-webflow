@@ -15,25 +15,28 @@
  */
 package org.springframework.faces.webflow;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.el.ELContext;
 import javax.faces.FactoryFinder;
-import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.ExternalContext;
+import javax.faces.context.ExternalContextWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
-import javax.faces.context.ResponseStream;
-import javax.faces.context.ResponseWriter;
+import javax.faces.context.FacesContextWrapper;
+import javax.faces.context.PartialViewContext;
+import javax.faces.context.PartialViewContextFactory;
 import javax.faces.lifecycle.Lifecycle;
-import javax.faces.render.RenderKit;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
 import org.springframework.util.ClassUtils;
@@ -47,8 +50,9 @@ import org.springframework.webflow.execution.RequestContext;
  * 
  * @author Jeremy Grelle
  * @author Phillip Webb
+ * @author Rossen Stoyanchev
  */
-public class FlowFacesContext extends FacesContext {
+public class FlowFacesContext extends FacesContextWrapper {
 
 	/**
 	 * The key for storing the renderResponse flag
@@ -65,9 +69,11 @@ public class FlowFacesContext extends FacesContext {
 	private ExternalContext externalContext;
 
 	/**
-	 * The base FacesContext delegate
+	 * The wrapped FacesContext
 	 */
-	private FacesContext delegate;
+	private FacesContext wrapped;
+
+	private PartialViewContext partialViewContext;
 
 	public static FlowFacesContext newInstance(RequestContext context, Lifecycle lifecycle) {
 		FacesContext defaultFacesContext = null;
@@ -82,16 +88,23 @@ public class FlowFacesContext extends FacesContext {
 					context.getExternalContext().getNativeRequest(), context.getExternalContext().getNativeResponse(),
 					lifecycle);
 		}
-		return (JsfRuntimeInformation.isAtLeastJsf20()) ? new Jsf2FlowFacesContext(context, defaultFacesContext)
-				: new FlowFacesContext(context, defaultFacesContext);
+		return new FlowFacesContext(context, defaultFacesContext);
 	}
 
-	public FlowFacesContext(RequestContext context, FacesContext delegate) {
+	public FlowFacesContext(RequestContext context, FacesContext wrapped) {
 		this.context = context;
-		this.delegate = delegate;
+		this.wrapped = wrapped;
 		this.messageDelegate = new FlowFacesContextMessageDelegate(context);
-		this.externalContext = new FlowExternalContext(delegate.getExternalContext());
+		this.externalContext = new FlowExternalContext(wrapped.getExternalContext());
 		setCurrentInstance(this);
+		PartialViewContextFactory factory = (PartialViewContextFactory) FactoryFinder
+				.getFactory(FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
+		PartialViewContext partialViewContextDelegate = factory.getPartialViewContext(this);
+		this.partialViewContext = new FlowPartialViewContext(partialViewContextDelegate);
+	}
+
+	public FacesContext getWrapped() {
+		return wrapped;
 	}
 
 	/**
@@ -108,11 +121,12 @@ public class FlowFacesContext extends FacesContext {
 		return messageDelegate.getClientIdsWithMessages();
 	}
 
+	// FIXME PW revist
 	public ELContext getELContext() {
-		Method delegateMethod = ClassUtils.getMethodIfAvailable(delegate.getClass(), "getELContext");
+		Method delegateMethod = ClassUtils.getMethodIfAvailable(wrapped.getClass(), "getELContext");
 		if (delegateMethod != null) {
 			try {
-				ELContext context = (ELContext) delegateMethod.invoke(delegate);
+				ELContext context = (ELContext) delegateMethod.invoke(wrapped);
 				context.putContext(FacesContext.class, this);
 				return context;
 			} catch (Exception e) {
@@ -164,70 +178,71 @@ public class FlowFacesContext extends FacesContext {
 		context.getExternalContext().recordResponseComplete();
 	}
 
-	// ------------------ Pass-through delegate methods ----------------------//
+	public void release() {
+		super.release();
+		// FIXME PW revist
+		setCurrentInstance(null);
+	}
 
-	public Application getApplication() {
-		return delegate.getApplication();
+	// FIXME PW remove the message delegate, makes less sense now
+	protected FlowFacesContextMessageDelegate getMessageDelegate() {
+		return messageDelegate;
 	}
 
 	public ExternalContext getExternalContext() {
 		return externalContext;
 	}
 
-	public RenderKit getRenderKit() {
-		return delegate.getRenderKit();
+	public PartialViewContext getPartialViewContext() {
+		return partialViewContext;
 	}
 
-	public ResponseStream getResponseStream() {
-		return delegate.getResponseStream();
+	/**
+	 * Returns a List for all Messages in the current MessageContext that does translation to FacesMessages.
+	 */
+	public List<FacesMessage> getMessageList() {
+		return getMessageDelegate().getMessageList();
 	}
 
-	public ResponseWriter getResponseWriter() {
-		return delegate.getResponseWriter();
+	/**
+	 * Returns a List for all Messages with the given clientId in the current MessageContext that does translation to
+	 * FacesMessages.
+	 */
+	public List<FacesMessage> getMessageList(String clientId) {
+		return getMessageDelegate().getMessageList(clientId);
 	}
 
-	public UIViewRoot getViewRoot() {
-		return delegate.getViewRoot();
+	public boolean isValidationFailed() {
+		if (getMessageDelegate().hasErrorMessages()) {
+			return true;
+		} else {
+			return super.isValidationFailed();
+		}
 	}
 
-	public void release() {
-		delegate.release();
-		setCurrentInstance(null);
-	}
-
-	public void setResponseStream(ResponseStream responseStream) {
-		delegate.setResponseStream(responseStream);
-	}
-
-	public void setResponseWriter(ResponseWriter responseWriter) {
-		delegate.setResponseWriter(responseWriter);
-	}
-
-	public void setViewRoot(UIViewRoot root) {
-		delegate.setViewRoot(root);
-	}
-
-	protected FacesContext getDelegate() {
-		return delegate;
-	}
-
-	protected FlowFacesContextMessageDelegate getMessageDelegate() {
-		return messageDelegate;
-	}
+	// FIXME PW make top level class
 
 	protected class FlowExternalContext extends ExternalContextWrapper {
 
+		Log logger = LogFactory.getLog(FlowExternalContext.class);
+
 		private static final String CUSTOM_RESPONSE = "customResponse";
 
-		public FlowExternalContext(ExternalContext delegate) {
-			super(delegate);
+		private ExternalContext wrapped;
+
+		public FlowExternalContext(ExternalContext wrapped) {
+			this.wrapped = wrapped;
+		}
+
+		public ExternalContext getWrapped() {
+			return wrapped;
 		}
 
 		public Object getResponse() {
 			if (context.getRequestScope().contains(CUSTOM_RESPONSE)) {
 				return context.getRequestScope().get(CUSTOM_RESPONSE);
 			}
-			return delegate.getResponse();
+			return super.getResponse();
 		}
 
 		/**
@@ -235,8 +250,14 @@ public class FlowFacesContext extends FacesContext {
 		 */
 		public void setResponse(Object response) {
 			context.getRequestScope().put(CUSTOM_RESPONSE, response);
-			delegate.setResponse(response);
+			super.setResponse(response);
+		}
+
+		public void responseSendError(int statusCode, String message) throws IOException {
+			logger.debug("Sending error HTTP status code " + statusCode + " with message '" + message + "'");
+			super.responseSendError(statusCode, message);
 		}
 
 	}
+
 }

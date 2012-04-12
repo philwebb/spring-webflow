@@ -34,15 +34,15 @@ import org.springframework.webflow.execution.View;
  */
 public class FlowPartialViewContext extends PartialViewContextWrapper {
 
-	private PartialViewContext delegate;
+	private PartialViewContext wrapped;
 
-	public FlowPartialViewContext(PartialViewContext delegate) {
-		this.delegate = delegate;
+	public FlowPartialViewContext(PartialViewContext wrapped) {
+		this.wrapped = wrapped;
 	}
 
 	@Override
 	public PartialViewContext getWrapped() {
-		return delegate;
+		return wrapped;
 	}
 
 	@Override

@@ -38,9 +38,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 
 	public FlowRenderKit(RenderKit delegate) {
 		this.delegate = delegate;
-		if (JsfRuntimeInformation.isAtLeastJsf20()) {
-			this.responseStateManager = new FlowViewResponseStateManager(delegate.getResponseStateManager());
-		}
+		this.responseStateManager = new FlowViewResponseStateManager(delegate.getResponseStateManager());
 	}
 
 	public RenderKit getWrapped() {

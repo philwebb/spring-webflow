@@ -37,8 +37,7 @@ public class FlowFacesContextTests extends TestCase {
 	protected void setUp() throws Exception {
 		jsf.setUp();
 		requestContext = (RequestContext) EasyMock.createMock(RequestContext.class);
-		facesContext = new Jsf2FlowFacesContext(requestContext, jsf.facesContext());
-
+		facesContext = new FlowFacesContext(requestContext, jsf.facesContext());
 		setupMessageContext();
 	}
 

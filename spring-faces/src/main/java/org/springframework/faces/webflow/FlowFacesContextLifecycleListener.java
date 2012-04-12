@@ -44,5 +44,4 @@ public class FlowFacesContextLifecycleListener extends FlowExecutionListenerAdap
 	public void requestProcessed(RequestContext context) {
 		FacesContext.getCurrentInstance().release();
 	}
-
 }

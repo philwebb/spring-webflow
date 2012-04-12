@@ -35,11 +35,9 @@ public class JsfFlowHandlerAdapter extends FlowHandlerAdapter {
 		boolean initializeAjaxHandler = getAjaxHandler() == null;
 		super.afterPropertiesSet();
 		if (initializeAjaxHandler) {
-			if (JsfRuntimeInformation.isAtLeastJsf20()) {
-				JsfAjaxHandler ajaxHandler = new JsfAjaxHandler();
-				ajaxHandler.setApplicationContext(getApplicationContext());
-				setAjaxHandler(ajaxHandler);
-			}
+			JsfAjaxHandler ajaxHandler = new JsfAjaxHandler();
+			ajaxHandler.setApplicationContext(getApplicationContext());
+			setAjaxHandler(ajaxHandler);
 		}
 	}
 
