@@ -22,6 +22,8 @@ public class HotelLazyDataModel extends LazyDataModel<Hotel> {
     public HotelLazyDataModel(SearchCriteria searchCriteria, BookingService bookingService) {
 	this.searchCriteria = searchCriteria;
 	this.bookingService = bookingService;
+	setPageSize(5);
+	// setWrappedData(new ArrayList<Hotel>());
     }
 
     @Override

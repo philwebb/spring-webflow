@@ -15,11 +15,8 @@
  */
 package org.springframework.faces.webflow;
 
-import java.io.IOException;
-
 import javax.faces.application.StateManager;
 import javax.faces.application.StateManagerWrapper;
-import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.logging.Log;
@@ -38,6 +35,7 @@ public class FlowViewStateManager extends StateManagerWrapper {
 
 	private static final Log logger = LogFactory.getLog(FlowViewStateManager.class);
 
+	// FIXME PW rename and check usage
 	protected static final String SERIALIZED_VIEW_STATE = "flowSerializedViewState";
 
 	private StateManager wrapped;
@@ -50,101 +48,11 @@ public class FlowViewStateManager extends StateManagerWrapper {
 		return wrapped;
 	}
 
-	protected Object getComponentStateToSave(FacesContext context) {
-		if (!JsfUtils.isFlowRequest()) {
-			return super.getComponentStateToSave(context);
-		}
-		UIViewRoot viewRoot = context.getViewRoot();
-		if (viewRoot.isTransient()) {
-			return null;
-		} else {
-			return viewRoot.processSaveState(context);
-		}
-	}
-
-	protected Object getTreeStructureToSave(FacesContext context) {
-		if (!JsfUtils.isFlowRequest()) {
-			return super.getTreeStructureToSave(context);
-		}
-		UIViewRoot viewRoot = context.getViewRoot();
-		if (viewRoot.isTransient()) {
-			return null;
-		} else {
-			return new TreeStructureManager().buildTreeStructureToSave(viewRoot);
-		}
-	}
-
-	protected void restoreComponentState(FacesContext context, UIViewRoot viewRoot, String renderKitId) {
-		if (!JsfUtils.isFlowRequest()) {
-			super.restoreComponentState(context, viewRoot, renderKitId);
-			return;
-		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
-		viewRoot.processRestoreState(context, view.getComponentState());
-		logger.debug("UIViewRoot component state restored");
-	}
-
-	protected UIViewRoot restoreTreeStructure(FacesContext context, String viewId, String renderKitId) {
-		if (!JsfUtils.isFlowRequest()) {
-			return super.restoreTreeStructure(context, viewId, renderKitId);
-		}
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(SERIALIZED_VIEW_STATE);
-		if (view == null || !view.getViewId().equals(viewId)) {
-			logger.debug("No matching view in view scope");
-			return null;
-		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Restoring view root with id '" + viewId + "' from view scope");
-		}
-		if (view.getTreeStructure() == null) {
-			logger.debug("Tree structure is null indicating transient UIViewRoot; returning null");
-			return null;
-		}
-		UIViewRoot viewRoot = new TreeStructureManager().restoreTreeStructure(view.getTreeStructure());
-		logger.debug("UIViewRoot structure restored");
-		return viewRoot;
-	}
-
-	public void writeState(FacesContext context, Object state) throws IOException {
-		// FIXME PW revisit
-		if (state instanceof Object[]) {
-			super.writeState(context, state); // MyFaces
-		} else if (state instanceof FlowSerializedView) { // Mojarra
-			FlowSerializedView view = (FlowSerializedView) state;
-			super.writeState(context, view.asTreeStructAndCompStateArray());
-		} else {
-			super.writeState(context, state);
-		}
-	}
-
 	public boolean isSavingStateInClient(FacesContext context) {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.isSavingStateInClient(context);
 		} else {
 			return false;
-		}
-	}
-
-	/**
-	 * JSF 1.1 version of state saving
-	 */
-	public javax.faces.application.StateManager.SerializedView saveSerializedView(FacesContext context) {
-		if (context.getViewRoot().isTransient()) {
-			return null;
-		}
-		if (!JsfUtils.isFlowRequest()) {
-			return super.saveSerializedView(context);
-		}
-		Object state = saveView(context);
-		if (state instanceof FlowSerializedView) {
-			FlowSerializedView serializedState = (FlowSerializedView) state;
-			return new javax.faces.application.StateManager.SerializedView(serializedState.getTreeStructure(),
-					serializedState.getComponentState());
-		} else {
-			Object[] serializedState = (Object[]) state;
-			return new javax.faces.application.StateManager.SerializedView(serializedState[0], serializedState[1]);
 		}
 	}
 
@@ -169,63 +77,36 @@ public class FlowViewStateManager extends StateManagerWrapper {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.saveView(context);
 		}
-		FlowSerializedView view = null;
-		if (JsfRuntimeInformation.isPartialStateSavingSupported()) {
-			Object[] state = (Object[]) super.saveView(context);
-			view = new FlowSerializedView(context.getViewRoot().getViewId(), state[0], state[1]);
-		} else {
-			view = new FlowSerializedView(context.getViewRoot().getViewId(), getTreeStructureToSave(context),
-					getComponentStateToSave(context));
-		}
+		Object state = super.saveView(context);
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
 		}
-		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, view);
-		return view;
+		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, state);
+		return state;
 	}
 
-	/**
-	 * <p>
-	 * In JSF 2 where a partial state saving algorithm is used, this method merely delegates to the next
-	 * ViewStateManager. Thus partial state saving is handled by the JSF 2 runtime. However, a
-	 * {@link FlowViewResponseStateManager} plugged in via {@link FlowRenderKit} will ensure the state is saved in a Web
-	 * Flow view-scoped variable.
-	 * </p>
-	 */
-	public UIViewRoot restoreView(FacesContext context, String viewId, String renderKitId) {
-		if ((!JsfUtils.isFlowRequest()) || JsfRuntimeInformation.isPartialStateSavingSupported()) {
-			return super.restoreView(context, viewId, renderKitId);
-		} else {
-			UIViewRoot viewRoot = restoreTreeStructure(context, viewId, renderKitId);
-			if (viewRoot != null) {
-				context.setViewRoot(viewRoot);
-				restoreComponentState(context, viewRoot, renderKitId);
-			}
-			return viewRoot;
-		}
-	}
-
-	@Override
-	public String getViewState(FacesContext context) {
-		if (!JsfUtils.isFlowRequest()) {
-			return super.getViewState(context);
-		}
-		/*
-		 * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. We
-		 * overridde it to convert FlowSerializedView state to an array before calling the
-		 * ResponseStateManager.getViewState(), which in turn calls the ServerSideStateHelper and expects state to be an
-		 * array.
-		 */
-		Object state = saveView(context);
-		if (state != null) {
-			if (state instanceof FlowSerializedView) {
-				FlowSerializedView view = (FlowSerializedView) state;
-				state = view.asTreeStructAndCompStateArray();
-			}
-			return context.getRenderKit().getResponseStateManager().getViewState(context, state);
-		}
-		return null;
-	}
+	// FIXME PW revisit, is this save
+	// @Override
+	// public String getViewState(FacesContext context) {
+	// if (!JsfUtils.isFlowRequest()) {
+	// return super.getViewState(context);
+	// }
+	// /*
+	// * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. We
+	// * overridde it to convert FlowSerializedView state to an array before calling the
+	// * ResponseStateManager.getViewState(), which in turn calls the ServerSideStateHelper and expects state to be an
+	// * array.
+	// */
+	// Object state = saveView(context);
+	// if (state != null) {
+	// if (state instanceof FlowSerializedView) {
+	// FlowSerializedView view = (FlowSerializedView) state;
+	// state = view.asTreeStructAndCompStateArray();
+	// }
+	// return context.getRenderKit().getResponseStateManager().getViewState(context, state);
+	// }
+	// return null;
+	// }
 
 }

@@ -78,17 +78,8 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 		if (!JsfUtils.isFlowRequest()) {
 			super.writeState(facesContext, state);
 		} else {
-			FlowSerializedView view = null;
-			if (state instanceof FlowSerializedView) {
-				view = (FlowSerializedView) state;
-			} else {
-				Object[] serializedState = (Object[]) state;
-				view = new FlowSerializedView(facesContext.getViewRoot().getViewId(), serializedState[0],
-						serializedState[1]);
-			}
 			RequestContext requestContext = RequestContextHolder.getRequestContext();
-			requestContext.getViewScope().put(FlowViewStateManager.SERIALIZED_VIEW_STATE, view);
-
+			requestContext.getViewScope().put(FlowViewStateManager.SERIALIZED_VIEW_STATE, state);
 			ResponseWriter writer = facesContext.getResponseWriter();
 			writeViewStateField(facesContext, writer);
 			writeRenderKitIdField(facesContext, writer);
@@ -107,13 +98,9 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 			return super.getState(facesContext, viewId);
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		FlowSerializedView view = (FlowSerializedView) requestContext.getViewScope().get(
-				FlowViewStateManager.SERIALIZED_VIEW_STATE);
-		Object[] state = null;
-		if (view == null) {
+		Object state = requestContext.getViewScope().get(FlowViewStateManager.SERIALIZED_VIEW_STATE);
+		if (state == null) {
 			logger.debug("No matching view in view scope");
-		} else {
-			state = new Object[] { view.getTreeStructure(), view.getComponentState() };
 		}
 		return state;
 	}

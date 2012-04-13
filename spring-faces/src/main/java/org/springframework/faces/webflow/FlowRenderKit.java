@@ -24,6 +24,7 @@ package org.springframework.faces.webflow;
  * parameter in web.xml to disable it.
  * 
  * @author Rossen Stoyanchev
+ * @author Phillip Webb
  * @since 2.2.0
  */
 import javax.faces.render.RenderKit;
@@ -32,17 +33,19 @@ import javax.faces.render.ResponseStateManager;
 
 public class FlowRenderKit extends RenderKitWrapper {
 
-	private RenderKit delegate;
+	// FIXME PW revisit all DC
+
+	private RenderKit wrapped;
 
 	private FlowViewResponseStateManager responseStateManager;
 
-	public FlowRenderKit(RenderKit delegate) {
-		this.delegate = delegate;
-		this.responseStateManager = new FlowViewResponseStateManager(delegate.getResponseStateManager());
+	public FlowRenderKit(RenderKit wrapped) {
+		this.wrapped = wrapped;
+		this.responseStateManager = new FlowViewResponseStateManager(wrapped.getResponseStateManager());
 	}
 
 	public RenderKit getWrapped() {
-		return delegate;
+		return wrapped;
 	}
 
 	/**
@@ -50,8 +53,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 	 * ResponseStateManager instance otherwise.
 	 */
 	public ResponseStateManager getResponseStateManager() {
-		return (JsfUtils.isFlowRequest() && JsfRuntimeInformation.isPartialStateSavingSupported()) ? responseStateManager
-				: delegate.getResponseStateManager();
+		// FIXME PW rename, check out spring faces code
+		return (JsfUtils.isFlowRequest() ? responseStateManager : wrapped.getResponseStateManager());
 	}
-
 }
