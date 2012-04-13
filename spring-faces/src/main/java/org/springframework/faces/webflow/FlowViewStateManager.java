@@ -15,17 +15,20 @@
  */
 package org.springframework.faces.webflow;
 
+import java.lang.reflect.Method;
+
 import javax.faces.application.StateManager;
 import javax.faces.application.StateManagerWrapper;
 import javax.faces.context.FacesContext;
+import javax.faces.render.ResponseStateManager;
+import javax.faces.view.ViewDeclarationLanguage;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
- * Custom {@link StateManager} that manages the JSF component state in web flow's view scope.
+ * Custom {@link StateManager} that manages ensures web flow's state is always stored server side.
  * 
  * @author Jeremy Grelle
  * @author Rossen Stoyanchev
@@ -33,15 +36,24 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class FlowViewStateManager extends StateManagerWrapper {
 
-	private static final Log logger = LogFactory.getLog(FlowViewStateManager.class);
-
-	// FIXME PW rename and check usage
-	protected static final String SERIALIZED_VIEW_STATE = "flowSerializedViewState";
+	private static final String MYFACES_STATE_CACHE_UTILS = "org.apache.myfaces.renderkit.StateCacheUtils";
 
 	private StateManager wrapped;
 
+	private Method isMyFacesResponseStateManagerMethod;
+
 	public FlowViewStateManager(StateManager wrapped) {
 		this.wrapped = wrapped;
+		this.isMyFacesResponseStateManagerMethod = findIsMyFacesResponseStateManagerMethod();
+	}
+
+	private Method findIsMyFacesResponseStateManagerMethod() {
+		try {
+			return ReflectionUtils.findMethod(Class.forName(MYFACES_STATE_CACHE_UTILS),
+					"isMyFacesResponseStateManager", ResponseStateManager.class);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 	public StateManager getWrapped() {
@@ -56,57 +68,34 @@ public class FlowViewStateManager extends StateManagerWrapper {
 		}
 	}
 
-	/**
-	 * <p>
-	 * JSF 1.2 (or higher) version of state saving.
-	 * 
-	 * <p>
-	 * In JSF 2, if partial state saving is enabled this method delegates in order to obtain the serialized view state.
-	 * During rendering JSF calls this method to prepare the state and then calls {@link FlowViewResponseStateManager}
-	 * which writes it to Web Flow's view scope.
-	 * 
-	 * <p>
-	 * Nevertheless this method always writes the serialized state to Web Flow's view scope to ensure it is up-to-date
-	 * for cases outside of rendering (e.g. ViewState.updateHistory()) or when the render phase doesn't call
-	 * {@link FlowViewResponseStateManager} such as when processing a partial request.
-	 */
 	public Object saveView(FacesContext context) {
-		if (context.getViewRoot().isTransient()) {
-			return null;
-		}
-		if (!JsfUtils.isFlowRequest()) {
-			return super.saveView(context);
-		}
 		Object state = super.saveView(context);
-		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Saving view root '" + context.getViewRoot().getViewId() + "' in view scope");
+		if (wouldCallMyfacesResponseStateManagerSaveState(context)) {
+			RequestContext requestContext = RequestContextHolder.getRequestContext();
+			requestContext.getViewScope().put(FlowViewResponseStateManager.FACES_VIEW_STATE, state);
 		}
-		requestContext.getViewScope().put(SERIALIZED_VIEW_STATE, state);
 		return state;
 	}
 
-	// FIXME PW revisit, is this save
-	// @Override
-	// public String getViewState(FacesContext context) {
-	// if (!JsfUtils.isFlowRequest()) {
-	// return super.getViewState(context);
-	// }
-	// /*
-	// * Mojarra 2: PartialRequestContextImpl.renderState() invokes this method during Ajax request rendering. We
-	// * overridde it to convert FlowSerializedView state to an array before calling the
-	// * ResponseStateManager.getViewState(), which in turn calls the ServerSideStateHelper and expects state to be an
-	// * array.
-	// */
-	// Object state = saveView(context);
-	// if (state != null) {
-	// if (state instanceof FlowSerializedView) {
-	// FlowSerializedView view = (FlowSerializedView) state;
-	// state = view.asTreeStructAndCompStateArray();
-	// }
-	// return context.getRenderKit().getResponseStateManager().getViewState(context, state);
-	// }
-	// return null;
-	// }
+	private boolean wouldCallMyfacesResponseStateManagerSaveState(FacesContext context) {
+		ResponseStateManager responseStateManager = context.getRenderKit().getResponseStateManager();
+		if (!isMyFacesResponseStateManager(responseStateManager)) {
+			return false;
+		}
 
+		String viewId = context.getViewRoot().getViewId();
+		ViewDeclarationLanguage viewDeclarationLanguage = context.getApplication().getViewHandler()
+				.getViewDeclarationLanguage(context, viewId);
+		if (viewDeclarationLanguage == null) {
+			return false;
+		}
+		return (viewDeclarationLanguage.getStateManagementStrategy(context, viewId) != null);
+	}
+
+	private boolean isMyFacesResponseStateManager(ResponseStateManager responseStateManager) {
+		if (isMyFacesResponseStateManagerMethod == null) {
+			return false;
+		}
+		return (Boolean) ReflectionUtils.invokeMethod(isMyFacesResponseStateManagerMethod, null, responseStateManager);
+	}
 }

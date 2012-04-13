@@ -34,7 +34,10 @@ import org.springframework.webflow.expression.el.FlowResourceELResolver;
  * </p>
  * @author Jeremy Grelle
  */
+@Deprecated
 public class FlowPropertyResolver extends ELDelegatingPropertyResolver {
+
+	// FIXME PW delete
 
 	private static final CompositeELResolver composite = new CompositeELResolver();
 

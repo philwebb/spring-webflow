@@ -15,8 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
-
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -35,6 +33,7 @@ import org.springframework.webflow.execution.View;
  * JSF-specific {@link View} implementation.
  * 
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
 public class JsfView implements View {
 
@@ -88,11 +87,9 @@ public class JsfView implements View {
 			logger.debug("Asking faces lifecycle to render");
 			facesLifecycle.render(facesContext);
 
-			/* Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState(). */
-			if (JsfRuntimeInformation.isAtLeastJsf20()) {
-				if (requestContext.getExternalContext().isAjaxRequest()) {
-					saveState();
-				}
+			// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState().
+			if (requestContext.getExternalContext().isAjaxRequest()) {
+				saveState();
 			}
 		} finally {
 			logger.debug("View rendering complete");
@@ -101,11 +98,7 @@ public class JsfView implements View {
 	}
 
 	public boolean userEventQueued() {
-		if (isAtLeastJsf12()) {
-			return requestContext.getRequestParameters().contains("javax.faces.ViewState");
-		} else {
-			return requestContext.getRequestParameters().size() > 1;
-		}
+		return requestContext.getRequestParameters().contains("javax.faces.ViewState");
 	}
 
 	/**
@@ -132,6 +125,7 @@ public class JsfView implements View {
 		} else {
 			facesContext.setViewRoot(viewRoot);
 		}
+		// FIXME PW revisit why
 		facesContext.getApplication().getStateManager().saveSerializedView(facesContext);
 	}
 

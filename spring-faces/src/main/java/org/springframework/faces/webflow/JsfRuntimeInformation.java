@@ -28,6 +28,8 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class JsfRuntimeInformation {
 
+	// FIXME PW revisit
+
 	/** JSF Version 1.1 */
 	public static final int JSF_11 = 0;
 

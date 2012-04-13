@@ -31,6 +31,8 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class SpringBeanWebFlowVariableResolver extends SpringBeanVariableResolver {
 
+	// FIXME PW revisit
+
 	private static final BeanFactory EMPTY_BEAN_FACTORY = new StaticListableBeanFactory();
 
 	public SpringBeanWebFlowVariableResolver(VariableResolver originalVariableResolver) {

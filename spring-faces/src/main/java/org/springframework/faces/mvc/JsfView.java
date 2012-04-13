@@ -15,7 +15,6 @@
  */
 package org.springframework.faces.mvc;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 import java.util.Map;
@@ -63,7 +62,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
-		if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
+		if (!isPortletRequest(facesContext)) {
 			viewHandler.initView(facesContext);
 		}
 

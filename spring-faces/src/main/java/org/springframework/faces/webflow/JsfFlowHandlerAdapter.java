@@ -24,7 +24,7 @@ import org.springframework.webflow.mvc.servlet.FlowHandlerAdapter;
 
 /**
  * An extension of {@link FlowHandlerAdapter} that replaces the default {@link AjaxHandler} instance with a
- * {@link JsfAjaxHandler} assuming JSF 2 is the runtime environment.
+ * {@link JsfAjaxHandler}.
  * 
  * @author Rossen Stoyanchev
  * @since 2.2.0
@@ -45,5 +45,4 @@ public class JsfFlowHandlerAdapter extends FlowHandlerAdapter {
 			throws Exception {
 		return super.handle(request, response, handler);
 	}
-
 }

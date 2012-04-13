@@ -30,7 +30,10 @@ import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
  * 
  * @author Jeremy Grelle
  */
+@Deprecated
 public class FlowVariableResolver extends ELDelegatingVariableResolver {
+
+	// FIXME PW revisit
 
 	private static final CompositeELResolver composite = new CompositeELResolver();
 

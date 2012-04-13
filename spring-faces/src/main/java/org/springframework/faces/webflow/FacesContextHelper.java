@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * <p>
  * Provides helper methods for getting a FacesContext that is suitable for use outside of Web Flow. Inside a running
  * Flow session {@link FlowFacesContext} is typically used instead.
  * <p>

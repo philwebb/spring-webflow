@@ -122,21 +122,13 @@ public class FlowFacesContextMessageDelegate {
 		return new FacesMessageIterator(clientId);
 	}
 
-	/**
-	 * @see Jsf2FlowFacesContext#getMessageList()
-	 */
 	public List<FacesMessage> getMessageList() {
 		return new FacesMessageIterator().asList();
 	}
 
-	/**
-	 * @see Jsf2FlowFacesContext#getMessageList(String)
-	 */
 	public List<FacesMessage> getMessageList(String clientId) {
 		return new FacesMessageIterator(clientId).asList();
 	}
-
-	// ------------------ Private helper methods ----------------------//
 
 	private FacesMessage toFacesMessage(Message summaryMessage, Message detailMessage) {
 

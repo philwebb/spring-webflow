@@ -53,5 +53,4 @@ public class FlowApplicationFactory extends ApplicationFactory {
 	public ApplicationFactory getWrapped() {
 		return wrapped;
 	}
-
 }

@@ -24,8 +24,8 @@ import org.springframework.util.Assert;
 
 /**
  * Wraps an {@link Application} instance in order to ensure Web Flow specific implementations of {@link ViewHandler} and
- * {@link StateManager} are inserted at the front of the processing chain in JSF 1.2 and JSF 2.0 environments. This is
- * done by intercepting the corresponding setters. All other methods are simple delegation methods.
+ * {@link StateManager} are inserted at the front of the processing chain in JSF environments. This is done by
+ * intercepting the corresponding setters. All other methods are simple delegation methods.
  * 
  * @author Rossen Stoyanchev
  * @author Phillip Webb
@@ -61,15 +61,6 @@ public class FlowApplication extends ApplicationWrapper {
 	}
 
 	/**
-	 * @return the wrapped Application instance
-	 * @deprecated use getWrapped
-	 */
-	@Deprecated
-	public Application getDelegate() {
-		return getWrapped();
-	}
-
-	/**
 	 * Inserts {@link FlowViewStateManager} in front of the given StateManager (if not already done).
 	 */
 	public void setStateManager(StateManager manager) {
@@ -78,6 +69,14 @@ public class FlowApplication extends ApplicationWrapper {
 		} else {
 			super.setStateManager(manager);
 		}
+	}
+
+	private boolean shouldWrap(StateManager manager) {
+		return (manager != null) && (!(manager instanceof FlowViewStateManager));
+	}
+
+	private void wrapAndSetStateManager(StateManager target) {
+		super.setStateManager(new FlowViewStateManager(target));
 	}
 
 	/**
@@ -103,13 +102,4 @@ public class FlowApplication extends ApplicationWrapper {
 		}
 		return false;
 	}
-
-	private boolean shouldWrap(StateManager manager) {
-		return (manager != null) && (!(manager instanceof FlowViewStateManager));
-	}
-
-	private void wrapAndSetStateManager(StateManager target) {
-		super.setStateManager(new FlowViewStateManager(target));
-	}
-
 }

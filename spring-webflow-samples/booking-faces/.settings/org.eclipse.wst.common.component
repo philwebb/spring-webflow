@@ -24,16 +24,7 @@
     <dependent-module archiveName="cglib-2.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/cglib/cglib/2.2/cglib-2.2.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
-    <dependent-module archiveName="commons-beanutils-1.8.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
-    <dependent-module archiveName="commons-codec-1.3.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-codec/commons-codec/1.3/commons-codec-1.3.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
-    <dependent-module archiveName="commons-collections-3.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-collections/commons-collections/3.2/commons-collections-3.2.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
-    <dependent-module archiveName="commons-digester-1.8.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-digester/commons-digester/1.8/commons-digester-1.8.jar">
+    <dependent-module archiveName="commons-collections-3.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-collections/commons-collections/3.1/commons-collections-3.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="commons-logging-1.1.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar">
@@ -75,16 +66,16 @@
     <dependent-module archiveName="jcl-over-slf4j-1.5.10.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/slf4j/jcl-over-slf4j/1.5.10/jcl-over-slf4j-1.5.10.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
+    <dependent-module archiveName="jsf-api-2.1.7.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/sun/faces/jsf-api/2.1.7/jsf-api-2.1.7.jar">
+      <dependency-type>uses</dependency-type>
+    </dependent-module>
+    <dependent-module archiveName="jsf-impl-2.1.7.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/com/sun/faces/jsf-impl/2.1.7/jsf-impl-2.1.7.jar">
+      <dependency-type>uses</dependency-type>
+    </dependent-module>
     <dependent-module archiveName="jta-1.1.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/javax/transaction/jta/1.1/jta-1.1.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="log4j-1.2.15.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/log4j/log4j/1.2.15/log4j-1.2.15.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
-    <dependent-module archiveName="myfaces-api-2.1.6.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/apache/myfaces/core/myfaces-api/2.1.6/myfaces-api-2.1.6.jar">
-      <dependency-type>uses</dependency-type>
-    </dependent-module>
-    <dependent-module archiveName="myfaces-impl-2.1.6.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/apache/myfaces/core/myfaces-impl/2.1.6/myfaces-impl-2.1.6.jar">
       <dependency-type>uses</dependency-type>
     </dependent-module>
     <dependent-module archiveName="primefaces-3.2.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/var/M2_REPO/org/primefaces/primefaces/3.2/primefaces-3.2.jar">

@@ -26,6 +26,8 @@ import javax.faces.component.UIViewRoot;
  */
 class ViewRootHolder implements Serializable {
 
+	// FIXME PW can we delete and just store the UIViewRoot
+
 	private transient UIViewRoot viewRoot;
 
 	public ViewRootHolder(UIViewRoot viewRoot) {

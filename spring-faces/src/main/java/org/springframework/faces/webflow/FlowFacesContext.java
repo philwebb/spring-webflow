@@ -16,7 +16,6 @@
 package org.springframework.faces.webflow;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +38,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.MessageSource;
 import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
-import org.springframework.util.ClassUtils;
 import org.springframework.webflow.execution.RequestContext;
 
 /**
@@ -121,20 +119,11 @@ public class FlowFacesContext extends FacesContextWrapper {
 		return messageDelegate.getClientIdsWithMessages();
 	}
 
-	// FIXME PW revist
 	public ELContext getELContext() {
-		Method delegateMethod = ClassUtils.getMethodIfAvailable(wrapped.getClass(), "getELContext");
-		if (delegateMethod != null) {
-			try {
-				ELContext context = (ELContext) delegateMethod.invoke(wrapped);
-				context.putContext(FacesContext.class, this);
-				return context;
-			} catch (Exception e) {
-				return null;
-			}
-		} else {
-			return null;
-		}
+		ELContext elContext = super.getELContext();
+		// FIXME PW revist, why is this needed>
+		elContext.putContext(FacesContext.class, this);
+		return elContext;
 	}
 
 	/**
@@ -184,7 +173,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 		setCurrentInstance(null);
 	}
 
-	// FIXME PW remove the message delegate, makes less sense now
+	// FIXME PW perhaps remove the message delegate, makes less sense now
 	protected FlowFacesContextMessageDelegate getMessageDelegate() {
 		return messageDelegate;
 	}
@@ -238,6 +227,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 			return wrapped;
 		}
 
+		// FIXME PW review this
 		public Object getResponse() {
 			if (context.getRequestScope().contains(CUSTOM_RESPONSE)) {
 				return context.getRequestScope().get(CUSTOM_RESPONSE);

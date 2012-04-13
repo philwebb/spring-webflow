@@ -15,8 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf20;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 import java.util.Iterator;
@@ -82,16 +80,14 @@ public class JsfViewFactory implements ViewFactory {
 							+ " Check the configuration for your <webflow:flow-executor>."
 							+ " For JSF you will need FlowFacesContextLifecycleListener configured as one of its flow execution listeners.");
 		}
-		if (isAtLeastJsf20()) {
-			facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
-		}
+		facesContext.setCurrentPhaseId(PhaseId.RESTORE_VIEW);
 		if (!facesContext.getRenderResponse()) {
 			// only publish a RESTORE_VIEW event if this is the first phase of the lifecycle
 			// this won't be true when this method is called after a transition from one view-state to another
 			JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
 		}
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
-		if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
+		if (!isPortletRequest(facesContext)) {
 			viewHandler.initView(facesContext);
 		}
 		JsfView view;

@@ -31,13 +31,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * A custom ResponseStateManager that writes JSF state to a Web Flow managed view-scoped variable. This class is plugged
- * in via {@link FlowRenderKit} in JSF 2 runtime environments only. </p>
- * 
- * <p>
- * In JSF 2 where a partial state saving algorithm is used, Web Flow delegates to the JSF 2 runtime to handle state
- * saving. However, an instance of this class plugged in via {@link FlowRenderKit} will ensure that state is saved in a
- * Web Flow managed view-scoped variable.
- * </p>
+ * in via {@link FlowRenderKit}.
  * 
  * @author Rossen Stoyanchev
  * @author Phillip Webb
@@ -48,12 +42,15 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 
 	private static final Log logger = LogFactory.getLog(FlowViewResponseStateManager.class);
 
+	static final String FACES_VIEW_STATE = "facesViewState";
+
+	private static final char[] STATE_FIELD_START = ("<input type=\"hidden\" name=\""
+			+ ResponseStateManager.VIEW_STATE_PARAM + "\" id=\"" + ResponseStateManager.VIEW_STATE_PARAM + "\" value=\"")
+			.toCharArray();
+
+	private static final char[] STATE_FIELD_END = "\" />".toCharArray();
+
 	private ResponseStateManager wrapped;
-
-	private char[] stateFieldStart = ("<input type=\"hidden\" name=\"" + ResponseStateManager.VIEW_STATE_PARAM
-			+ "\" id=\"" + ResponseStateManager.VIEW_STATE_PARAM + "\" value=\"").toCharArray();
-
-	private char[] stateFieldEnd = "\" />".toCharArray();
 
 	public FlowViewResponseStateManager(ResponseStateManager wrapped) {
 		this.wrapped = wrapped;
@@ -63,42 +60,26 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 		return wrapped;
 	}
 
-	/**
-	 * <p>
-	 * Wraps state in an instance of {@link FlowSerializedView} and stores it in view scope.
-	 * </p>
-	 * 
-	 * <p>
-	 * Also complies with the contract for {@link ResponseStateManager#writeState(FacesContext, Object)} by writing the
-	 * "javax.faces.ViewState" and optionally the "javax.faces.RenderKitId" hidden input fields to the response.
-	 * </p>
-	 */
 	@Override
 	public void writeState(FacesContext facesContext, Object state) throws IOException {
 		if (!JsfUtils.isFlowRequest()) {
 			super.writeState(facesContext, state);
 		} else {
 			RequestContext requestContext = RequestContextHolder.getRequestContext();
-			requestContext.getViewScope().put(FlowViewStateManager.SERIALIZED_VIEW_STATE, state);
+			requestContext.getViewScope().put(FACES_VIEW_STATE, state);
 			ResponseWriter writer = facesContext.getResponseWriter();
 			writeViewStateField(facesContext, writer);
 			writeRenderKitIdField(facesContext, writer);
 		}
 	}
 
-	/**
-	 * <p>
-	 * Retrieves the state from view scope as an instance of {@link FlowSerializedView} and turns it to an array before
-	 * returning.
-	 * </p>
-	 */
 	@Override
 	public Object getState(FacesContext facesContext, String viewId) {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.getState(facesContext, viewId);
 		}
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
-		Object state = requestContext.getViewScope().get(FlowViewStateManager.SERIALIZED_VIEW_STATE);
+		Object state = requestContext.getViewScope().get(FACES_VIEW_STATE);
 		if (state == null) {
 			logger.debug("No matching view in view scope");
 		}
@@ -116,6 +97,8 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.getViewState(facesContext, state);
 		}
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		requestContext.getViewScope().put(FACES_VIEW_STATE, state);
 		return getFlowExecutionKey();
 	}
 
@@ -132,9 +115,9 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 	 * @throws IOException if an error occurs writing to the client
 	 */
 	private void writeViewStateField(FacesContext context, Writer writer) throws IOException {
-		writer.write(stateFieldStart);
+		writer.write(STATE_FIELD_START);
 		writer.write(getFlowExecutionKey());
-		writer.write(stateFieldEnd);
+		writer.write(STATE_FIELD_END);
 	}
 
 	/**
@@ -155,5 +138,4 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 			writer.endElement("input");
 		}
 	}
-
 }

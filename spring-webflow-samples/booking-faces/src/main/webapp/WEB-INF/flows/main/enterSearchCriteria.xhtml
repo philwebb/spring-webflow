@@ -22,7 +22,7 @@
 			<p:messages globalOnly="true" />
 			<h:panelGrid columns="2">
 				<h:outputLabel for="searchString">Search String: </h:outputLabel>
-				<h:inputText id="searchString" value="#{searchCriteria.searchString}" />
+				<h:inputText id="searchString" value="#{searchCriteria.searchString}"/>
 			   	<h:outputLabel for="pageSize">Maximum Results: </h:outputLabel>
 				<h:selectOneMenu id="pageSize" value="#{searchCriteria.pageSize}">
 					<f:selectItems value="#{referenceData.pageSizeOptions}" />
@@ -31,6 +31,7 @@
 			</h:panelGrid>
 			<p:tooltip for="searchString" targetPosition="topRight" position="bottomLeft"
 				value="Search hotels by name, address, city, or zip." style="cream" />
+				<h:commandButton id="test" value="test"/>
 		</h:form>			  
 	</p:panel>
 
