@@ -21,9 +21,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.webflow.expression.spel.WebFlowSpringELExpressionParser;
 
 /**
- * <p>
  * A Spring EL {@link ExpressionParser} for use with JSF. Adds JSF specific Spring EL PropertyAccessors.
- * </p>
  * 
  * @author Rossen Stoyanchev
  * @since 2.1

@@ -28,8 +28,6 @@ import org.springframework.webflow.execution.RequestContext;
  */
 public class JsfRuntimeInformation {
 
-	// FIXME PW revisit
-
 	/** JSF Version 1.1 */
 	public static final int JSF_11 = 0;
 
@@ -54,16 +52,25 @@ public class JsfRuntimeInformation {
 		}
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
 	@Deprecated
 	public static boolean isAtLeastJsf20() {
 		return jsfVersion >= JSF_20;
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
 	@Deprecated
 	public static boolean isAtLeastJsf12() {
 		return jsfVersion >= JSF_12;
 	}
 
+	/**
+	 * @deprecated As of Web Flow 2.4.0 JSF 2.0 is a minimum requirement
+	 */
 	@Deprecated
 	public static boolean isLessThanJsf20() {
 		return jsfVersion < JSF_20;

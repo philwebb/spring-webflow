@@ -23,7 +23,7 @@ import javax.faces.lifecycle.LifecycleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.faces.util.LifecycleWrapper;
+import org.springframework.faces.wrapper.LifecycleWrapper;
 
 /**
  * Custom {@link Lifecycle} for Spring Web Flow that only executes the APPLY_REQUEST_VALUES through INVOKE_APPLICATION

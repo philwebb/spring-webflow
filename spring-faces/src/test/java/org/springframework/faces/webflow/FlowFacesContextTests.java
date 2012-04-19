@@ -19,6 +19,7 @@ import org.springframework.binding.message.DefaultMessageContext;
 import org.springframework.binding.message.Message;
 import org.springframework.binding.message.MessageBuilder;
 import org.springframework.binding.message.MessageContext;
+import org.springframework.faces.webflow.FlowFacesContext.FacesMessageSource;
 import org.springframework.webflow.execution.RequestContext;
 
 public class FlowFacesContextTests extends TestCase {
@@ -56,11 +57,9 @@ public class FlowFacesContextTests extends TestCase {
 
 		facesContext.addMessage("foo", new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "bar"));
 
-		assertEquals("Message count is incorrect", 2, messageContext.getAllMessages().length);
-		Message summaryMessage = messageContext.getMessagesBySource("foo_summary")[0];
-		assertEquals("foo", summaryMessage.getText());
-		Message detailMessage = messageContext.getMessagesBySource("foo_detail")[0];
-		assertEquals("bar", detailMessage.getText());
+		assertEquals("Message count is incorrect", 1, messageContext.getAllMessages().length);
+		Message message = messageContext.getMessagesBySource(new FacesMessageSource("foo"))[0];
+		assertEquals("foo : bar", message.getText());
 	}
 
 	public final void testGetGlobalMessagesOnly() {
@@ -107,15 +106,10 @@ public class FlowFacesContextTests extends TestCase {
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "foo", "bar"));
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "zoo", "zar"));
 
-		assertEquals("Message count is incorrect", 4, messageContext.getAllMessages().length);
-		Message summaryMessage1 = messageContext.getMessagesBySource("null_summary")[0];
-		assertEquals("foo", summaryMessage1.getText());
-		Message detailMessage1 = messageContext.getMessagesBySource("null_detail")[0];
-		assertEquals("bar", detailMessage1.getText());
-		Message summaryMessage2 = messageContext.getMessagesBySource("null_summary")[1];
-		assertEquals("zoo", summaryMessage2.getText());
-		Message detailMessage2 = messageContext.getMessagesBySource("null_detail")[1];
-		assertEquals("zar", detailMessage2.getText());
+		assertEquals("Message count is incorrect", 2, messageContext.getAllMessages().length);
+		Message[] messages = messageContext.getMessagesBySource(new FacesMessageSource(null));
+		assertEquals("foo : bar", messages[0].getText());
+		assertEquals("zoo : zar", messages[1].getText());
 	}
 
 	public final void testGetMessages() {
@@ -274,25 +268,39 @@ public class FlowFacesContextTests extends TestCase {
 
 	private void setupMessageContext() {
 		prepopulatedMessageContext = new DefaultMessageContext();
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("foo").info()
-				.build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("foo").info()
-				.build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary")
-				.defaultText("componentId_summary1").warning().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail")
-				.defaultText("componentId_detail1").warning().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary")
-				.defaultText("componentId_summary2").warning().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail")
-				.defaultText("componentId_detail2").warning().build());
+		prepopulatedMessageContext.addMessage(new FlowFacesContext.FlowFacesMessage(new FacesMessageSource(null),
+				new FacesMessage("foo")));
+		prepopulatedMessageContext.addMessage(new FlowFacesContext.FlowFacesMessage(new FacesMessageSource(
+				"componentId"), new FacesMessage("componentId_summary1", "componentId_detail1")));
+		prepopulatedMessageContext.addMessage(new FlowFacesContext.FlowFacesMessage(new FacesMessageSource(
+				"componentId"), new FacesMessage("componentId_summary2", "componentId_detail2")));
+		prepopulatedMessageContext.addMessage(new FlowFacesContext.FlowFacesMessage(new FacesMessageSource(null),
+				new FacesMessage("baz")));
 		prepopulatedMessageContext.addMessage(new MessageBuilder().source("userMessage").defaultText("userMessage")
 				.info().build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("baz").error()
-				.build());
-		prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("baz").error()
-				.build());
 		prepopulatedMessageContext.addMessage(new MessageBuilder().defaultText("Subzero Wins - Fatality").fatal()
 				.build());
+
+		//
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("foo").info()
+		// .build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("foo").info()
+		// .build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary")
+		// .defaultText("componentId_summary1").warning().build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail")
+		// .defaultText("componentId_detail1").warning().build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_summary")
+		// .defaultText("componentId_summary2").warning().build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("componentId_detail")
+		// .defaultText("componentId_detail2").warning().build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("userMessage").defaultText("userMessage")
+		// .info().build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_summary").defaultText("baz").error()
+		// .build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().source("null_detail").defaultText("baz").error()
+		// .build());
+		// prepopulatedMessageContext.addMessage(new MessageBuilder().defaultText("Subzero Wins - Fatality").fatal()
+		// .build());
 	}
 }

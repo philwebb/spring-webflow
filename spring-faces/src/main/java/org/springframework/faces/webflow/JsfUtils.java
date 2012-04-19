@@ -99,7 +99,6 @@ public class JsfUtils {
 		}
 	}
 
-	// FIXME Test
 	/**
 	 * Find a factory of the specified class using JSFs {@link FactoryFinder} class.
 	 * @param factoryClass the factory class to find

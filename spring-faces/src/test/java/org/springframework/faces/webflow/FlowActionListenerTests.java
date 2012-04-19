@@ -95,8 +95,7 @@ public class FlowActionListenerTests extends TestCase {
 			super(new Flow("mockFlow"), "mockView", new ViewFactory() {
 
 				public View getView(RequestContext context) {
-					// TODO Auto-generated method stub
-					throw new UnsupportedOperationException("Auto-generated method stub");
+					throw new UnsupportedOperationException();
 				}
 			});
 		}

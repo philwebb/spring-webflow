@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.util;
+package org.springframework.faces.wrapper;
 
 import java.io.IOException;
 
@@ -24,17 +24,14 @@ import javax.faces.render.ResponseStateManager;
 
 /**
  * Provides a simple implementation of {@link ResponseStateManager} that can be subclassed by developers wishing to
- * provide specialised behaviour to an existing {@link ResponseStateManager instance} . The default implementation of
- * all methods is to call through to the wrapped {@link ResponseStateManager}.
+ * provide specialized behavior to an existing {@link ResponseStateManager instance} . The default implementation of all
+ * methods is to call through to the wrapped {@link ResponseStateManager}.
  * 
  * @author Phillip Webb
  */
 @SuppressWarnings("deprecation")
 public abstract class ResponseStateManagerWrapper extends ResponseStateManager implements
 		FacesWrapper<ResponseStateManager> {
-
-	// FIXME PW copy test from SpringFaces
-	// FIXME PW consider package
 
 	public abstract ResponseStateManager getWrapped();
 

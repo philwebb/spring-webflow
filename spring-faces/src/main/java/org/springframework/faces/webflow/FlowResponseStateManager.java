@@ -25,7 +25,7 @@ import javax.faces.render.ResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.faces.util.ResponseStateManagerWrapper;
+import org.springframework.faces.wrapper.ResponseStateManagerWrapper;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 

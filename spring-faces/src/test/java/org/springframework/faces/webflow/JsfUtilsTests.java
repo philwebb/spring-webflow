@@ -44,6 +44,8 @@ public class JsfUtilsTests extends TestCase {
 		assertEquals(listener1, list.get(2));
 	}
 
+	// FIXME PW test get factory
+
 	private class OrderVerifyingPhaseListener implements PhaseListener {
 
 		private List<OrderVerifyingPhaseListener> afterPhaseList;

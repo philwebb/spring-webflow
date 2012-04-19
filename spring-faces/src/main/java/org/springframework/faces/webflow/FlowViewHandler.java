@@ -31,8 +31,8 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
 
 /**
- * Simple delegating {@link ViewHandler} implementation that provides JSF Form's with the correct FlowExecution URL,
- * including the current FlowExecutionKey, so that postbacks may be properly intercepted and handled by Web Flow.
+ * Simple {@link ViewHandler} implementation that provides JSF Form's with the correct FlowExecution URL, including the
+ * current FlowExecutionKey, so that postbacks may be properly intercepted and handled by Web Flow.
  * 
  * @author Jeremy Grelle
  * @author Rossen Stoyanchev

@@ -18,11 +18,12 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,6 +49,7 @@ import org.springframework.binding.message.Severity;
 import org.springframework.context.MessageSource;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.webflow.execution.RequestContext;
 
@@ -68,37 +70,24 @@ public class FlowFacesContext extends FacesContextWrapper {
 	/**
 	 * The key for storing the renderResponse flag
 	 */
-	private static final String RENDER_RESPONSE_KEY = "flowRenderResponse";
+	static final String RENDER_RESPONSE_KEY = "flowRenderResponse";
 
-	/**
-	 * Key for identifying summary messages
-	 */
-	private static final String SUMMARY_MESSAGE_KEY = "_summary";
-
-	/**
-	 * Key for identifying detail messages
-	 */
-	private static final String DETAIL_MESSAGE_KEY = "_detail";
-
-	/**
-	 * Mappings between {@link FacesMessage} and {@link Severity}.
-	 */
-	private static final Map<FacesMessage.Severity, Severity> SEVERITY_MAPPING;
+	private static final Map<Severity, FacesMessage.Severity> SPRING_SEVERITY_TO_FACES;
 	static {
-		SEVERITY_MAPPING = new LinkedHashMap<FacesMessage.Severity, Severity>();
-		SEVERITY_MAPPING.put(FacesMessage.SEVERITY_INFO, Severity.INFO);
-		SEVERITY_MAPPING.put(FacesMessage.SEVERITY_WARN, Severity.WARNING);
-		SEVERITY_MAPPING.put(FacesMessage.SEVERITY_ERROR, Severity.ERROR);
-		SEVERITY_MAPPING.put(FacesMessage.SEVERITY_FATAL, Severity.FATAL);
+		SPRING_SEVERITY_TO_FACES = new HashMap<Severity, FacesMessage.Severity>();
+		SPRING_SEVERITY_TO_FACES.put(Severity.INFO, FacesMessage.SEVERITY_INFO);
+		SPRING_SEVERITY_TO_FACES.put(Severity.WARNING, FacesMessage.SEVERITY_WARN);
+		SPRING_SEVERITY_TO_FACES.put(Severity.ERROR, FacesMessage.SEVERITY_ERROR);
+		SPRING_SEVERITY_TO_FACES.put(Severity.FATAL, FacesMessage.SEVERITY_FATAL);
 	}
 
-	private static MessageCriteria SUMMARY_MESSAGES = new MessagesEnding(SUMMARY_MESSAGE_KEY);
-	private static MessageCriteria DETAIL_MESSAGES = new MessagesEnding(DETAIL_MESSAGE_KEY);
-	private static MessageCriteria USER_MESSAGES = new MessageCriteria() {
-		public boolean test(Message message) {
-			return !(SUMMARY_MESSAGES.test(message) || DETAIL_MESSAGES.test(message));
+	private static final Map<FacesMessage.Severity, Severity> FACES_SEVERITY_TO_SPRING;
+	static {
+		FACES_SEVERITY_TO_SPRING = new HashMap<FacesMessage.Severity, Severity>();
+		for (Map.Entry<Severity, FacesMessage.Severity> entry : SPRING_SEVERITY_TO_FACES.entrySet()) {
+			FACES_SEVERITY_TO_SPRING.put(entry.getValue(), entry.getKey());
 		}
-	};
+	}
 
 	private FacesContext wrapped;
 
@@ -172,22 +161,25 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * Translates a FacesMessage to a Spring Web Flow message and adds it to the current MessageContext
 	 */
 	public void addMessage(String clientId, FacesMessage message) {
-		String source = null;
-		if (StringUtils.hasText(clientId)) {
-			source = clientId;
-		}
-		context.getMessageContext().addMessage(new FlowFacesMessageAdapter(source, SUMMARY_MESSAGE_KEY, message));
-		context.getMessageContext().addMessage(new FlowFacesMessageAdapter(source, DETAIL_MESSAGE_KEY, message));
+		FacesMessageSource source = new FacesMessageSource(clientId);
+		FlowFacesMessage flowFacesMessage = new FlowFacesMessage(source, message);
+		context.getMessageContext().addMessage(flowFacesMessage);
 	}
 
 	/**
 	 * Returns an Iterator for all component clientId's for which messages have been added.
 	 */
 	public Iterator<String> getClientIdsWithMessages() {
-		ClientIdCollector clientIdCollector = new ClientIdCollector();
-		context.getMessageContext().getMessagesByCriteria(new ClientIdCollector());
-		// FIXME make unmodifiable
-		return clientIdCollector.clientIds.iterator();
+		Set<String> clientIds = new LinkedHashSet<String>();
+		for (Message message : context.getMessageContext().getAllMessages()) {
+			Object source = message.getSource();
+			if (source != null && source instanceof String) {
+				clientIds.add((String) source);
+			} else if (message.getSource() instanceof FacesMessageSource) {
+				clientIds.add(((FacesMessageSource) source).getClientId());
+			}
+		}
+		return Collections.unmodifiableSet(clientIds).iterator();
 	}
 
 	/**
@@ -223,10 +215,8 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * Returns a List for all Messages in the current MessageContext that does translation to FacesMessages.
 	 */
 	public List<FacesMessage> getMessageList() {
-		Message[] summaryMessages = context.getMessageContext().getMessagesByCriteria(SUMMARY_MESSAGES);
-		Message[] detailMessages = context.getMessageContext().getMessagesByCriteria(DETAIL_MESSAGES);
-		Message[] userMessages = context.getMessageContext().getMessagesByCriteria(USER_MESSAGES);
-		return buildMessages(summaryMessages, detailMessages, userMessages);
+		Message[] messages = context.getMessageContext().getAllMessages();
+		return asFacesMessages(messages);
 	}
 
 	/**
@@ -241,39 +231,37 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * Returns a List for all Messages with the given clientId in the current MessageContext that does translation to
 	 * FacesMessages.
 	 */
-	public List<FacesMessage> getMessageList(String clientId) {
-		Message[] summaryMessages = context.getMessageContext().getMessagesBySource(clientId + SUMMARY_MESSAGE_KEY);
-		Message[] detailMessages = context.getMessageContext().getMessagesBySource(clientId + DETAIL_MESSAGE_KEY);
-		Message[] userMessages = context.getMessageContext().getMessagesBySource(clientId);
-		return buildMessages(summaryMessages, detailMessages, userMessages);
-	}
-
-	private FacesMessage getFacesMessage(Message summary, Message detail) {
-		// If we can return the actual message instance.
-		if (summary instanceof FlowFacesMessageAdapter) {
-			return ((FlowFacesMessageAdapter) summary).getFacesMessage();
-		}
-		if (detail instanceof FlowFacesMessageAdapter) {
-			return ((FlowFacesMessageAdapter) detail).getFacesMessage();
-		}
-
-		for (Map.Entry<FacesMessage.Severity, Severity> mapping : SEVERITY_MAPPING.entrySet()) {
-			if (summary.getSeverity() == mapping.getValue()) {
-				return new FacesMessage(mapping.getKey(), summary.getText(), detail.getText());
+	public List<FacesMessage> getMessageList(final String clientId) {
+		final FacesMessageSource source = new FacesMessageSource(clientId);
+		Message[] messages = context.getMessageContext().getMessagesByCriteria(new MessageCriteria() {
+			public boolean test(Message message) {
+				return ObjectUtils.nullSafeEquals(message.getSource(), source)
+						|| ObjectUtils.nullSafeEquals(message.getSource(), clientId);
 			}
-		}
-		return new FacesMessage(FacesMessage.SEVERITY_FATAL, summary.getText(), detail.getText());
+		});
+		return asFacesMessages(messages);
 	}
 
-	private List<FacesMessage> buildMessages(Message[] summaryMessages, Message[] detailMessages, Message[] userMessages) {
-		List<FacesMessage> messages = new ArrayList<FacesMessage>();
-		for (int i = 0; i < summaryMessages.length; i++) {
-			messages.add(getFacesMessage(summaryMessages[i], detailMessages[i]));
+	private List<FacesMessage> asFacesMessages(Message[] messages) {
+		if (messages == null || messages.length == 0) {
+			return Collections.emptyList();
 		}
-		for (Message userMessage : userMessages) {
-			messages.add(getFacesMessage(userMessage, userMessage));
+		List<FacesMessage> facesMessages = new ArrayList<FacesMessage>();
+		for (Message message : messages) {
+			facesMessages.add(asFacesMessage(message));
 		}
-		return Collections.unmodifiableList(messages);
+		return Collections.unmodifiableList(facesMessages);
+	}
+
+	private FacesMessage asFacesMessage(Message message) {
+		if (message instanceof FlowFacesMessage) {
+			return ((FlowFacesMessage) message).getFacesMessage();
+		}
+		FacesMessage.Severity severity = SPRING_SEVERITY_TO_FACES.get(message.getSeverity());
+		if (severity == null) {
+			severity = FacesMessage.SEVERITY_INFO;
+		}
+		return new FacesMessage(severity, message.getText(), null);
 	}
 
 	public static FlowFacesContext newInstance(RequestContext context, Lifecycle lifecycle) {
@@ -293,51 +281,6 @@ public class FlowFacesContext extends FacesContextWrapper {
 		return facesContextFactory.getFacesContext(nativeContext, nativeRequest, nativeResponse, lifecycle);
 	}
 
-	private static class MessagesEnding implements MessageCriteria {
-
-		private String ending;
-
-		public MessagesEnding(String ending) {
-			this.ending = ending;
-		}
-
-		public boolean test(Message message) {
-			return message.getSource() != null && message.getSource().toString().endsWith(ending);
-		}
-	}
-
-	private static class ClientIdCollector implements MessageCriteria {
-
-		private static final String NULL_SUMMARY_ID = null + SUMMARY_MESSAGE_KEY;
-
-		private Set<String> clientIds = new HashSet<String>();
-
-		public boolean test(Message message) {
-			if (DETAIL_MESSAGES.equals(message)) {
-				return false;
-			}
-			Object source = message.getSource();
-			if ("".equals(source) || NULL_SUMMARY_ID.equals(source)) {
-				// From getClientIdsWithMessages docs:
-				// If any messages have been queued that were not associated with
-				// any specific client identifier, a null value will be included in the iterated values.
-				source = null;
-			}
-			String clientId = null;
-			if (source != null) {
-				clientId = source.toString();
-				if (clientId.endsWith(SUMMARY_MESSAGE_KEY)) {
-					clientId = clientId.replaceAll(SUMMARY_MESSAGE_KEY, "");
-				}
-			}
-			if (!clientIds.contains(clientId)) {
-				clientIds.add(clientId);
-				return true;
-			}
-			return false;
-		}
-	}
-
 	/**
 	 * Adapter class to convert a {@link FacesMessage} to a Spring {@link Message}. This adapter is required to allow
 	 * <tt>FacesMessages</tt> to be registered with Spring whilst still retaining their mutable nature. It is not
@@ -349,17 +292,26 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * 
 	 * For convenience this class also implements the {@link MessageResolver} interface.
 	 */
-	private static class FlowFacesMessageAdapter extends Message implements MessageResolver {
+	protected static class FlowFacesMessage extends Message implements MessageResolver {
 
-		private String key;
-		private String source;
 		private transient FacesMessage facesMessage;
 
-		public FlowFacesMessageAdapter(String source, String key, FacesMessage message) {
-			super(null, null, null);
-			this.source = source;
-			this.key = key;
+		public FlowFacesMessage(FacesMessageSource source, FacesMessage message) {
+			super(source, null, null);
 			this.facesMessage = asStandardFacesMessageInstance(message);
+		}
+
+		/**
+		 * Use standard faces message as required to protect against bugs such as SWF-1073.
+		 * 
+		 * @param message {@link javax.faces.application.FacesMessage} or subclass.
+		 * @return {@link javax.faces.application.FacesMessage} instance
+		 */
+		private FacesMessage asStandardFacesMessageInstance(FacesMessage message) {
+			if (FacesMessage.class.equals(message.getClass())) {
+				return message;
+			}
+			return new FacesMessage(message.getSeverity(), message.getSummary(), message.getDetail());
 		}
 
 		// Custom serialization to work around myfaces bug MYFACES-1347
@@ -386,43 +338,22 @@ public class FlowFacesContext extends FacesContextWrapper {
 			facesMessage = new FacesMessage(severity, summary, detail);
 		}
 
-		/**
-		 * Use standard faces message as required to protect against bugs such as SWF-1073.
-		 * 
-		 * @param message {@link javax.faces.application.FacesMessage} or subclass.
-		 * @return {@link javax.faces.application.FacesMessage} instance
-		 */
-		private FacesMessage asStandardFacesMessageInstance(FacesMessage message) {
-			if (FacesMessage.class.equals(message.getClass())) {
-				return message;
-			}
-			return new FacesMessage(message.getSeverity(), message.getSummary(), message.getDetail());
-		}
-
-		public Object getSource() {
-			return source + key;
-		}
-
 		public String getText() {
-			String text = null;
-			if (DETAIL_MESSAGE_KEY.equals(key)) {
-				text = facesMessage.getDetail();
-			} else if (SUMMARY_MESSAGE_KEY.equals(key)) {
-				text = facesMessage.getSummary();
-			} else {
-				throw new RuntimeException("Unknown faces message type key");
+			StringBuilder text = new StringBuilder();
+			if (StringUtils.hasLength(facesMessage.getSummary())) {
+				text.append(facesMessage.getSummary());
 			}
-
-			if (StringUtils.hasText(text)) {
-				return text;
+			if (StringUtils.hasLength(facesMessage.getDetail())) {
+				text.append(text.length() == 0 ? "" : " : ");
+				text.append(facesMessage.getDetail());
 			}
-			return "";
+			return text.toString();
 		}
 
 		public Severity getSeverity() {
 			Severity severity = null;
 			if (facesMessage.getSeverity() != null) {
-				severity = SEVERITY_MAPPING.get(facesMessage.getSeverity());
+				severity = FACES_SEVERITY_TO_SPRING.get(facesMessage.getSeverity());
 			}
 			return (severity == null ? Severity.INFO : severity);
 		}
@@ -449,4 +380,38 @@ public class FlowFacesContext extends FacesContextWrapper {
 		}
 	}
 
+	/**
+	 * A Spring Message {@link Message#getSource() Source} that originated from JSF.
+	 */
+	public static class FacesMessageSource implements Serializable {
+
+		private String clientId;
+
+		public FacesMessageSource(String clientId) {
+			if (StringUtils.hasLength(clientId)) {
+				this.clientId = clientId;
+			}
+		}
+
+		public String getClientId() {
+			return clientId;
+		}
+
+		public int hashCode() {
+			return ObjectUtils.nullSafeHashCode(clientId);
+		}
+
+		public boolean equals(Object obj) {
+			if (obj == null) {
+				return false;
+			}
+			if (obj == this) {
+				return true;
+			}
+			if (obj.getClass().equals(FacesMessageSource.class)) {
+				return ObjectUtils.nullSafeEquals(getClientId(), ((FacesMessageSource) obj).getClientId());
+			}
+			return false;
+		}
+	}
 }

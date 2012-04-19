@@ -27,7 +27,7 @@ import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.execution.View;
 
 /**
- * Web Flow {@link PartialViewContext} implementation allowing ids for partial rendering to be specified from the
+ * Web Flow {@link PartialViewContext} implementation allowing IDs for partial rendering to be specified from the
  * server-side. This is done in a flow definition with the &lt;render fragments="..." /&gt; action.
  * 
  * @author Rossen Stoyanchev
