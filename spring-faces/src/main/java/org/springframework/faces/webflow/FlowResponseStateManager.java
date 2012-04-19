@@ -38,9 +38,9 @@ import org.springframework.webflow.execution.RequestContextHolder;
  * 
  * @since 2.2.0
  */
-public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
+public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 
-	private static final Log logger = LogFactory.getLog(FlowViewResponseStateManager.class);
+	private static final Log logger = LogFactory.getLog(FlowResponseStateManager.class);
 
 	static final String FACES_VIEW_STATE = "facesViewState";
 
@@ -52,7 +52,7 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 
 	private ResponseStateManager wrapped;
 
-	public FlowViewResponseStateManager(ResponseStateManager wrapped) {
+	public FlowResponseStateManager(ResponseStateManager wrapped) {
 		this.wrapped = wrapped;
 	}
 
@@ -65,8 +65,7 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 		if (!JsfUtils.isFlowRequest()) {
 			super.writeState(facesContext, state);
 		} else {
-			RequestContext requestContext = RequestContextHolder.getRequestContext();
-			requestContext.getViewScope().put(FACES_VIEW_STATE, state);
+			saveState(state);
 			ResponseWriter writer = facesContext.getResponseWriter();
 			writeViewStateField(facesContext, writer);
 			writeRenderKitIdField(facesContext, writer);
@@ -97,9 +96,13 @@ public class FlowViewResponseStateManager extends ResponseStateManagerWrapper {
 		if (!JsfUtils.isFlowRequest()) {
 			return super.getViewState(facesContext, state);
 		}
+		saveState(state);
+		return getFlowExecutionKey();
+	}
+
+	void saveState(Object state) {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		requestContext.getViewScope().put(FACES_VIEW_STATE, state);
-		return getFlowExecutionKey();
 	}
 
 	private String getFlowExecutionKey() {

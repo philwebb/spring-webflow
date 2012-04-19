@@ -53,9 +53,9 @@
 		<dependency org="com.sun.faces" name="jsf-api" rev="2.0.6" conf="provided, mojarra20->default" />
 		<dependency org="com.sun.faces" name="jsf-impl" rev="2.0.6" conf="provided, mojarra20->default" />
 
-		<!-- JSF 2.0 MyFaces dependencies -->
-   		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="2.0.1-SNAPSHOT" conf="myfaces20->default" />
-   		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="2.0.1-SNAPSHOT" conf="myfaces20->default" />
+		<!-- JSF 2.1 MyFaces dependencies -->
+   		<dependency org="org.apache.myfaces.core" name="myfaces-api" rev="2.1.6" conf="provided, myfaces20->default" />
+   		<dependency org="org.apache.myfaces.core" name="myfaces-impl" rev="2.1.6" conf="provided, myfaces20->default" />
 
 		<!-- JSF 1.2 Mojarra dependencies -->
 		<dependency org="javax.faces" name="com.springsource.javax.faces" rev="1.2.0.09" conf="mojarra12->runtime" />

@@ -12,7 +12,7 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private FlowViewResponseStateManager responseStateManager;
+	private FlowResponseStateManager responseStateManager;
 
 	private RequestContext requestContext;
 	private FlowExecutionContext flowExecutionContext;
@@ -26,7 +26,7 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 		RequestContextHolder.setRequestContext(requestContext);
 		flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
 
-		responseStateManager = new FlowViewResponseStateManager(null);
+		responseStateManager = new FlowResponseStateManager(null);
 	}
 
 	protected void tearDown() throws Exception {

@@ -15,7 +15,6 @@
  */
 package org.springframework.faces.webflow;
 
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
 import javax.servlet.ServletContext;
@@ -40,8 +39,7 @@ public class FacesContextHelper {
 		if (FacesContext.getCurrentInstance() != null) {
 			facesContext = FacesContext.getCurrentInstance();
 		} else {
-			FacesContextFactory factory = (FacesContextFactory) FactoryFinder
-					.getFactory(FactoryFinder.FACES_CONTEXT_FACTORY);
+			FacesContextFactory factory = JsfUtils.findFactory(FacesContextFactory.class);
 			facesContext = factory.getFacesContext(servletContext, request, response, FlowLifecycle.newInstance());
 			release = true;
 		}

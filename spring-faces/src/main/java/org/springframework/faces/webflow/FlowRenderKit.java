@@ -31,11 +31,17 @@ public class FlowRenderKit extends RenderKitWrapper {
 
 	private RenderKit wrapped;
 
-	private FlowViewResponseStateManager flowViewResponseStateManager;
+	private ResponseStateManager flowViewResponseStateManager;
 
 	public FlowRenderKit(RenderKit wrapped) {
 		this.wrapped = wrapped;
-		this.flowViewResponseStateManager = new FlowViewResponseStateManager(wrapped.getResponseStateManager());
+		FlowResponseStateManager flowViewResponseStateManager = new FlowResponseStateManager(
+				wrapped.getResponseStateManager());
+		if (JsfRuntimeInformation.isMyFacesPresent()) {
+			this.flowViewResponseStateManager = new MyFacesFlowResponseStateManager(flowViewResponseStateManager);
+		} else {
+			this.flowViewResponseStateManager = flowViewResponseStateManager;
+		}
 	}
 
 	public RenderKit getWrapped() {
@@ -43,7 +49,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 	}
 
 	/**
-	 * Returns an instance of {@link FlowViewResponseStateManager} in a JSF 2 environment or returns the delegates's
+	 * Returns an instance of {@link FlowResponseStateManager} in a JSF 2 environment or returns the delegates's
 	 * ResponseStateManager instance otherwise.
 	 */
 	public ResponseStateManager getResponseStateManager() {

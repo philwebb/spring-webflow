@@ -15,20 +15,53 @@
  */
 package org.springframework.faces.webflow;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.faces.FactoryFinder;
+import javax.faces.application.ApplicationFactory;
+import javax.faces.component.visit.VisitContextFactory;
+import javax.faces.context.ExceptionHandlerFactory;
+import javax.faces.context.ExternalContextFactory;
 import javax.faces.context.FacesContext;
+import javax.faces.context.FacesContextFactory;
+import javax.faces.context.PartialViewContextFactory;
 import javax.faces.event.PhaseEvent;
 import javax.faces.event.PhaseId;
 import javax.faces.event.PhaseListener;
 import javax.faces.lifecycle.Lifecycle;
+import javax.faces.lifecycle.LifecycleFactory;
+import javax.faces.render.RenderKitFactory;
+import javax.faces.view.ViewDeclarationLanguageFactory;
+import javax.faces.view.facelets.FaceletCacheFactory;
+import javax.faces.view.facelets.TagHandlerDelegateFactory;
 
+import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * Common support for the JSF integration with Spring Web Flow.
  * 
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
 public class JsfUtils {
+
+	private static final Map<Class<?>, String> FACTORY_NAMES;
+	static {
+		FACTORY_NAMES = new HashMap<Class<?>, String>();
+		FACTORY_NAMES.put(ApplicationFactory.class, FactoryFinder.APPLICATION_FACTORY);
+		FACTORY_NAMES.put(ExceptionHandlerFactory.class, FactoryFinder.EXCEPTION_HANDLER_FACTORY);
+		FACTORY_NAMES.put(ExternalContextFactory.class, FactoryFinder.EXTERNAL_CONTEXT_FACTORY);
+		FACTORY_NAMES.put(FaceletCacheFactory.class, FactoryFinder.FACELET_CACHE_FACTORY);
+		FACTORY_NAMES.put(FacesContextFactory.class, FactoryFinder.FACES_CONTEXT_FACTORY);
+		FACTORY_NAMES.put(LifecycleFactory.class, FactoryFinder.LIFECYCLE_FACTORY);
+		FACTORY_NAMES.put(PartialViewContextFactory.class, FactoryFinder.PARTIAL_VIEW_CONTEXT_FACTORY);
+		FACTORY_NAMES.put(RenderKitFactory.class, FactoryFinder.RENDER_KIT_FACTORY);
+		FACTORY_NAMES.put(TagHandlerDelegateFactory.class, FactoryFinder.TAG_HANDLER_DELEGATE_FACTORY);
+		FACTORY_NAMES.put(ViewDeclarationLanguageFactory.class, FactoryFinder.VIEW_DECLARATION_LANGUAGE_FACTORY);
+		FACTORY_NAMES.put(VisitContextFactory.class, FactoryFinder.VISIT_CONTEXT_FACTORY);
+	}
 
 	public static void notifyAfterListeners(PhaseId phaseId, Lifecycle lifecycle, FacesContext context) {
 		PhaseEvent afterPhaseEvent = new PhaseEvent(context, phaseId, lifecycle);
@@ -64,5 +97,19 @@ public class JsfUtils {
 		} else {
 			return false;
 		}
+	}
+
+	// FIXME Test
+	/**
+	 * Find a factory of the specified class using JSFs {@link FactoryFinder} class.
+	 * @param factoryClass the factory class to find
+	 * @return the factory instance
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> T findFactory(Class<T> factoryClass) {
+		Assert.notNull(factoryClass, "FactoryClass must not be null");
+		String name = FACTORY_NAMES.get(factoryClass);
+		Assert.state(name != null, "Unknown factory class " + factoryClass.getName());
+		return (T) FactoryFinder.getFactory(name);
 	}
 }

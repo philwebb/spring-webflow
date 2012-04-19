@@ -28,7 +28,6 @@ import javax.el.ELContextListener;
 import javax.el.ELResolver;
 import javax.el.FunctionMapper;
 import javax.el.VariableMapper;
-import javax.faces.FactoryFinder;
 import javax.faces.application.Application;
 import javax.faces.application.ApplicationFactory;
 import javax.faces.application.FacesMessage;
@@ -43,6 +42,7 @@ import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
+import org.springframework.faces.webflow.JsfUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -85,9 +85,8 @@ public class PortletFacesContextImpl extends FacesContext {
 
 	public PortletFacesContextImpl(PortletContext portletContext, PortletRequest portletRequest,
 			PortletResponse portletResponse) {
-		application = ((ApplicationFactory) FactoryFinder.getFactory(FactoryFinder.APPLICATION_FACTORY))
-				.getApplication();
-		renderKitFactory = (RenderKitFactory) FactoryFinder.getFactory(FactoryFinder.RENDER_KIT_FACTORY);
+		application = JsfUtils.findFactory(ApplicationFactory.class).getApplication();
+		renderKitFactory = JsfUtils.findFactory(RenderKitFactory.class);
 		this.externalContext = new PortletExternalContextImpl(portletContext, portletRequest, portletResponse);
 		FacesContext.setCurrentInstance(this);
 	}

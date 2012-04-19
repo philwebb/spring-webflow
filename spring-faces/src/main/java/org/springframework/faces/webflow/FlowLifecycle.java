@@ -16,7 +16,6 @@
 package org.springframework.faces.webflow;
 
 import javax.faces.FacesException;
-import javax.faces.FactoryFinder;
 import javax.faces.context.FacesContext;
 import javax.faces.event.PhaseId;
 import javax.faces.lifecycle.Lifecycle;
@@ -44,8 +43,7 @@ public class FlowLifecycle extends LifecycleWrapper {
 	private final Lifecycle wrapped;
 
 	public static Lifecycle newInstance() {
-		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
-				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		LifecycleFactory lifecycleFactory = JsfUtils.findFactory(LifecycleFactory.class);
 		Lifecycle defaultLifecycle = lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
 		return new FlowLifecycle(defaultLifecycle);
 

@@ -85,6 +85,7 @@
 			<version>3.5.0-Final</version>
 		</dependency>
 		<!-- JSF: Mojarra, PrimeFaces -->
+		<!-- 
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
@@ -94,14 +95,12 @@
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
 			<version>${jsf-version}</version>
-		</dependency>
-		<!-- 
+		</dependency> -->
 		<dependency>
 			<groupId>org.apache.myfaces.core</groupId>
 			<artifactId>myfaces-impl</artifactId>
 			<version>2.1.6</version>
 		</dependency>
-		 -->
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>

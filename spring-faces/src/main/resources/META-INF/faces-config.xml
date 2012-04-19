@@ -8,15 +8,7 @@
 	<application>
 		<action-listener>org.springframework.faces.webflow.FlowActionListener</action-listener>
 		<action-listener>org.springframework.faces.model.SelectionTrackingActionListener</action-listener>
-		<el-resolver>org.springframework.webflow.expression.el.RequestContextELResolver</el-resolver>
-		<el-resolver>org.springframework.webflow.expression.el.ImplicitFlowVariableELResolver</el-resolver>
-		<el-resolver>org.springframework.webflow.expression.el.FlowResourceELResolver</el-resolver>
-		<el-resolver>org.springframework.webflow.expression.el.ScopeSearchingELResolver</el-resolver>
-<!-- FIXME PW 
-		<variable-resolver>org.springframework.faces.webflow.FlowVariableResolver</variable-resolver>
-		-->
-        <property-resolver>org.springframework.faces.webflow.FlowPropertyResolver</property-resolver>
-		<variable-resolver>org.springframework.faces.webflow.SpringBeanWebFlowVariableResolver</variable-resolver>
+        <el-resolver>org.springframework.faces.webflow.FlowELResolver</el-resolver>
 	</application>
 
 	<factory>

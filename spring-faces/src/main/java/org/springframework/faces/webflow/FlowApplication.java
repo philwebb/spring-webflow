@@ -36,7 +36,7 @@ public class FlowApplication extends ApplicationWrapper {
 
 	/**
 	 * Class constructor that accepts a delegate Application instance. If the delegate has default instantiation logic
-	 * for its StateManager and ViewHandler instances, those will be wrapped with {@link FlowViewStateManager} and a
+	 * for its StateManager and ViewHandler instances, those will be wrapped with {@link FlowStateManager} and a
 	 * {@link FlowViewHandler} instance.
 	 * 
 	 * @param wrapped the wrapped Application instance.
@@ -61,7 +61,7 @@ public class FlowApplication extends ApplicationWrapper {
 	}
 
 	/**
-	 * Inserts {@link FlowViewStateManager} in front of the given StateManager (if not already done).
+	 * Inserts {@link FlowStateManager} in front of the given StateManager (if not already done).
 	 */
 	public void setStateManager(StateManager manager) {
 		if (shouldWrap(manager)) {
@@ -72,11 +72,11 @@ public class FlowApplication extends ApplicationWrapper {
 	}
 
 	private boolean shouldWrap(StateManager manager) {
-		return (manager != null) && (!(manager instanceof FlowViewStateManager));
+		return (manager != null) && (!(manager instanceof FlowStateManager));
 	}
 
 	private void wrapAndSetStateManager(StateManager target) {
-		super.setStateManager(new FlowViewStateManager(target));
+		super.setStateManager(new FlowStateManager(target));
 	}
 
 	/**
