@@ -10,11 +10,11 @@ import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 import org.springframework.webflow.test.MockFlowExecutionKey;
 
-public class FlowViewResponseStateManagerTests extends TestCase {
+public class FlowResponseStateManagerTests extends TestCase {
 
 	private JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private FlowViewResponseStateManager responseStateManager;
+	private FlowResponseStateManager responseStateManager;
 
 	private RequestContext requestContext;
 	private FlowExecutionContext flowExecutionContext;
@@ -28,11 +28,17 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 		RequestContextHolder.setRequestContext(requestContext);
 		flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
 
-		responseStateManager = new FlowViewResponseStateManager(null);
+		responseStateManager = new FlowResponseStateManager(null);
 	}
 
 	protected void tearDown() throws Exception {
+		super.tearDown();
 		jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
+	}
+
+	public void testname() throws Exception {
+
 	}
 
 	public void testWriteFlowSerializedView() throws Exception {
@@ -42,10 +48,10 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 		EasyMock.expect(requestContext.getFlowExecutionContext()).andReturn(flowExecutionContext);
 		EasyMock.replay(requestContext, flowExecutionContext);
 
-		FlowSerializedView flowSerializedView = new FlowSerializedView("viewId", null, null);
-		responseStateManager.writeState(jsfMock.facesContext(), flowSerializedView);
+		Object state = new Object();
+		responseStateManager.writeState(jsfMock.facesContext(), state);
 
-		assertEquals(flowSerializedView, viewMap.get(FlowViewStateManager.SERIALIZED_VIEW_STATE));
+		assertEquals(state, viewMap.get(FlowResponseStateManager.FACES_VIEW_STATE));
 		assertEquals(
 				"<input type=\"hidden\" name=\"javax.faces.ViewState\" id=\"javax.faces.ViewState\" value=\"e1s1\" />",
 				jsfMock.contentAsString());
@@ -53,21 +59,16 @@ public class FlowViewResponseStateManagerTests extends TestCase {
 	}
 
 	public void testGetState() throws Exception {
-		Object treeStructure = new Object();
-		Object componentState = new Object();
-		FlowSerializedView flowSerializedView = new FlowSerializedView("viewId", treeStructure, componentState);
+		Object state = new Object();
 
 		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<Object>();
-		viewMap.put(FlowViewStateManager.SERIALIZED_VIEW_STATE, flowSerializedView);
+		viewMap.put(FlowResponseStateManager.FACES_VIEW_STATE, state);
 		EasyMock.expect(requestContext.getViewScope()).andStubReturn(viewMap);
 		EasyMock.replay(requestContext);
 
-		Object state = responseStateManager.getState(jsfMock.facesContext(), "viewId");
+		Object actual = responseStateManager.getState(jsfMock.facesContext(), "viewId");
 
-		assertTrue(state instanceof Object[]);
-		assertSame(treeStructure, ((Object[]) state)[0]);
-		assertSame(componentState, ((Object[]) state)[1]);
+		assertSame(state, actual);
 		EasyMock.verify(requestContext);
 	}
-
 }

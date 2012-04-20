@@ -19,14 +19,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import javax.faces.FacesException;
+import javax.faces.view.facelets.ResourceResolver;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
+import org.springframework.util.ClassUtils;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
-
-import com.sun.facelets.impl.DefaultResourceResolver;
-import com.sun.facelets.impl.ResourceResolver;
 
 /**
  * Resolves Facelets templates using Spring Resource paths such as "classpath:foo.xhtml". Configure it via a context
@@ -41,9 +40,30 @@ import com.sun.facelets.impl.ResourceResolver;
  * 
  * @see Jsf2FlowResourceResolver
  */
-public class FlowResourceResolver implements ResourceResolver {
+public class FlowResourceResolver extends ResourceResolver {
 
-	ResourceResolver delegateResolver = new DefaultResourceResolver();
+	private static final String MOJARRA_DEFAULT_RESOLVER = "com.sun.faces.facelets.impl.DefaultResourceResolver";
+	private static final String MYFACES_DEFAULT_RESOLVER = "org.apache.myfaces.view.facelets.impl.DefaultResourceResolver";
+
+	private ResourceResolver delegateResolver;
+
+	public FlowResourceResolver() {
+		delegateResolver = createDelegateResolver();
+	}
+
+	private ResourceResolver createDelegateResolver() {
+		try {
+			ClassLoader classLoader = getClass().getClassLoader();
+			if (ClassUtils.isPresent(MYFACES_DEFAULT_RESOLVER, classLoader)) {
+				return (ResourceResolver) ClassUtils.forName(MYFACES_DEFAULT_RESOLVER, classLoader).newInstance();
+			}
+			if (ClassUtils.isPresent(MOJARRA_DEFAULT_RESOLVER, getClass().getClassLoader())) {
+				return (ResourceResolver) ClassUtils.forName(MOJARRA_DEFAULT_RESOLVER, classLoader).newInstance();
+			}
+		} catch (Exception e) {
+		}
+		throw new IllegalStateException("Unable to find Default ResourceResolver");
+	}
 
 	public URL resolveUrl(String path) {
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.NavigationHandler;
-import javax.faces.component.ActionSource;
+import javax.faces.component.ActionSource2;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AbortProcessingException;
 import javax.faces.event.ActionEvent;
@@ -40,15 +40,11 @@ import org.springframework.webflow.validation.WebFlowMessageCodesResolver;
 /**
  * The default {@link ActionListener} implementation to be used with Web Flow.
  * 
- * <p>
  * This implementation bypasses the JSF {@link NavigationHandler} mechanism to instead let the event be handled directly
  * by Web Flow.
- * </p>
- * 
  * <p>
  * Web Flow's model-level validation will be invoked here after an event has been detected if the event is not an
  * immediate event.
- * </p>
  * 
  * @author Jeremy Grelle
  */
@@ -72,13 +68,13 @@ public class FlowActionListener implements ActionListener {
 			return;
 		}
 		FacesContext context = FacesContext.getCurrentInstance();
-		ActionSource source = (ActionSource) actionEvent.getSource();
+		ActionSource2 source = (ActionSource2) actionEvent.getSource();
 		String eventId = null;
-		if (source.getAction() != null) {
+		if (source.getActionExpression() != null) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Invoking action " + source.getAction());
+				logger.debug("Invoking action " + source.getActionExpression());
 			}
-			eventId = (String) source.getAction().invoke(context, null);
+			eventId = (String) source.getActionExpression().invoke(context.getELContext(), null);
 		}
 		if (StringUtils.hasText(eventId)) {
 			if (logger.isDebugEnabled()) {

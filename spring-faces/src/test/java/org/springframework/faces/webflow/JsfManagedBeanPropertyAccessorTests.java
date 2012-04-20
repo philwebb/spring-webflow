@@ -36,7 +36,9 @@ public class JsfManagedBeanPropertyAccessorTests extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
+		super.tearDown();
 		jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public void testCanRead() throws Exception {

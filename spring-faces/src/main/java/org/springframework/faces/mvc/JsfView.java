@@ -15,12 +15,10 @@
  */
 package org.springframework.faces.mvc;
 
-import static org.springframework.faces.webflow.JsfRuntimeInformation.isAtLeastJsf12;
 import static org.springframework.faces.webflow.JsfRuntimeInformation.isPortletRequest;
 
 import java.util.Map;
 
-import javax.faces.FactoryFinder;
 import javax.faces.application.ViewHandler;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
@@ -63,7 +61,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
-		if (isAtLeastJsf12() && (!isPortletRequest(facesContext))) {
+		if (!isPortletRequest(facesContext)) {
 			viewHandler.initView(facesContext);
 		}
 
@@ -96,8 +94,7 @@ public class JsfView extends AbstractUrlBasedView {
 	}
 
 	private Lifecycle createFacesLifecycle() {
-		LifecycleFactory lifecycleFactory = (LifecycleFactory) FactoryFinder
-				.getFactory(FactoryFinder.LIFECYCLE_FACTORY);
+		LifecycleFactory lifecycleFactory = JsfUtils.findFactory(LifecycleFactory.class);
 		return lifecycleFactory.getLifecycle(LifecycleFactory.DEFAULT_LIFECYCLE);
 	}
 

@@ -38,7 +38,9 @@ public class FlowActionListenerTests extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
+		super.tearDown();
 		jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public final void testProcessAction() {
@@ -95,8 +97,7 @@ public class FlowActionListenerTests extends TestCase {
 			super(new Flow("mockFlow"), "mockView", new ViewFactory() {
 
 				public View getView(RequestContext context) {
-					// TODO Auto-generated method stub
-					throw new UnsupportedOperationException("Auto-generated method stub");
+					throw new UnsupportedOperationException();
 				}
 			});
 		}

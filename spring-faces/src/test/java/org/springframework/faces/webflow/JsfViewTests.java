@@ -94,7 +94,9 @@ public class JsfViewTests extends TestCase {
 	}
 
 	protected void tearDown() throws Exception {
+		super.tearDown();
 		jsfMock.tearDown();
+		RequestContextHolder.setRequestContext(null);
 	}
 
 	public final void testSaveState() {
