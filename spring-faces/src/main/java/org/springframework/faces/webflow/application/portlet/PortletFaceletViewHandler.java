@@ -26,26 +26,23 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.RenderKit;
 import javax.portlet.RenderResponse;
 
+import org.apache.myfaces.view.facelets.FaceletViewHandler;
 import org.springframework.faces.webflow.JsfRuntimeInformation;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.sun.facelets.FaceletViewHandler;
-
 /**
- * <p>
  * This {@link ViewHandler} implementation is needed because portions of the native Facelets ViewHandler depend on the
  * Servlet API and cannot be used directly in a Portlet environment.
- * </p>
- * 
  * <p>
  * Note: the basis for this code was a Facelets sample provided with Apache MyFaces Portlet Bridge for JSF version
  * 2.0.0.alpha-2.
- * </p>
  * 
  * @since 2.2.0
  */
 public class PortletFaceletViewHandler extends FaceletViewHandler {
+
+	// FIXME PW FaceletViewHandler is deprecated, what other option?
 
 	private static final String FACELETS_CONTENT_TYPE_KEY = "facelets.ContentType";
 	private static final String FACELETS_ENCODING_KEY = "facelets.Encoding";

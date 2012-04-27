@@ -10,7 +10,7 @@
 	<properties>
 		<org.springframework-version>3.1.1.RELEASE</org.springframework-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
-		<myfaces.core-version>1.2.9</myfaces.core-version>
+		<myfaces.core-version>2.1.6</myfaces.core-version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -73,11 +73,6 @@
 			<groupId>org.apache.myfaces.core</groupId>
 			<artifactId>myfaces-impl</artifactId>
 			<version>${myfaces.core-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.facelets</groupId>
-			<artifactId>jsf-facelets</artifactId>
-			<version>1.1.14</version>
 		</dependency>
 		<!-- Logging -->
 		<dependency>

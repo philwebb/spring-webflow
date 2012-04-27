@@ -4,7 +4,16 @@
   "http://java.sun.com/dtd/web-facesconfig_1_0.dtd">
 
 <faces-config>
+	<!-- 
 	<application>
 		<view-handler>org.springframework.faces.webflow.application.portlet.PortletFaceletViewHandler</view-handler>  
 	</application>
+
+
+	 -->
+
+	<application>
+		<view-handler>org.springframework.faces.webflow.context.portlet.PortletViewHandler</view-handler>  
+	</application>
+
 </faces-config>

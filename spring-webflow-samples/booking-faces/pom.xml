@@ -12,7 +12,7 @@
 		<org.springsecurity-version>3.0.2.RELEASE</org.springsecurity-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<jsf-version>2.1.7</jsf-version>
-		<primefaces-version>3.1.1</primefaces-version>
+		<primefaces-version>3.2</primefaces-version>
 	</properties>
 	<dependencies>
 		<!-- Spring -->
@@ -25,14 +25,14 @@
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
-				 </exclusion>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
 			<version>${org.springframework-version}</version>
-		</dependency>				
+		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-orm</artifactId>
@@ -57,8 +57,8 @@
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
-				 </exclusion>
-			</exclusions>						
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -69,9 +69,9 @@
 				<exclusion>
 					<groupId>commons-logging</groupId>
 					<artifactId>commons-logging</artifactId>
-				 </exclusion>
-			</exclusions>						
-        </dependency>	
+				</exclusion>
+			</exclusions>
+		</dependency>
 		<!-- Database, JPA -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -85,6 +85,7 @@
 			<version>3.5.0-Final</version>
 		</dependency>
 		<!-- JSF: Mojarra, PrimeFaces -->
+		<!-- 
 		<dependency>
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-api</artifactId>
@@ -94,6 +95,11 @@
 			<groupId>com.sun.faces</groupId>
 			<artifactId>jsf-impl</artifactId>
 			<version>${jsf-version}</version>
+		</dependency> -->
+		<dependency>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-impl</artifactId>
+			<version>2.1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
@@ -154,16 +160,14 @@
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.0.2.GA</version>
 		</dependency>
-		<!--
-			JAXB is needed when running on Java 5. In this environment these dependencies have to be added 
-			(unless xml	configuration is explicitly disabled via Configuration.ignoreXmlConfiguration) 
-			On Java 6 jaxb is part of the runtime environment.
-		-->
-        <dependency>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api</artifactId>
-          <version>2.1</version>
-        </dependency>
+		<!-- JAXB is needed when running on Java 5. In this environment these dependencies 
+			have to be added (unless xml configuration is explicitly disabled via Configuration.ignoreXmlConfiguration) 
+			On Java 6 jaxb is part of the runtime environment. -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.1</version>
+		</dependency>
 		<!-- Test -->
 		<dependency>
 			<groupId>org.easymock</groupId>
@@ -195,7 +199,7 @@
 			<name>Prime Technology Maven Repository</name>
 			<url>http://repository.primefaces.org</url>
 			<layout>default</layout>
-		</repository>		
+		</repository>
 	</repositories>
 	<build>
 		<finalName>swf-booking-faces</finalName>
@@ -227,7 +231,7 @@
 					<downloadJavadocs>false</downloadJavadocs>
 					<wtpversion>2.0</wtpversion>
 				</configuration>
-			</plugin>			
+			</plugin>
 		</plugins>
 	</build>
 </project>
