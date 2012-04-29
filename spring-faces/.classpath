@@ -34,5 +34,6 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security.core/3.0.2.RELEASE/org.springframework.security.core-3.0.2.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework.security/org.springframework.security.core/3.0.2.RELEASE/org.springframework.security.core-sources-3.0.2.RELEASE.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security.web/3.0.2.RELEASE/org.springframework.security.web-3.0.2.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework.security/org.springframework.security.web/3.0.2.RELEASE/org.springframework.security.web-sources-3.0.2.RELEASE.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/com.sun.facelets/com.springsource.com.sun.facelets/1.1.14/com.springsource.com.sun.facelets-1.1.14.jar" sourcepath="/IVY_CACHE/com.sun.facelets/com.springsource.com.sun.facelets/1.1.14/com.springsource.com.sun.facelets-sources-1.1.14.jar"/>
+	<classpathentry kind="var" path="IVY_CACHE/org.springframework/org.springframework.web.portlet/3.1.1.RELEASE/org.springframework.web.portlet-3.1.1.RELEASE.jar" sourcepath="/IVY_CACHE/org.springframework/org.springframework.web.portlet/3.1.1.RELEASE/org.springframework.web.portlet-sources-3.1.1.RELEASE.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

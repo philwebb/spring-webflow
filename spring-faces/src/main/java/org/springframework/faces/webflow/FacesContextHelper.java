@@ -17,9 +17,11 @@ package org.springframework.faces.webflow;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.FacesContextFactory;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.portlet.PortletContext;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+
+import org.springframework.faces.webflow.context.portlet.PortletFacesContextImpl;
 
 /**
  * Provides helper methods for getting a FacesContext that is suitable for use outside of Web Flow. Inside a running
@@ -33,14 +35,18 @@ public class FacesContextHelper {
 
 	private boolean release = false;
 
-	public FacesContext getFacesContext(ServletContext servletContext, HttpServletRequest request,
-			HttpServletResponse response) {
+	public FacesContext getFacesContext(Object context, Object request, Object response) {
 		FacesContext facesContext = null;
 		if (FacesContext.getCurrentInstance() != null) {
 			facesContext = FacesContext.getCurrentInstance();
 		} else {
-			FacesContextFactory factory = JsfUtils.findFactory(FacesContextFactory.class);
-			facesContext = factory.getFacesContext(servletContext, request, response, FlowLifecycle.newInstance());
+			if (context instanceof PortletContext) { // FIXME check if not portlet jar
+				facesContext = new PortletFacesContextImpl((PortletContext) context, (PortletRequest) request,
+						(PortletResponse) response);
+			} else {
+				FacesContextFactory factory = JsfUtils.findFactory(FacesContextFactory.class);
+				facesContext = factory.getFacesContext(context, request, response, FlowLifecycle.newInstance());
+			}
 			release = true;
 		}
 		return facesContext;

@@ -22,6 +22,8 @@
 		</property>
 	</bean>
 
+	<bean class="org.springframework.faces.webflow.context.portlet.JsfResourceRequestHandler"/>
+
 	<!-- Maps logical view names selected by the url filename controller to .jsp view templates within the /WEB-INF directory -->	
 	<bean id="internalJspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/" />
