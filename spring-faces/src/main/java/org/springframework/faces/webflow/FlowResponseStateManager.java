@@ -100,7 +100,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 		return getFlowExecutionKey();
 	}
 
-	void saveState(Object state) {
+	private void saveState(Object state) {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		requestContext.getViewScope().put(FACES_VIEW_STATE, state);
 	}
