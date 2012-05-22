@@ -4,11 +4,18 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 import javax.faces.context.FacesContext;
-import javax.faces.render.ResponseStateManager;
 
 import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
 import org.apache.myfaces.test.base.AbstractJsfTestCase;
 import org.apache.myfaces.test.mock.MockResponseWriter;
+import org.easymock.EasyMock;
+import org.springframework.webflow.engine.ViewState;
+import org.springframework.webflow.execution.RequestContextHolder;
+import org.springframework.webflow.execution.ViewFactory;
+import org.springframework.webflow.test.MockFlowExecutionContext;
+import org.springframework.webflow.test.MockFlowExecutionKey;
+import org.springframework.webflow.test.MockFlowSession;
+import org.springframework.webflow.test.MockRequestContext;
 
 /**
  * Tests for {@link MyFacesFlowResponseStateManager}.
@@ -18,8 +25,9 @@ import org.apache.myfaces.test.mock.MockResponseWriter;
 public class MyFacesFlowResponseStateManagerTests extends AbstractJsfTestCase {
 
 	private MockMyfacesResponseStateManager root;
-	private MockFlowResponseStateManager flow;
+	private FlowResponseStateManager flow;
 	private MyFacesFlowResponseStateManager manager;
+	private MockRequestContext requestContext;
 
 	public MyFacesFlowResponseStateManagerTests(String name) {
 		super(name);
@@ -28,8 +36,20 @@ public class MyFacesFlowResponseStateManagerTests extends AbstractJsfTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.root = new MockMyfacesResponseStateManager();
-		this.flow = new MockFlowResponseStateManager(this.root);
+		this.flow = new FlowResponseStateManager(this.root);
 		this.manager = new MyFacesFlowResponseStateManager(this.flow);
+		this.requestContext = new MockRequestContext();
+		MockFlowExecutionContext executionContext = requestContext.getMockFlowExecutionContext();
+		MockFlowSession session = executionContext.getMockActiveSession();
+		ViewFactory viewFactory = EasyMock.createNiceMock(ViewFactory.class);
+		session.setState(new ViewState(session.getDefinitionInternal(), "view", viewFactory));
+		executionContext.setKey(new MockFlowExecutionKey("x"));
+		RequestContextHolder.setRequestContext(requestContext);
+	}
+
+	protected void tearDown() throws Exception {
+		RequestContextHolder.setRequestContext(null);
+		super.tearDown();
 	}
 
 	public void testDelegatesIsWriteStateAfterRenderViewRequired() throws Exception {
@@ -38,14 +58,16 @@ public class MyFacesFlowResponseStateManagerTests extends AbstractJsfTestCase {
 	}
 
 	public void testDelegatesWriteState() throws Exception {
+		RequestContextHolder.setRequestContext(null);
 		this.facesContext.setResponseWriter(new MockResponseWriter(new StringWriter()));
 		this.manager.writeState(this.facesContext, new Object());
 		assertTrue(this.root.writeStateCalled);
 	}
 
 	public void testTriggersSaveStateInFlowResponseStateManager() throws Exception {
-		this.manager.saveState(this.facesContext, new Object());
-		assertTrue(this.flow.saveStateCalled);
+		Object state = new Object();
+		this.manager.saveState(this.facesContext, state);
+		assertSame(state, requestContext.getViewScope().get(FlowResponseStateManager.FACES_VIEW_STATE));
 		assertFalse(this.root.saveStateCalled);
 	}
 
@@ -67,18 +89,4 @@ public class MyFacesFlowResponseStateManagerTests extends AbstractJsfTestCase {
 			this.writeStateCalled = true;
 		}
 	}
-
-	private static class MockFlowResponseStateManager extends FlowResponseStateManager {
-
-		private boolean saveStateCalled;
-
-		public MockFlowResponseStateManager(ResponseStateManager wrapped) {
-			super(wrapped);
-		}
-
-		void saveState(Object state) {
-			this.saveStateCalled = true;
-		}
-	}
-
 }
