@@ -21,7 +21,7 @@ public class JsfViewTests extends TestCase {
 
 	UrlBasedViewResolver resolver;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
 	public void setUp() throws Exception {
 		jsfMock.setUp();

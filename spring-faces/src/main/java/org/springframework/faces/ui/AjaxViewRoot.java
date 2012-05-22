@@ -60,7 +60,7 @@ public class AjaxViewRoot extends DelegatingViewRoot {
 
 	protected static final String PROCESS_ALL = "*";
 
-	private List<FacesEvent> events = new ArrayList<FacesEvent>();
+	private final List<FacesEvent> events = new ArrayList<FacesEvent>();
 
 	private String[] processIds;
 

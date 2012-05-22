@@ -12,7 +12,7 @@ import org.springframework.webflow.test.MockFlowExecutionKey;
 
 public class FlowResponseStateManagerTests extends TestCase {
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
 	private FlowResponseStateManager responseStateManager;
 

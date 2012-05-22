@@ -6,7 +6,7 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
 
 public class JsfAjaxHandlerTests extends TestCase {
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 	private JsfAjaxHandler ajaxHandler;
 
 	protected void setUp() throws Exception {

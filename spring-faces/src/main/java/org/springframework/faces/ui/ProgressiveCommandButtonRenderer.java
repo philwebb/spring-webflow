@@ -55,7 +55,7 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
-	private RenderAttributeCallback onclickCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback onclickCallback = new RenderAttributeCallback() {
 
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {

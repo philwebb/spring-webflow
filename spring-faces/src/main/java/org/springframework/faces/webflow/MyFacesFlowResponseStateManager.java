@@ -50,7 +50,7 @@ import org.apache.myfaces.renderkit.StateCacheUtils;
 public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager implements
 		FacesWrapper<ResponseStateManager> {
 
-	private FlowResponseStateManager flowResponseStateManager;
+	private final FlowResponseStateManager flowResponseStateManager;
 
 	public MyFacesFlowResponseStateManager(FlowResponseStateManager flowResponseStateManager) {
 		this.flowResponseStateManager = flowResponseStateManager;

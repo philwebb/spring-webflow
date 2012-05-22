@@ -43,11 +43,11 @@ public class JsfView implements View {
 
 	private UIViewRoot viewRoot;
 
-	private Lifecycle facesLifecycle;
+	private final Lifecycle facesLifecycle;
 
-	private RequestContext requestContext;
+	private final RequestContext requestContext;
 
-	private String viewId;
+	private final String viewId;
 
 	/**
 	 * Creates a new JSF view.

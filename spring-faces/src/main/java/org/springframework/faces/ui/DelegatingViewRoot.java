@@ -40,7 +40,7 @@ import javax.faces.event.PhaseListener;
  */
 public abstract class DelegatingViewRoot extends UIViewRoot {
 
-	private UIViewRoot original;
+	private final UIViewRoot original;
 
 	public DelegatingViewRoot(UIViewRoot original) {
 		this.original = original;

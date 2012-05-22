@@ -295,7 +295,7 @@ public class PortletFacesContextImpl extends FacesContext {
 
 		private FunctionMapper functionMapper;
 		private VariableMapper variableMapper;
-		private ELResolver resolver;
+		private final ELResolver resolver;
 
 		public PortletELContextImpl(ELResolver resolver) {
 			this.resolver = resolver;

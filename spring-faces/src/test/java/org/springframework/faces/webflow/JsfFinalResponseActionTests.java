@@ -37,11 +37,11 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private JsfViewFactory factory;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
+	private final RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	private ViewHandler viewHandler = new NoRenderViewHandler();
+	private final ViewHandler viewHandler = new NoRenderViewHandler();
 
 	private TestLifecycle lifecycle;
 
@@ -119,7 +119,7 @@ public class JsfFinalResponseActionTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private List<String> phaseCallbacks = new ArrayList<String>();
+		private final List<String> phaseCallbacks = new ArrayList<String>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();

@@ -29,7 +29,7 @@ import javax.faces.render.ResponseStateManager;
 
 public class FlowRenderKit extends RenderKitWrapper {
 
-	private RenderKit wrapped;
+	private final RenderKit wrapped;
 
 	private ResponseStateManager flowViewResponseStateManager;
 

@@ -30,7 +30,7 @@ import javax.faces.context.FacesContext;
  */
 public class FlowStateManager extends StateManagerWrapper {
 
-	private StateManager wrapped;
+	private final StateManager wrapped;
 
 	public FlowStateManager(StateManager wrapped) {
 		this.wrapped = wrapped;

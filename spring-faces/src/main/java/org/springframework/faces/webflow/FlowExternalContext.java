@@ -41,9 +41,9 @@ public class FlowExternalContext extends ExternalContextWrapper {
 
 	private static final String CUSTOM_RESPONSE = FlowExternalContext.class.getName() + ".customResponse";
 
-	private ExternalContext wrapped;
+	private final ExternalContext wrapped;
 
-	private RequestContext context;
+	private final RequestContext context;
 
 	public FlowExternalContext(RequestContext context, ExternalContext wrapped) {
 		this.context = context;

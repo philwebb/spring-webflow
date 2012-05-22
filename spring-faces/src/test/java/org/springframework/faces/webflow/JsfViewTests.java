@@ -30,24 +30,24 @@ public class JsfViewTests extends TestCase {
 
 	private static final String VIEW_ID = "testView.xhtml";
 
-	private MockExternalContext extContext = new MockExternalContext();
+	private final MockExternalContext extContext = new MockExternalContext();
 
 	private JsfView view;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private StringWriter output = new StringWriter();
+	private final StringWriter output = new StringWriter();
 
-	private String event = "foo";
+	private final String event = "foo";
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
-	private FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
+	private final RequestContext context = EasyMock.createMock(RequestContext.class);
+	private final FlowExecutionContext flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
 	@SuppressWarnings("unchecked")
-	private MutableAttributeMap<Object> flashScope = EasyMock.createMock(MutableAttributeMap.class);
+	private final MutableAttributeMap<Object> flashScope = EasyMock.createMock(MutableAttributeMap.class);
 	@SuppressWarnings("unchecked")
-	private MutableAttributeMap<Object> flowMap = EasyMock.createMock(MutableAttributeMap.class);
+	private final MutableAttributeMap<Object> flowMap = EasyMock.createMock(MutableAttributeMap.class);
 
-	private FlowExecutionKey key = new FlowExecutionKey() {
+	private final FlowExecutionKey key = new FlowExecutionKey() {
 
 		public String toString() {
 			return "MOCK_KEY";

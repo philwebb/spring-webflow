@@ -50,7 +50,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 
 	private static final char[] STATE_FIELD_END = "\" />".toCharArray();
 
-	private ResponseStateManager wrapped;
+	private final ResponseStateManager wrapped;
 
 	public FlowResponseStateManager(ResponseStateManager wrapped) {
 		this.wrapped = wrapped;

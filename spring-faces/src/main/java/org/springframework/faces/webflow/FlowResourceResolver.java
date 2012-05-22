@@ -45,7 +45,7 @@ public class FlowResourceResolver extends ResourceResolver {
 	private static final String MOJARRA_DEFAULT_RESOLVER = "com.sun.faces.facelets.impl.DefaultResourceResolver";
 	private static final String MYFACES_DEFAULT_RESOLVER = "org.apache.myfaces.view.facelets.impl.DefaultResourceResolver";
 
-	private ResourceResolver delegateResolver;
+	private final ResourceResolver delegateResolver;
 
 	public FlowResourceResolver() {
 		delegateResolver = createDelegateResolver();

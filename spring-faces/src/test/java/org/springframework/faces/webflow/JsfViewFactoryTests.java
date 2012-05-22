@@ -50,27 +50,27 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private ViewFactory factory;
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
-	private RequestContext context = EasyMock.createMock(RequestContext.class);
+	private final RequestContext context = EasyMock.createMock(RequestContext.class);
 
-	private LocalAttributeMap<Object> flashMap = new LocalAttributeMap<Object>();
+	private final LocalAttributeMap<Object> flashMap = new LocalAttributeMap<Object>();
 
-	private ViewHandler viewHandler = new MockViewHandler();
+	private final ViewHandler viewHandler = new MockViewHandler();
 
 	private Lifecycle lifecycle;
 
 	private PhaseListener trackingListener;
 
-	private ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
+	private final ExpressionParser parser = new WebFlowELExpressionParser(new ExpressionFactoryImpl());
 
-	private MockExternalContext extContext = new MockExternalContext();
+	private final MockExternalContext extContext = new MockExternalContext();
 
-	private MockServletContext servletContext = new MockServletContext();
+	private final MockServletContext servletContext = new MockServletContext();
 
-	private MockHttpServletRequest request = new MockHttpServletRequest();
+	private final MockHttpServletRequest request = new MockHttpServletRequest();
 
-	private MockHttpServletResponse response = new MockHttpServletResponse();
+	private final MockHttpServletResponse response = new MockHttpServletResponse();
 
 	protected void setUp() throws Exception {
 		configureJsf();
@@ -302,7 +302,7 @@ public class JsfViewFactoryTests extends TestCase {
 
 	private class TrackingPhaseListener implements PhaseListener {
 
-		private List<String> phaseCallbacks = new ArrayList<String>();
+		private final List<String> phaseCallbacks = new ArrayList<String>();
 
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();

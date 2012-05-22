@@ -39,7 +39,7 @@ import org.apache.myfaces.test.mock.visit.MockVisitContextFactory;
  */
 public class JSFMockHelper {
 
-	private JSFMock mock = new JSFMock();
+	private final JSFMock mock = new JSFMock();
 
 	public Application application() {
 		return mock.application();

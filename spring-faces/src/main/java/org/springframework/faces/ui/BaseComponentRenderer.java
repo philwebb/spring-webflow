@@ -34,14 +34,14 @@ public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
-	private RenderAttributeCallback idCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback idCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			writer.writeAttribute(attribute, component.getClientId(context), property);
 		}
 	};
 
-	private RenderAttributeCallback disabledCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback disabledCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			if (Boolean.TRUE.equals(attributeValue)) {

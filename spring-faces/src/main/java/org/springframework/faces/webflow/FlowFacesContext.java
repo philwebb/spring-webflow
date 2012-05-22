@@ -89,13 +89,13 @@ public class FlowFacesContext extends FacesContextWrapper {
 		}
 	}
 
-	private FacesContext wrapped;
+	private final FacesContext wrapped;
 
-	private RequestContext context;
+	private final RequestContext context;
 
-	private ExternalContext externalContext;
+	private final ExternalContext externalContext;
 
-	private PartialViewContext partialViewContext;
+	private final PartialViewContext partialViewContext;
 
 	public FlowFacesContext(RequestContext context, FacesContext wrapped) {
 		this.context = context;

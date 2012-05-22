@@ -75,8 +75,8 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 
 	private class OrderVerifyingPhaseListener implements PhaseListener {
 
-		private List<OrderVerifyingPhaseListener> afterPhaseList;
-		private List<OrderVerifyingPhaseListener> beforePhaseList;
+		private final List<OrderVerifyingPhaseListener> afterPhaseList;
+		private final List<OrderVerifyingPhaseListener> beforePhaseList;
 
 		public OrderVerifyingPhaseListener(List<OrderVerifyingPhaseListener> afterPhaseList,
 				List<OrderVerifyingPhaseListener> beforePhaseList) {

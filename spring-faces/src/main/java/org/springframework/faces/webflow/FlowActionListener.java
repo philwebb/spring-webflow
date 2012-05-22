@@ -54,9 +54,9 @@ public class FlowActionListener implements ActionListener {
 
 	private static final String MESSAGES_ID = "messages";
 
-	private ActionListener delegate;
+	private final ActionListener delegate;
 
-	private MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
+	private final MessageCodesResolver messageCodesResolver = new WebFlowMessageCodesResolver();
 
 	public FlowActionListener(ActionListener delegate) {
 		this.delegate = delegate;

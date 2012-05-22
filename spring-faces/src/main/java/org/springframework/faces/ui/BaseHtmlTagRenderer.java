@@ -45,7 +45,7 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 	 * Default {@link RenderAttributeCallback} that just renders the tag attribute as a pass-through value if the value
 	 * is not null.
 	 */
-	private RenderAttributeCallback defaultRenderAttributeCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback defaultRenderAttributeCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			if (attributeValue != null) {

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class RequestLoggingPhaseListener implements PhaseListener {
 
-	private Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
+	private final Log logger = LogFactory.getLog(RequestLoggingPhaseListener.class);
 
 	public void afterPhase(PhaseEvent event) {
 		// no-op

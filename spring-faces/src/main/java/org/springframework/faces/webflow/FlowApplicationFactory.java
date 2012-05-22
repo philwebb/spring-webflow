@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  */
 public class FlowApplicationFactory extends ApplicationFactory {
 
-	private ApplicationFactory wrapped;
+	private final ApplicationFactory wrapped;
 
 	public FlowApplicationFactory(ApplicationFactory wrapped) {
 		Assert.notNull(wrapped, "The wrapped ApplicationFactory instance must not be null!");

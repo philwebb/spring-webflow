@@ -69,14 +69,14 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 
 	private Map<String, RenderAttributeCallback> attributeCallbacks;
 
-	private RenderAttributeCallback hrefCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback hrefCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			writer.writeAttribute(attribute, "#", property);
 		}
 	};
 
-	private RenderAttributeCallback classCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback classCallback = new RenderAttributeCallback() {
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
 			String classToAdd = "progressiveLink";
@@ -89,7 +89,7 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 		}
 	};
 
-	private RenderAttributeCallback noOpCallback = new RenderAttributeCallback() {
+	private final RenderAttributeCallback noOpCallback = new RenderAttributeCallback() {
 
 		public void doRender(FacesContext context, ResponseWriter writer, UIComponent component, String attribute,
 				Object attributeValue, String property) throws IOException {
@@ -241,11 +241,11 @@ public class ProgressiveCommandLinkRenderer extends ProgressiveCommandButtonRend
 
 	private class DoubleQuoteEscapingWriter extends ResponseWriter {
 
-		private ResponseWriter original;
+		private final ResponseWriter original;
 
-		private ResponseWriter clonedWriter;
+		private final ResponseWriter clonedWriter;
 
-		private StringWriter buffer = new StringWriter();
+		private final StringWriter buffer = new StringWriter();
 
 		public DoubleQuoteEscapingWriter(ResponseWriter original) {
 			this.original = original;

@@ -22,7 +22,7 @@ public class AjaxViewRootTests extends TestCase {
 
 	UIViewRoot testTree = new UIViewRoot();
 
-	private StringWriter output = new StringWriter();
+	private final StringWriter output = new StringWriter();
 
 	protected void setUp() throws Exception {
 		jsf.setUp();

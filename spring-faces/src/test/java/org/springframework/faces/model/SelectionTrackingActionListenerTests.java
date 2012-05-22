@@ -26,7 +26,7 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	/**
 	 * JSF Mock Helper
 	 */
-	private JSFMockHelper jsfMockHelper = new JSFMockHelper();
+	private final JSFMockHelper jsfMockHelper = new JSFMockHelper();
 
 	/**
 	 * The JSF view to simulate
@@ -41,12 +41,12 @@ public class SelectionTrackingActionListenerTests extends TestCase {
 	/**
 	 * The delegate action listener that should be called
 	 */
-	private TestDelegateActionListener delegateListener = new TestDelegateActionListener();
+	private final TestDelegateActionListener delegateListener = new TestDelegateActionListener();
 
 	/**
 	 * The class under test
 	 */
-	private ActionListener selectionTrackingListener = new SelectionTrackingActionListener(delegateListener);
+	private final ActionListener selectionTrackingListener = new SelectionTrackingActionListener(delegateListener);
 
 	public void setUp() throws Exception {
 		jsfMockHelper.setUp();

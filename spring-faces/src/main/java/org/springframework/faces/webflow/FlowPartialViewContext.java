@@ -34,7 +34,7 @@ import org.springframework.webflow.execution.View;
  */
 public class FlowPartialViewContext extends PartialViewContextWrapper {
 
-	private PartialViewContext wrapped;
+	private final PartialViewContext wrapped;
 
 	public FlowPartialViewContext(PartialViewContext wrapped) {
 		this.wrapped = wrapped;

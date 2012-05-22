@@ -36,9 +36,9 @@ import org.springframework.webflow.context.portlet.PortletRequestParameterMap;
  */
 public abstract class RequestParameterMap<V> extends StringKeyedMapAdapter<V> {
 
-	private PortletRequest portletRequest;
+	private final PortletRequest portletRequest;
 
-	private Delegate delegate;
+	private final Delegate delegate;
 
 	public RequestParameterMap(PortletRequest portletRequest) {
 		this.portletRequest = portletRequest;

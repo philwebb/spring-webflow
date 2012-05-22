@@ -26,7 +26,7 @@ import org.springframework.faces.webflow.JsfUtils;
 
 public abstract class BaseSpringJavascriptDecorationRenderer extends Renderer {
 
-	private String springJsResourceUri = "/spring/Spring.js";
+	private final String springJsResourceUri = "/spring/Spring.js";
 
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 

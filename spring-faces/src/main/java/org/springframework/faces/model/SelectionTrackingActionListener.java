@@ -44,7 +44,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 
 	private static final Log logger = LogFactory.getLog(FlowActionListener.class);
 
-	private ActionListener delegate;
+	private final ActionListener delegate;
 
 	public SelectionTrackingActionListener(ActionListener delegate) {
 		this.delegate = delegate;

@@ -20,11 +20,11 @@ import org.springframework.webflow.test.MockRequestContext;
  */
 public class FlowELResolverTests extends TestCase {
 
-	private FlowELResolver resolver = new FlowELResolver();
+	private final FlowELResolver resolver = new FlowELResolver();
 
-	private RequestContext requestContext = new MockRequestContext();
+	private final RequestContext requestContext = new MockRequestContext();
 
-	private ELContext elContext = new MockELContext();
+	private final ELContext elContext = new MockELContext();
 
 	protected void setUp() throws Exception {
 		RequestContextHolder.setRequestContext(requestContext);

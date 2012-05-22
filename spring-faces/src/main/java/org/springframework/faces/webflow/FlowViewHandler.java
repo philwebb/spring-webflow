@@ -40,7 +40,7 @@ import org.springframework.webflow.execution.View;
  */
 public class FlowViewHandler extends ViewHandlerWrapper {
 
-	private ViewHandler wrapped;
+	private final ViewHandler wrapped;
 
 	public FlowViewHandler(ViewHandler wrapped) {
 		Assert.notNull(wrapped, "The wrapped ViewHandler instance must not be null!");

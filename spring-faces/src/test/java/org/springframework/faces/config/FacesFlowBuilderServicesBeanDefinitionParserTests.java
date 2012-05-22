@@ -26,7 +26,7 @@ public class FacesFlowBuilderServicesBeanDefinitionParserTests extends TestCase 
 
 	private ClassPathXmlApplicationContext context;
 	private FlowBuilderServices builderServices;
-	private JSFMockHelper jsf = new JSFMockHelper();
+	private final JSFMockHelper jsf = new JSFMockHelper();
 
 	public void setUp() throws Exception {
 		jsf.setUp();
