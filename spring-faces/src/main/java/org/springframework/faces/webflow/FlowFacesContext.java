@@ -269,7 +269,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 		return new FlowFacesContext(context, defaultFacesContext);
 	}
 
-	public static FacesContext newDefaultInstance(RequestContext context, Lifecycle lifecycle) {
+	private static FacesContext newDefaultInstance(RequestContext context, Lifecycle lifecycle) {
 		Object nativeContext = context.getExternalContext().getNativeContext();
 		Object nativeRequest = context.getExternalContext().getNativeRequest();
 		Object nativeResponse = context.getExternalContext().getNativeResponse();
