@@ -28,25 +28,25 @@ public class MyFacesFlowResponseStateManagerTests extends AbstractJsfTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.root = new MockMyfacesResponseStateManager();
-		this.flow = new MockFlowResponseStateManager(root);
-		this.manager = new MyFacesFlowResponseStateManager(flow);
+		this.flow = new MockFlowResponseStateManager(this.root);
+		this.manager = new MyFacesFlowResponseStateManager(this.flow);
 	}
 
 	public void testDelegatesIsWriteStateAfterRenderViewRequired() throws Exception {
-		manager.isWriteStateAfterRenderViewRequired(facesContext);
-		assertTrue(root.isWriteStateAfterRenderViewRequiredCalled);
+		this.manager.isWriteStateAfterRenderViewRequired(this.facesContext);
+		assertTrue(this.root.isWriteStateAfterRenderViewRequiredCalled);
 	}
 
 	public void testDelegatesWriteState() throws Exception {
-		facesContext.setResponseWriter(new MockResponseWriter(new StringWriter()));
-		manager.writeState(facesContext, new Object());
-		assertTrue(root.writeStateCalled);
+		this.facesContext.setResponseWriter(new MockResponseWriter(new StringWriter()));
+		this.manager.writeState(this.facesContext, new Object());
+		assertTrue(this.root.writeStateCalled);
 	}
 
 	public void testTriggersSaveStateInFlowResponseStateManager() throws Exception {
-		manager.saveState(facesContext, new Object());
-		assertTrue(flow.saveStateCalled);
-		assertFalse(root.saveStateCalled);
+		this.manager.saveState(this.facesContext, new Object());
+		assertTrue(this.flow.saveStateCalled);
+		assertFalse(this.root.saveStateCalled);
 	}
 
 	private static class MockMyfacesResponseStateManager extends MyfacesResponseStateManager {

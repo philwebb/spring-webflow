@@ -51,23 +51,23 @@ public class FlowExternalContext extends ExternalContextWrapper {
 	}
 
 	public ExternalContext getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	public Object getResponse() {
-		if (context.getRequestScope().contains(CUSTOM_RESPONSE)) {
-			return context.getRequestScope().get(CUSTOM_RESPONSE);
+		if (this.context.getRequestScope().contains(CUSTOM_RESPONSE)) {
+			return this.context.getRequestScope().get(CUSTOM_RESPONSE);
 		}
 		return super.getResponse();
 	}
 
 	public void setResponse(Object response) {
-		context.getRequestScope().put(CUSTOM_RESPONSE, response);
+		this.context.getRequestScope().put(CUSTOM_RESPONSE, response);
 		super.setResponse(response);
 	}
 
 	public void responseSendError(int statusCode, String message) throws IOException {
-		logger.debug("Sending error HTTP status code " + statusCode + " with message '" + message + "'");
+		this.logger.debug("Sending error HTTP status code " + statusCode + " with message '" + message + "'");
 		super.responseSendError(statusCode, message);
 	}
 

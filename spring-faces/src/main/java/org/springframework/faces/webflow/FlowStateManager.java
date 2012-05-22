@@ -37,7 +37,7 @@ public class FlowStateManager extends StateManagerWrapper {
 	}
 
 	public StateManager getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	public boolean isSavingStateInClient(FacesContext context) {

@@ -41,13 +41,13 @@ public class FacesContextHelper {
 		} else {
 			FacesContextFactory factory = JsfUtils.findFactory(FacesContextFactory.class);
 			facesContext = factory.getFacesContext(servletContext, request, response, FlowLifecycle.newInstance());
-			release = true;
+			this.release = true;
 		}
 		return facesContext;
 	}
 
 	public void releaseIfNecessary() {
-		if (release) {
+		if (this.release) {
 			FacesContext.getCurrentInstance().release();
 		}
 	}

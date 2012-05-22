@@ -48,7 +48,7 @@ public class FlowViewHandler extends ViewHandlerWrapper {
 	}
 
 	public ViewHandler getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	public String getActionURL(FacesContext context, String viewId) {

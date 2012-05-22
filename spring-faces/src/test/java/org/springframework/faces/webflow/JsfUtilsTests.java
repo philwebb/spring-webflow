@@ -85,11 +85,11 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		}
 
 		public void afterPhase(PhaseEvent event) {
-			afterPhaseList.add(this);
+			this.afterPhaseList.add(this);
 		}
 
 		public void beforePhase(PhaseEvent event) {
-			beforePhaseList.add(this);
+			this.beforePhaseList.add(this);
 		}
 
 		public PhaseId getPhaseId() {

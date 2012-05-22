@@ -108,7 +108,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	}
 
 	public FacesContext getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	public void release() {
@@ -117,11 +117,11 @@ public class FlowFacesContext extends FacesContextWrapper {
 	}
 
 	public ExternalContext getExternalContext() {
-		return externalContext;
+		return this.externalContext;
 	}
 
 	public PartialViewContext getPartialViewContext() {
-		return partialViewContext;
+		return this.partialViewContext;
 	}
 
 	public ELContext getELContext() {
@@ -132,25 +132,25 @@ public class FlowFacesContext extends FacesContextWrapper {
 	}
 
 	public boolean getRenderResponse() {
-		Boolean renderResponse = context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
+		Boolean renderResponse = this.context.getFlashScope().getBoolean(RENDER_RESPONSE_KEY);
 		return (renderResponse == null ? false : renderResponse);
 	}
 
 	public boolean getResponseComplete() {
-		return context.getExternalContext().isResponseComplete();
+		return this.context.getExternalContext().isResponseComplete();
 	}
 
 	public void renderResponse() {
 		// stored in flash scope to survive a redirect when transitioning from one view to another
-		context.getFlashScope().put(RENDER_RESPONSE_KEY, true);
+		this.context.getFlashScope().put(RENDER_RESPONSE_KEY, true);
 	}
 
 	public void responseComplete() {
-		context.getExternalContext().recordResponseComplete();
+		this.context.getExternalContext().recordResponseComplete();
 	}
 
 	public boolean isValidationFailed() {
-		if (context.getMessageContext().hasErrorMessages()) {
+		if (this.context.getMessageContext().hasErrorMessages()) {
 			return true;
 		} else {
 			return super.isValidationFailed();
@@ -163,7 +163,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	public void addMessage(String clientId, FacesMessage message) {
 		FacesMessageSource source = new FacesMessageSource(clientId);
 		FlowFacesMessage flowFacesMessage = new FlowFacesMessage(source, message);
-		context.getMessageContext().addMessage(flowFacesMessage);
+		this.context.getMessageContext().addMessage(flowFacesMessage);
 	}
 
 	/**
@@ -171,7 +171,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 */
 	public Iterator<String> getClientIdsWithMessages() {
 		Set<String> clientIds = new LinkedHashSet<String>();
-		for (Message message : context.getMessageContext().getAllMessages()) {
+		for (Message message : this.context.getMessageContext().getAllMessages()) {
 			Object source = message.getSource();
 			if (source != null && source instanceof String) {
 				clientIds.add((String) source);
@@ -187,7 +187,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * associated with any specific UIComponent. If no such messages have been queued, return null.
 	 */
 	public FacesMessage.Severity getMaximumSeverity() {
-		if (context.getMessageContext().getAllMessages().length == 0) {
+		if (this.context.getMessageContext().getAllMessages().length == 0) {
 			return null;
 		}
 		FacesMessage.Severity max = FacesMessage.SEVERITY_INFO;
@@ -215,7 +215,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 * Returns a List for all Messages in the current MessageContext that does translation to FacesMessages.
 	 */
 	public List<FacesMessage> getMessageList() {
-		Message[] messages = context.getMessageContext().getAllMessages();
+		Message[] messages = this.context.getMessageContext().getAllMessages();
 		return asFacesMessages(messages);
 	}
 
@@ -233,7 +233,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 	 */
 	public List<FacesMessage> getMessageList(final String clientId) {
 		final FacesMessageSource source = new FacesMessageSource(clientId);
-		Message[] messages = context.getMessageContext().getMessagesByCriteria(new MessageCriteria() {
+		Message[] messages = this.context.getMessageContext().getMessagesByCriteria(new MessageCriteria() {
 			public boolean test(Message message) {
 				return ObjectUtils.nullSafeEquals(message.getSource(), source)
 						|| ObjectUtils.nullSafeEquals(message.getSource(), clientId);
@@ -318,9 +318,9 @@ public class FlowFacesContext extends FacesContextWrapper {
 
 		private void writeObject(ObjectOutputStream oos) throws IOException {
 			oos.defaultWriteObject();
-			oos.writeObject(facesMessage.getSummary());
-			oos.writeObject(facesMessage.getDetail());
-			oos.writeInt(facesMessage.getSeverity().getOrdinal());
+			oos.writeObject(this.facesMessage.getSummary());
+			oos.writeObject(this.facesMessage.getDetail());
+			oos.writeInt(this.facesMessage.getSeverity().getOrdinal());
 		}
 
 		private void readObject(ObjectInputStream ois) throws ClassNotFoundException, IOException {
@@ -335,25 +335,25 @@ public class FlowFacesContext extends FacesContextWrapper {
 					severity = value;
 				}
 			}
-			facesMessage = new FacesMessage(severity, summary, detail);
+			this.facesMessage = new FacesMessage(severity, summary, detail);
 		}
 
 		public String getText() {
 			StringBuilder text = new StringBuilder();
-			if (StringUtils.hasLength(facesMessage.getSummary())) {
-				text.append(facesMessage.getSummary());
+			if (StringUtils.hasLength(this.facesMessage.getSummary())) {
+				text.append(this.facesMessage.getSummary());
 			}
-			if (StringUtils.hasLength(facesMessage.getDetail())) {
+			if (StringUtils.hasLength(this.facesMessage.getDetail())) {
 				text.append(text.length() == 0 ? "" : " : ");
-				text.append(facesMessage.getDetail());
+				text.append(this.facesMessage.getDetail());
 			}
 			return text.toString();
 		}
 
 		public Severity getSeverity() {
 			Severity severity = null;
-			if (facesMessage.getSeverity() != null) {
-				severity = FACES_SEVERITY_TO_SPRING.get(facesMessage.getSeverity());
+			if (this.facesMessage.getSeverity() != null) {
+				severity = FACES_SEVERITY_TO_SPRING.get(this.facesMessage.getSeverity());
 			}
 			return (severity == null ? Severity.INFO : severity);
 		}
@@ -376,7 +376,7 @@ public class FlowFacesContext extends FacesContextWrapper {
 		 * @return The original {@link FacesMessage} adapted by this class.
 		 */
 		public FacesMessage getFacesMessage() {
-			return facesMessage;
+			return this.facesMessage;
 		}
 	}
 
@@ -394,11 +394,11 @@ public class FlowFacesContext extends FacesContextWrapper {
 		}
 
 		public String getClientId() {
-			return clientId;
+			return this.clientId;
 		}
 
 		public int hashCode() {
-			return ObjectUtils.nullSafeHashCode(clientId);
+			return ObjectUtils.nullSafeHashCode(this.clientId);
 		}
 
 		public boolean equals(Object obj) {

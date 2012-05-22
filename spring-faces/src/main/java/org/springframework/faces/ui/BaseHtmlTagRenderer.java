@@ -79,7 +79,7 @@ abstract class BaseHtmlTagRenderer extends Renderer {
 				}
 				Object attributeValue = component.getAttributes().get(property);
 
-				RenderAttributeCallback callback = defaultRenderAttributeCallback;
+				RenderAttributeCallback callback = this.defaultRenderAttributeCallback;
 				if (getAttributeCallbacks(null).containsKey(attribute)) {
 					callback = getAttributeCallbacks(component).get(attribute);
 				}

@@ -93,12 +93,12 @@ public class ProgressiveCommandButtonRenderer extends BaseDojoComponentRenderer 
 	};
 
 	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
-		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
-			attributeCallbacks.putAll(super.getAttributeCallbacks(component));
-			attributeCallbacks.put("onclick", onclickCallback);
+		if (this.attributeCallbacks == null) {
+			this.attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
+			this.attributeCallbacks.putAll(super.getAttributeCallbacks(component));
+			this.attributeCallbacks.put("onclick", this.onclickCallback);
 		}
-		return attributeCallbacks;
+		return this.attributeCallbacks;
 	}
 
 	/**

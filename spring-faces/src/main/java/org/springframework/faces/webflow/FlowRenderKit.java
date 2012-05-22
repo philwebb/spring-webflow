@@ -45,7 +45,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 	}
 
 	public RenderKit getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class FlowRenderKit extends RenderKitWrapper {
 	 */
 	public ResponseStateManager getResponseStateManager() {
 		if (JsfUtils.isFlowRequest()) {
-			return flowViewResponseStateManager;
+			return this.flowViewResponseStateManager;
 		}
-		return wrapped.getResponseStateManager();
+		return this.wrapped.getResponseStateManager();
 	}
 }

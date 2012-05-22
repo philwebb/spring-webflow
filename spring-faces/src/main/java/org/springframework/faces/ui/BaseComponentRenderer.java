@@ -51,12 +51,12 @@ public abstract class BaseComponentRenderer extends BaseHtmlTagRenderer {
 	};
 
 	protected Map<String, RenderAttributeCallback> getAttributeCallbacks(UIComponent component) {
-		if (attributeCallbacks == null) {
-			attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
-			attributeCallbacks.put("id", idCallback);
-			attributeCallbacks.put("name", idCallback);
-			attributeCallbacks.put("disabled", disabledCallback);
+		if (this.attributeCallbacks == null) {
+			this.attributeCallbacks = new HashMap<String, RenderAttributeCallback>();
+			this.attributeCallbacks.put("id", this.idCallback);
+			this.attributeCallbacks.put("name", this.idCallback);
+			this.attributeCallbacks.put("disabled", this.disabledCallback);
 		}
-		return attributeCallbacks;
+		return this.attributeCallbacks;
 	}
 }

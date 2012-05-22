@@ -27,6 +27,6 @@ public class Jsf2FlowResourceResolver extends FlowResourceResolver {
 	Log logger = LogFactory.getLog(FlowExternalContext.class);
 
 	public Jsf2FlowResourceResolver() {
-		logger.warn("Jsf2FlowResourceResolver has been deprecated, please update your faces-config.xml to use FlowResourceResolver");
+		this.logger.warn("Jsf2FlowResourceResolver has been deprecated, please update your faces-config.xml to use FlowResourceResolver");
 	}
 }

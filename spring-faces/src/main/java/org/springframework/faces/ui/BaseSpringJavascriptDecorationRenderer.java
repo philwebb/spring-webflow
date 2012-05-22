@@ -31,7 +31,7 @@ public abstract class BaseSpringJavascriptDecorationRenderer extends Renderer {
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			ResourceHelper.renderScriptLink(context, springJsResourceUri);
+			ResourceHelper.renderScriptLink(context, this.springJsResourceUri);
 		}
 	}
 

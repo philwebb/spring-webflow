@@ -88,20 +88,20 @@ public class JsfViewFactory implements ViewFactory {
 		boolean notifyPhaseListeners = !facesContext.getRenderResponse();
 
 		if (notifyPhaseListeners) {
-			JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+			JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, this.lifecycle, facesContext);
 		}
 		UIViewRoot viewRoot = getViewRoot(context, facesContext);
 		facesContext.setViewRoot(viewRoot);
 		publishPostRestoreStateEvent(facesContext);
 		if (notifyPhaseListeners) {
-			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, lifecycle, facesContext);
+			JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, this.lifecycle, facesContext);
 		}
-		return createJsfView(viewRoot, lifecycle, context);
+		return createJsfView(viewRoot, this.lifecycle, context);
 	}
 
 	private UIViewRoot getViewRoot(RequestContext context, FacesContext facesContext) {
 		ViewHandler viewHandler = getViewHandler(facesContext);
-		String viewName = (String) viewIdExpression.getValue(context);
+		String viewName = (String) this.viewIdExpression.getValue(context);
 		if (viewAlreadySet(facesContext, viewName)) {
 			return getViewRootForAlreadySetView(context, facesContext);
 		}

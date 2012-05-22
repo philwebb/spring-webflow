@@ -56,7 +56,7 @@ public class MockJsfExternalContext extends ExternalContext {
 	}
 
 	public Map<String, Object> getApplicationMap() {
-		return applicationMap;
+		return this.applicationMap;
 	}
 
 	public String getAuthType() {
@@ -108,7 +108,7 @@ public class MockJsfExternalContext extends ExternalContext {
 	}
 
 	public Map<String, Object> getRequestMap() {
-		return requestMap;
+		return this.requestMap;
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class MockJsfExternalContext extends ExternalContext {
 	}
 
 	public Map<String, String> getRequestParameterMap() {
-		return requestParameterMap;
+		return this.requestParameterMap;
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class MockJsfExternalContext extends ExternalContext {
 	}
 
 	public Iterator<String> getRequestParameterNames() {
-		return requestParameterMap.keySet().iterator();
+		return this.requestParameterMap.keySet().iterator();
 	}
 
 	public Map<String, String[]> getRequestParameterValuesMap() {
@@ -168,7 +168,7 @@ public class MockJsfExternalContext extends ExternalContext {
 	}
 
 	public Map<String, Object> getSessionMap() {
-		return sessionMap;
+		return this.sessionMap;
 	}
 
 	public Principal getUserPrincipal() {

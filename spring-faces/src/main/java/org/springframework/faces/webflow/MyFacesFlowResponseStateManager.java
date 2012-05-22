@@ -57,11 +57,11 @@ public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager
 	}
 
 	public ResponseStateManager getWrapped() {
-		return flowResponseStateManager;
+		return this.flowResponseStateManager;
 	}
 
 	private MyfacesResponseStateManager getWrappedMyfacesResponseStateManager() {
-		return StateCacheUtils.getMyFacesResponseStateManager(flowResponseStateManager);
+		return StateCacheUtils.getMyFacesResponseStateManager(this.flowResponseStateManager);
 	}
 
 	public boolean isWriteStateAfterRenderViewRequired(FacesContext facesContext) {
@@ -73,7 +73,7 @@ public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager
 	}
 
 	public void saveState(FacesContext facesContext, Object state) {
-		flowResponseStateManager.saveState(state);
+		this.flowResponseStateManager.saveState(state);
 	}
 
 	public void writeStateAsUrlParams(FacesContext facesContext, SerializedView serializedview) {

@@ -57,7 +57,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 	}
 
 	public ResponseStateManager getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	@Override

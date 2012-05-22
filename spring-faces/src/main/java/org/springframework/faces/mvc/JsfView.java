@@ -46,7 +46,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 	public void afterPropertiesSet() throws Exception {
 		super.afterPropertiesSet();
-		facesLifecycle = createFacesLifecycle();
+		this.facesLifecycle = createFacesLifecycle();
 	}
 
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
@@ -57,7 +57,7 @@ public class JsfView extends AbstractUrlBasedView {
 
 		populateRequestMap(facesContext, model);
 
-		JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, facesLifecycle, facesContext);
+		JsfUtils.notifyBeforeListeners(PhaseId.RESTORE_VIEW, this.facesLifecycle, facesContext);
 
 		ViewHandler viewHandler = facesContext.getApplication().getViewHandler();
 
@@ -72,15 +72,15 @@ public class JsfView extends AbstractUrlBasedView {
 
 		facesContext.setViewRoot(viewRoot);
 
-		JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, facesLifecycle, facesContext);
+		JsfUtils.notifyAfterListeners(PhaseId.RESTORE_VIEW, this.facesLifecycle, facesContext);
 
 		facesContext.setViewRoot(viewRoot);
 		facesContext.renderResponse();
 		try {
-			logger.debug("Asking faces lifecycle to render");
-			facesLifecycle.render(facesContext);
+			this.logger.debug("Asking faces lifecycle to render");
+			this.facesLifecycle.render(facesContext);
 		} finally {
-			logger.debug("View rendering complete");
+			this.logger.debug("View rendering complete");
 			facesContextHelper.releaseIfNecessary();
 		}
 	}

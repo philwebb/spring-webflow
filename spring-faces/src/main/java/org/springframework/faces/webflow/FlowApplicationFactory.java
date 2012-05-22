@@ -39,18 +39,18 @@ public class FlowApplicationFactory extends ApplicationFactory {
 	}
 
 	public Application getApplication() {
-		Application application = wrapped.getApplication();
+		Application application = this.wrapped.getApplication();
 		if (application != null && (!(application instanceof FlowApplication))) {
 			setApplication(new FlowApplication(application));
 		}
-		return wrapped.getApplication();
+		return this.wrapped.getApplication();
 	}
 
 	public void setApplication(Application application) {
-		wrapped.setApplication(application);
+		this.wrapped.setApplication(application);
 	}
 
 	public ApplicationFactory getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 }

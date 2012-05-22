@@ -64,7 +64,7 @@ public class FlowActionListener implements ActionListener {
 
 	public void processAction(ActionEvent actionEvent) throws AbortProcessingException {
 		if (!JsfUtils.isFlowRequest()) {
-			delegate.processAction(actionEvent);
+			this.delegate.processAction(actionEvent);
 			return;
 		}
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -152,6 +152,6 @@ public class FlowActionListener implements ActionListener {
 
 	private void validate(RequestContext requestContext, Object model, String eventId) {
 		new ValidationHelper(model, requestContext, eventId, getModelExpression(requestContext).getExpressionString(),
-				null, messageCodesResolver, null).validate();
+				null, this.messageCodesResolver, null).validate();
 	}
 }

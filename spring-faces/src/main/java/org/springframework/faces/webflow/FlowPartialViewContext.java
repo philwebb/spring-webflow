@@ -42,7 +42,7 @@ public class FlowPartialViewContext extends PartialViewContextWrapper {
 
 	@Override
 	public PartialViewContext getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	@Override

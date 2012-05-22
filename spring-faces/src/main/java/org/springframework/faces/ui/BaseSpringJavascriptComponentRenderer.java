@@ -39,7 +39,7 @@ public abstract class BaseSpringJavascriptComponentRenderer extends BaseComponen
 		super.encodeBegin(context, component);
 
 		if (!JsfUtils.isAsynchronousFlowRequest()) {
-			ResourceHelper.renderScriptLink(context, springJsResourceUri);
+			ResourceHelper.renderScriptLink(context, this.springJsResourceUri);
 		}
 	}
 }

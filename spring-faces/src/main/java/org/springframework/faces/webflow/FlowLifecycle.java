@@ -54,7 +54,7 @@ public class FlowLifecycle extends LifecycleWrapper {
 	}
 
 	public Lifecycle getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	/**

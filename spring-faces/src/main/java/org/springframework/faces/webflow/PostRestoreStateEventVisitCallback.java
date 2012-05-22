@@ -37,7 +37,7 @@ class PostRestoreStateEventVisitCallback implements VisitCallback {
 		} else {
 			this.event.setComponent(target);
 		}
-		target.processEvent(event);
+		target.processEvent(this.event);
 		return VisitResult.ACCEPT;
 	}
 }

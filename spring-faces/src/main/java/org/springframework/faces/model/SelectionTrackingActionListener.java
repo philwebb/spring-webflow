@@ -52,7 +52,7 @@ public class SelectionTrackingActionListener implements ActionListener {
 
 	public void processAction(ActionEvent event) throws AbortProcessingException {
 		trackSelection(event.getComponent());
-		delegate.processAction(event);
+		this.delegate.processAction(event);
 	}
 
 	private void trackSelection(UIComponent component) {

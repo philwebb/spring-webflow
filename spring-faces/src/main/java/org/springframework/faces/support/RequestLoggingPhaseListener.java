@@ -38,8 +38,8 @@ public class RequestLoggingPhaseListener implements PhaseListener {
 	}
 
 	public void beforePhase(PhaseEvent event) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Entering JSF Phase: " + event.getPhaseId());
+		if (this.logger.isDebugEnabled()) {
+			this.logger.debug("Entering JSF Phase: " + event.getPhaseId());
 		}
 	}
 

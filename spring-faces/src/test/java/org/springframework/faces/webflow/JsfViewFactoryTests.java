@@ -74,30 +74,30 @@ public class JsfViewFactoryTests extends TestCase {
 
 	protected void setUp() throws Exception {
 		configureJsf();
-		extContext.setNativeContext(servletContext);
-		extContext.setNativeRequest(request);
-		extContext.setNativeResponse(response);
-		RequestContextHolder.setRequestContext(context);
-		EasyMock.expect(context.getFlashScope()).andStubReturn(flashMap);
-		EasyMock.expect(context.getExternalContext()).andStubReturn(extContext);
-		EasyMock.expect(context.getRequestParameters()).andStubReturn(
+		this.extContext.setNativeContext(this.servletContext);
+		this.extContext.setNativeRequest(this.request);
+		this.extContext.setNativeResponse(this.response);
+		RequestContextHolder.setRequestContext(this.context);
+		EasyMock.expect(this.context.getFlashScope()).andStubReturn(this.flashMap);
+		EasyMock.expect(this.context.getExternalContext()).andStubReturn(this.extContext);
+		EasyMock.expect(this.context.getRequestParameters()).andStubReturn(
 				new LocalParameterMap(new HashMap<String, Object>()));
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		jsfMock.tearDown();
+		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
 	private void configureJsf() throws Exception {
-		jsfMock.setUp();
+		this.jsfMock.setUp();
 		ExceptionEventAwareMockApplication application = new ExceptionEventAwareMockApplication();
 		((MockBaseFacesContext) FlowFacesContext.getCurrentInstance()).setApplication(application);
-		trackingListener = new TrackingPhaseListener();
-		jsfMock.lifecycle().addPhaseListener(trackingListener);
-		jsfMock.facesContext().setViewRoot(null);
-		jsfMock.facesContext().getApplication().setViewHandler(viewHandler);
+		this.trackingListener = new TrackingPhaseListener();
+		this.jsfMock.lifecycle().addPhaseListener(this.trackingListener);
+		this.jsfMock.facesContext().setViewRoot(null);
+		this.jsfMock.facesContext().getApplication().setViewHandler(this.viewHandler);
 	}
 
 	/**
@@ -105,20 +105,20 @@ public class JsfViewFactoryTests extends TestCase {
 	 */
 	public final void testGetView_Create() {
 
-		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
-				lifecycle);
+				this.lifecycle);
 
 		MockUIViewRoot newRoot = new MockUIViewRoot();
 		newRoot.setViewId(VIEW_ID);
-		((MockViewHandler) viewHandler).setCreateView(newRoot);
-		context.inViewState();
+		((MockViewHandler) this.viewHandler).setCreateView(newRoot);
+		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { context });
+		EasyMock.replay(new Object[] { this.context });
 
-		View newView = factory.getView(context);
+		View newView = this.factory.getView(this.context);
 
 		assertNotNull("A View was not created", newView);
 		assertTrue("A JsfView was expected", newView instanceof JsfView);
@@ -131,10 +131,10 @@ public class JsfViewFactoryTests extends TestCase {
 	 */
 	public final void testGetView_Restore() {
 
-		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
-				lifecycle);
+				this.lifecycle);
 
 		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
@@ -142,14 +142,14 @@ public class JsfViewFactoryTests extends TestCase {
 		input.setId("invalidInput");
 		input.setValid(false);
 		existingRoot.getChildren().add(input);
-		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+		((MockViewHandler) this.viewHandler).setRestoreView(existingRoot);
 
-		context.inViewState();
+		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { context });
+		EasyMock.replay(new Object[] { this.context });
 
-		View restoredView = factory.getView(context);
+		View restoredView = this.factory.getView(this.context);
 
 		assertNotNull("A View was not restored", restoredView);
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
@@ -164,21 +164,21 @@ public class JsfViewFactoryTests extends TestCase {
 	 */
 	public final void testGetView_RestoreWithBindings() {
 
-		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
-				lifecycle);
+				this.lifecycle);
 
 		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
 		UIPanel panel = new UIPanel();
 		panel.setId("panel1");
 		UIOutput output = new UIOutput();
-		output.setValueBinding("binding", jsfMock.facesContext().getApplication()
+		output.setValueBinding("binding", this.jsfMock.facesContext().getApplication()
 				.createValueBinding("#{myBean.output}"));
 		output.setId("output1");
 		UIInput input = new UIInput();
-		input.setValueBinding("binding", jsfMock.facesContext().getApplication().createValueBinding("#{myBean.input}"));
+		input.setValueBinding("binding", this.jsfMock.facesContext().getApplication().createValueBinding("#{myBean.input}"));
 		input.setId("input1");
 
 		existingRoot.getChildren().add(panel);
@@ -186,16 +186,16 @@ public class JsfViewFactoryTests extends TestCase {
 		panel.getChildren().add(input);
 
 		TestBean testBean = new TestBean();
-		jsfMock.externalContext().getRequestMap().put("myBean", testBean);
+		this.jsfMock.externalContext().getRequestMap().put("myBean", testBean);
 
-		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+		((MockViewHandler) this.viewHandler).setRestoreView(existingRoot);
 
-		context.inViewState();
+		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { context });
+		EasyMock.replay(new Object[] { this.context });
 
-		View restoredView = factory.getView(context);
+		View restoredView = this.factory.getView(this.context);
 
 		assertNotNull("A View was not restored", restoredView);
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
@@ -212,25 +212,25 @@ public class JsfViewFactoryTests extends TestCase {
 	 */
 	public final void testGetView_Restore_Ajax() {
 
-		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
-				lifecycle);
+				this.lifecycle);
 
 		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setViewId(VIEW_ID);
-		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+		((MockViewHandler) this.viewHandler).setRestoreView(existingRoot);
 
-		request.addHeader("Accept", "text/html;type=ajax");
+		this.request.addHeader("Accept", "text/html;type=ajax");
 
-		EasyMock.expect(context.getCurrentState()).andReturn(new NormalViewState());
+		EasyMock.expect(this.context.getCurrentState()).andReturn(new NormalViewState());
 
-		context.inViewState();
+		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { context });
+		EasyMock.replay(new Object[] { this.context });
 
-		View restoredView = factory.getView(context);
+		View restoredView = this.factory.getView(this.context);
 
 		assertNotNull("A View was not restored", restoredView);
 		assertTrue("A JsfView was expected", restoredView instanceof JsfView);
@@ -244,19 +244,19 @@ public class JsfViewFactoryTests extends TestCase {
 	 * Third party sets the view root before RESTORE_VIEW
 	 */
 	public final void testGetView_ExternalViewRoot() {
-		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
-				lifecycle);
+				this.lifecycle);
 
 		MockUIViewRoot newRoot = new MockUIViewRoot();
 		newRoot.setViewId(VIEW_ID);
-		jsfMock.facesContext().setViewRoot(newRoot);
-		jsfMock.facesContext().renderResponse();
+		this.jsfMock.facesContext().setViewRoot(newRoot);
+		this.jsfMock.facesContext().renderResponse();
 
-		EasyMock.replay(new Object[] { context });
+		EasyMock.replay(new Object[] { this.context });
 
-		View newView = factory.getView(context);
+		View newView = this.factory.getView(this.context);
 
 		assertNotNull("A View was not created", newView);
 		assertTrue("A JsfView was expected", newView instanceof JsfView);
@@ -267,21 +267,21 @@ public class JsfViewFactoryTests extends TestCase {
 	}
 
 	public void testGetView_ExceptionsOnPostRestoreStateEvent() throws Exception {
-		lifecycle = new NoExecutionLifecycle(jsfMock.lifecycle());
-		factory = new JsfViewFactory(parser.parseExpression(VIEW_ID,
+		this.lifecycle = new NoExecutionLifecycle(this.jsfMock.lifecycle());
+		this.factory = new JsfViewFactory(this.parser.parseExpression(VIEW_ID,
 				new FluentParserContext().template().evaluate(RequestContext.class).expectResult(String.class)),
-				lifecycle);
+				this.lifecycle);
 
 		MockUIViewRoot existingRoot = new MockUIViewRoot();
 		existingRoot.setThrowOnPostRestoreStateEvent(true);
 		existingRoot.setViewId(VIEW_ID);
-		((MockViewHandler) viewHandler).setRestoreView(existingRoot);
+		((MockViewHandler) this.viewHandler).setRestoreView(existingRoot);
 
-		context.inViewState();
+		this.context.inViewState();
 		EasyMock.expectLastCall().andReturn(true);
 
-		EasyMock.replay(new Object[] { context });
-		factory.getView(context);
+		EasyMock.replay(new Object[] { this.context });
+		this.factory.getView(this.context);
 		ExceptionEventAwareMockApplication application = (ExceptionEventAwareMockApplication) FlowFacesContext
 				.getCurrentInstance().getApplication();
 		assertNotNull("Expected exception event", application.getExceptionQueuedEventContext());
@@ -307,15 +307,15 @@ public class JsfViewFactoryTests extends TestCase {
 		public void afterPhase(PhaseEvent event) {
 			String phaseCallback = "AFTER_" + event.getPhaseId();
 			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					phaseCallbacks.contains(phaseCallback));
-			phaseCallbacks.add(phaseCallback);
+					this.phaseCallbacks.contains(phaseCallback));
+			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public void beforePhase(PhaseEvent event) {
 			String phaseCallback = "BEFORE_" + event.getPhaseId();
 			assertFalse("Phase callback " + phaseCallback + " already executed.",
-					phaseCallbacks.contains(phaseCallback));
-			phaseCallbacks.add(phaseCallback);
+					this.phaseCallbacks.contains(phaseCallback));
+			this.phaseCallbacks.add(phaseCallback);
 		}
 
 		public PhaseId getPhaseId() {
@@ -356,7 +356,7 @@ public class JsfViewFactoryTests extends TestCase {
 		UIInput input;
 
 		public UIOutput getOutput() {
-			return output;
+			return this.output;
 		}
 
 		public void setOutput(UIOutput output) {
@@ -364,7 +364,7 @@ public class JsfViewFactoryTests extends TestCase {
 		}
 
 		public UIInput getInput() {
-			return input;
+			return this.input;
 		}
 
 		public void setInput(UIInput input) {
@@ -381,10 +381,10 @@ public class JsfViewFactoryTests extends TestCase {
 		public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
 			if (event instanceof PostRestoreStateEvent) {
 				assertSame("Component did not match", this, ((PostRestoreStateEvent) event).getComponent());
-				postRestoreStateEventSeen = true;
-				if (throwOnPostRestoreStateEvent) {
-					abortProcessingException = new AbortProcessingException();
-					throw abortProcessingException;
+				this.postRestoreStateEventSeen = true;
+				if (this.throwOnPostRestoreStateEvent) {
+					this.abortProcessingException = new AbortProcessingException();
+					throw this.abortProcessingException;
 				}
 			}
 		}
@@ -394,11 +394,11 @@ public class JsfViewFactoryTests extends TestCase {
 		}
 
 		public boolean isPostRestoreStateEventSeen() {
-			return postRestoreStateEventSeen;
+			return this.postRestoreStateEventSeen;
 		}
 
 		public AbortProcessingException getAbortProcessingException() {
-			return abortProcessingException;
+			return this.abortProcessingException;
 		}
 	}
 
@@ -415,7 +415,7 @@ public class JsfViewFactoryTests extends TestCase {
 		}
 
 		public ExceptionQueuedEventContext getExceptionQueuedEventContext() {
-			return exceptionQueuedEventContext;
+			return this.exceptionQueuedEventContext;
 		}
 	}
 }

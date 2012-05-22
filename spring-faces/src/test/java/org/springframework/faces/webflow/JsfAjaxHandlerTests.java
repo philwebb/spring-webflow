@@ -10,23 +10,23 @@ public class JsfAjaxHandlerTests extends TestCase {
 	private JsfAjaxHandler ajaxHandler;
 
 	protected void setUp() throws Exception {
-		jsfMock.setUp();
+		this.jsfMock.setUp();
 		StaticWebApplicationContext webappContext = new StaticWebApplicationContext();
-		webappContext.setServletContext(jsfMock.servletContext());
-		ajaxHandler = new JsfAjaxHandler();
-		ajaxHandler.setApplicationContext(webappContext);
+		webappContext.setServletContext(this.jsfMock.servletContext());
+		this.ajaxHandler = new JsfAjaxHandler();
+		this.ajaxHandler.setApplicationContext(webappContext);
 	}
 
 	protected void tearDown() throws Exception {
-		jsfMock.tearDown();
+		this.jsfMock.tearDown();
 	}
 
 	public void testSendAjaxRedirect() throws Exception {
-		ajaxHandler.sendAjaxRedirectInternal("/target", jsfMock.request(), jsfMock.response(), false);
+		this.ajaxHandler.sendAjaxRedirectInternal("/target", this.jsfMock.request(), this.jsfMock.response(), false);
 		assertEquals(
 				"<?xml version='1.0' encoding='utf-8'?>\n<partial-response><redirect url=\"/target\"/></partial-response>",
-				jsfMock.contentAsString());
-		assertEquals("application/xml", jsfMock.response().getContentType());
+				this.jsfMock.contentAsString());
+		assertEquals("application/xml", this.jsfMock.response().getContentType());
 	}
 
 }

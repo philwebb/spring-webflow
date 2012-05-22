@@ -48,7 +48,7 @@ public class FlowResourceResolver extends ResourceResolver {
 	private final ResourceResolver delegateResolver;
 
 	public FlowResourceResolver() {
-		delegateResolver = createDelegateResolver();
+		this.delegateResolver = createDelegateResolver();
 	}
 
 	private ResourceResolver createDelegateResolver() {
@@ -68,7 +68,7 @@ public class FlowResourceResolver extends ResourceResolver {
 	public URL resolveUrl(String path) {
 
 		if (!JsfUtils.isFlowRequest()) {
-			return delegateResolver.resolveUrl(path);
+			return this.delegateResolver.resolveUrl(path);
 		}
 
 		try {
@@ -83,7 +83,7 @@ public class FlowResourceResolver extends ResourceResolver {
 			if (viewResource.exists()) {
 				return viewResource.getURL();
 			} else {
-				return delegateResolver.resolveUrl(path);
+				return this.delegateResolver.resolveUrl(path);
 			}
 		} catch (IOException ex) {
 			throw new FacesException(ex);
