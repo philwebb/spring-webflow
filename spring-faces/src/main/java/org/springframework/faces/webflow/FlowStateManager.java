@@ -25,6 +25,8 @@ import javax.faces.context.FacesContext;
  * @author Jeremy Grelle
  * @author Rossen Stoyanchev
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 public class FlowStateManager extends StateManagerWrapper {
 

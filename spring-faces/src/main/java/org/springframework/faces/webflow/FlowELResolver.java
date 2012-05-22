@@ -35,6 +35,8 @@ import org.springframework.webflow.expression.el.ScopeSearchingELResolver;
  * 
  * @author Jeremy Grelle
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 public class FlowELResolver extends CompositeELResolver {
 

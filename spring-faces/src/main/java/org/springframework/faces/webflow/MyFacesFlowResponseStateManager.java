@@ -43,6 +43,8 @@ import org.apache.myfaces.renderkit.StateCacheUtils;
  * @see FlowRenderKit
  * 
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 @SuppressWarnings("deprecation")
 public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager implements

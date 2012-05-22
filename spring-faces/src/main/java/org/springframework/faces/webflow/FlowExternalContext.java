@@ -32,6 +32,8 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Jeremy Grelle
  * @author Phillip Webb
  * @author Rossen Stoyanchev
+ * 
+ * @since 2.4
  */
 public class FlowExternalContext extends ExternalContextWrapper {
 

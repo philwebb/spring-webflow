@@ -28,6 +28,8 @@ import javax.faces.render.ResponseStateManager;
  * methods is to call through to the wrapped {@link ResponseStateManager}.
  * 
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 @SuppressWarnings("deprecation")
 public abstract class ResponseStateManagerWrapper extends ResponseStateManager implements

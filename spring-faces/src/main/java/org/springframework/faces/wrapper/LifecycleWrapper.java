@@ -27,6 +27,8 @@ import javax.faces.lifecycle.Lifecycle;
  * through to the wrapped {@link Lifecycle}.
  * 
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 public abstract class LifecycleWrapper extends Lifecycle implements FacesWrapper<Lifecycle> {
 
