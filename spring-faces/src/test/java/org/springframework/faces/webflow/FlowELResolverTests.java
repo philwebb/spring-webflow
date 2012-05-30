@@ -20,14 +20,14 @@ import org.springframework.webflow.test.MockRequestContext;
  */
 public class FlowELResolverTests extends TestCase {
 
-	private FlowELResolver resolver = new FlowELResolver();
+	private final FlowELResolver resolver = new FlowELResolver();
 
-	private RequestContext requestContext = new MockRequestContext();
+	private final RequestContext requestContext = new MockRequestContext();
 
-	private ELContext elContext = new MockELContext();
+	private final ELContext elContext = new MockELContext();
 
 	protected void setUp() throws Exception {
-		RequestContextHolder.setRequestContext(requestContext);
+		RequestContextHolder.setRequestContext(this.requestContext);
 	}
 
 	protected void tearDown() throws Exception {
@@ -35,57 +35,57 @@ public class FlowELResolverTests extends TestCase {
 	}
 
 	public void testRequestContextResolve() throws Exception {
-		Object actual = resolver.getValue(elContext, null, "flowRequestContext");
-		assertTrue(elContext.isPropertyResolved());
+		Object actual = this.resolver.getValue(this.elContext, null, "flowRequestContext");
+		assertTrue(this.elContext.isPropertyResolved());
 		assertNotNull(actual);
-		assertSame(requestContext, actual);
+		assertSame(this.requestContext, actual);
 	}
 
 	public void testImplicitFlowResolve() throws Exception {
-		Object actual = resolver.getValue(elContext, null, "flowScope");
-		assertTrue(elContext.isPropertyResolved());
+		Object actual = this.resolver.getValue(this.elContext, null, "flowScope");
+		assertTrue(this.elContext.isPropertyResolved());
 		assertNotNull(actual);
-		assertSame(requestContext.getFlowScope(), actual);
+		assertSame(this.requestContext.getFlowScope(), actual);
 	}
 
 	public void testFlowResourceResolve() throws Exception {
 		ApplicationContext applicationContext = new StaticWebApplicationContext();
-		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
-		Object actual = resolver.getValue(elContext, null, "resourceBundle");
-		assertTrue(elContext.isPropertyResolved());
+		((Flow) this.requestContext.getActiveFlow()).setApplicationContext(applicationContext);
+		Object actual = this.resolver.getValue(this.elContext, null, "resourceBundle");
+		assertTrue(this.elContext.isPropertyResolved());
 		assertNotNull(actual);
 		assertSame(applicationContext, actual);
 	}
 
 	public void testScopeResolve() throws Exception {
-		requestContext.getFlowScope().put("test", "test");
-		Object actual = resolver.getValue(elContext, null, "test");
-		assertTrue(elContext.isPropertyResolved());
+		this.requestContext.getFlowScope().put("test", "test");
+		Object actual = this.resolver.getValue(this.elContext, null, "test");
+		assertTrue(this.elContext.isPropertyResolved());
 		assertEquals("test", actual);
 	}
 
 	public void testMapAdaptableResolve() throws Exception {
 		LocalAttributeMap<String> base = new LocalAttributeMap<String>();
 		base.put("test", "test");
-		Object actual = resolver.getValue(elContext, base, "test");
-		assertTrue(elContext.isPropertyResolved());
+		Object actual = this.resolver.getValue(this.elContext, base, "test");
+		assertTrue(this.elContext.isPropertyResolved());
 		assertEquals("test", actual);
 	}
 
 	public void testBeanResolveWithRequestContext() throws Exception {
 		StaticWebApplicationContext applicationContext = new StaticWebApplicationContext();
-		((Flow) requestContext.getActiveFlow()).setApplicationContext(applicationContext);
+		((Flow) this.requestContext.getActiveFlow()).setApplicationContext(applicationContext);
 		applicationContext.registerSingleton("test", Bean.class);
-		Object actual = resolver.getValue(elContext, null, "test");
-		assertTrue(elContext.isPropertyResolved());
+		Object actual = this.resolver.getValue(this.elContext, null, "test");
+		assertTrue(this.elContext.isPropertyResolved());
 		assertNotNull(actual);
 		assertTrue(actual instanceof Bean);
 	}
 
 	public void testBeanResolveWithoutRequestContext() throws Exception {
 		RequestContextHolder.setRequestContext(null);
-		Object actual = resolver.getValue(elContext, null, "test");
-		assertFalse(elContext.isPropertyResolved());
+		Object actual = this.resolver.getValue(this.elContext, null, "test");
+		assertFalse(this.elContext.isPropertyResolved());
 		assertNull(actual);
 	}
 

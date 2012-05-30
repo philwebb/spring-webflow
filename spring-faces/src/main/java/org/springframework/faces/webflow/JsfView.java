@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2011 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,13 +43,12 @@ public class JsfView implements View {
 
 	private UIViewRoot viewRoot;
 
-	private Lifecycle facesLifecycle;
+	private final Lifecycle facesLifecycle;
 
-	private RequestContext requestContext;
+	private final RequestContext requestContext;
 
 	private String viewId;
 	
-
 	/**
 	 * Creates a new JSF view.
 	 * @param viewRoot the view root
@@ -83,13 +82,13 @@ public class JsfView implements View {
 		if (facesContext.getResponseComplete()) {
 			return;
 		}
-		facesContext.setViewRoot(viewRoot);
+		facesContext.setViewRoot(this.viewRoot);
 		try {
 			logger.debug("Asking faces lifecycle to render");
-			facesLifecycle.render(facesContext);
+			this.facesLifecycle.render(facesContext);
 
 			// Ensure serialized view state is always updated even if JSF didn't call StateManager.writeState().
-			if (requestContext.getExternalContext().isAjaxRequest()) {
+			if (this.requestContext.getExternalContext().isAjaxRequest()) {
 				saveState();
 			}
 		} finally {
@@ -99,7 +98,7 @@ public class JsfView implements View {
 	}
 
 	public boolean userEventQueued() {
-		return requestContext.getRequestParameters().contains("javax.faces.ViewState");
+		return this.requestContext.getRequestParameters().contains("javax.faces.ViewState");
 	}
 
 	/**
@@ -108,10 +107,10 @@ public class JsfView implements View {
 	 */
 	public void processUserEvent() {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
-		facesContext.setViewRoot(viewRoot);
+		facesContext.setViewRoot(this.viewRoot);
 		// Must respect these flags in case user set them during RESTORE_VIEW phase
 		if (!facesContext.getRenderResponse() && !facesContext.getResponseComplete()) {
-			facesLifecycle.execute(facesContext);
+			this.facesLifecycle.execute(facesContext);
 		}
 	}
 
@@ -121,10 +120,10 @@ public class JsfView implements View {
 	 */
 	public void saveState() {
 		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
-		if (viewRoot instanceof AjaxViewRoot) {
-			facesContext.setViewRoot(((AjaxViewRoot) viewRoot).getOriginalViewRoot());
+		if (this.viewRoot instanceof AjaxViewRoot) {
+			facesContext.setViewRoot(((AjaxViewRoot) this.viewRoot).getOriginalViewRoot());
 		} else {
-			facesContext.setViewRoot(viewRoot);
+			facesContext.setViewRoot(this.viewRoot);
 		}
 		facesContext.getApplication().getStateManager().saveView(facesContext);
 	}
@@ -136,7 +135,7 @@ public class JsfView implements View {
 	}
 
 	public boolean hasFlowEvent() {
-		return requestContext.getExternalContext().getRequestMap().contains(EVENT_KEY);
+		return this.requestContext.getExternalContext().getRequestMap().contains(EVENT_KEY);
 	}
 
 	public Event getFlowEvent() {
@@ -144,10 +143,10 @@ public class JsfView implements View {
 	}
 
 	private String getEventId() {
-		return (String) requestContext.getExternalContext().getRequestMap().get(EVENT_KEY);
+		return (String) this.requestContext.getExternalContext().getRequestMap().get(EVENT_KEY);
 	}
 
 	public String toString() {
-		return "[JSFView = '" + viewId + "']";
+		return "[JSFView = '" + this.viewId + "']";
 	}
 }

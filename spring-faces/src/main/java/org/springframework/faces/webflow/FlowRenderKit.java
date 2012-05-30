@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import javax.faces.render.ResponseStateManager;
 
 public class FlowRenderKit extends RenderKitWrapper {
 
-	private RenderKit wrapped;
+	private final RenderKit wrapped;
 
 	private ResponseStateManager flowViewResponseStateManager;
 
@@ -45,7 +45,7 @@ public class FlowRenderKit extends RenderKitWrapper {
 	}
 
 	public RenderKit getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class FlowRenderKit extends RenderKitWrapper {
 	 */
 	public ResponseStateManager getResponseStateManager() {
 		if (JsfUtils.isFlowRequest()) {
-			return flowViewResponseStateManager;
+			return this.flowViewResponseStateManager;
 		}
-		return wrapped.getResponseStateManager();
+		return this.wrapped.getResponseStateManager();
 	}
 }

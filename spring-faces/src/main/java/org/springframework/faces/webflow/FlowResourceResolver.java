@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,9 @@ package org.springframework.faces.webflow;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.faces.FacesException;
 import javax.faces.view.facelets.ResourceResolver;
@@ -42,23 +45,30 @@ import org.springframework.webflow.execution.RequestContextHolder;
  */
 public class FlowResourceResolver extends ResourceResolver {
 
-	private static final String MOJARRA_DEFAULT_RESOLVER = "com.sun.faces.facelets.impl.DefaultResourceResolver";
-	private static final String MYFACES_DEFAULT_RESOLVER = "org.apache.myfaces.view.facelets.impl.DefaultResourceResolver";
+	/**
+	 * All known {@link ResourceResolver} implementations in the priority order
+	 */
+	private static final List<String> RESOLVERS_CLASSES;
+	static {
+		List<String> resolvers = new ArrayList<String>();
+		resolvers.add("com.sun.faces.facelets.impl.DefaultResourceResolver");
+		resolvers.add("org.apache.myfaces.view.facelets.impl.DefaultResourceResolver");
+		RESOLVERS_CLASSES = Collections.unmodifiableList(resolvers);
+	}
 
-	private ResourceResolver delegateResolver;
+	private final ResourceResolver delegateResolver;
 
 	public FlowResourceResolver() {
-		delegateResolver = createDelegateResolver();
+		this.delegateResolver = createDelegateResolver();
 	}
 
 	private ResourceResolver createDelegateResolver() {
 		try {
 			ClassLoader classLoader = getClass().getClassLoader();
-			if (ClassUtils.isPresent(MYFACES_DEFAULT_RESOLVER, classLoader)) {
-				return (ResourceResolver) ClassUtils.forName(MYFACES_DEFAULT_RESOLVER, classLoader).newInstance();
-			}
-			if (ClassUtils.isPresent(MOJARRA_DEFAULT_RESOLVER, getClass().getClassLoader())) {
-				return (ResourceResolver) ClassUtils.forName(MOJARRA_DEFAULT_RESOLVER, classLoader).newInstance();
+			for (String resolverClass : RESOLVERS_CLASSES) {
+				if (ClassUtils.isPresent(resolverClass, classLoader)) {
+					return (ResourceResolver) ClassUtils.forName(resolverClass, classLoader).newInstance();
+				}
 			}
 		} catch (Exception e) {
 		}
@@ -68,7 +78,7 @@ public class FlowResourceResolver extends ResourceResolver {
 	public URL resolveUrl(String path) {
 
 		if (!JsfUtils.isFlowRequest()) {
-			return delegateResolver.resolveUrl(path);
+			return this.delegateResolver.resolveUrl(path);
 		}
 
 		try {
@@ -83,7 +93,7 @@ public class FlowResourceResolver extends ResourceResolver {
 			if (viewResource.exists()) {
 				return viewResource.getURL();
 			} else {
-				return delegateResolver.resolveUrl(path);
+				return this.delegateResolver.resolveUrl(path);
 			}
 		} catch (IOException ex) {
 			throw new FacesException(ex);

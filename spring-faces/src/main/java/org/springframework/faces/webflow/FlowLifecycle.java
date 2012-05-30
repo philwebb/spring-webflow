@@ -23,7 +23,7 @@ import javax.faces.lifecycle.LifecycleFactory;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.faces.wrapper.LifecycleWrapper;
+import org.springframework.faces.support.LifecycleWrapper;
 
 /**
  * Custom {@link Lifecycle} for Spring Web Flow that only executes the APPLY_REQUEST_VALUES through INVOKE_APPLICATION
@@ -54,7 +54,7 @@ public class FlowLifecycle extends LifecycleWrapper {
 	}
 
 	public Lifecycle getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	/**

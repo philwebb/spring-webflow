@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import javax.faces.render.ResponseStateManager;
 
 import org.apache.myfaces.renderkit.MyfacesResponseStateManager;
 import org.apache.myfaces.renderkit.StateCacheUtils;
+import org.springframework.webflow.execution.RequestContext;
+import org.springframework.webflow.execution.RequestContextHolder;
 
 /**
  * A wrapper for {@link FlowResponseStateManager} used to support MyFaces partial state saving. MyFaces supports an
@@ -43,23 +45,25 @@ import org.apache.myfaces.renderkit.StateCacheUtils;
  * @see FlowRenderKit
  * 
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 @SuppressWarnings("deprecation")
 public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager implements
 		FacesWrapper<ResponseStateManager> {
 
-	private FlowResponseStateManager flowResponseStateManager;
+	private final ResponseStateManager wrapped;
 
-	public MyFacesFlowResponseStateManager(FlowResponseStateManager flowResponseStateManager) {
-		this.flowResponseStateManager = flowResponseStateManager;
+	public MyFacesFlowResponseStateManager(FlowResponseStateManager wrapped) {
+		this.wrapped = wrapped;
 	}
 
 	public ResponseStateManager getWrapped() {
-		return flowResponseStateManager;
+		return this.wrapped;
 	}
 
 	private MyfacesResponseStateManager getWrappedMyfacesResponseStateManager() {
-		return StateCacheUtils.getMyFacesResponseStateManager(flowResponseStateManager);
+		return StateCacheUtils.getMyFacesResponseStateManager(this.wrapped);
 	}
 
 	public boolean isWriteStateAfterRenderViewRequired(FacesContext facesContext) {
@@ -71,7 +75,8 @@ public class MyFacesFlowResponseStateManager extends MyfacesResponseStateManager
 	}
 
 	public void saveState(FacesContext facesContext, Object state) {
-		flowResponseStateManager.saveState(state);
+		RequestContext requestContext = RequestContextHolder.getRequestContext();
+		requestContext.getViewScope().put(FlowResponseStateManager.FACES_VIEW_STATE, state);
 	}
 
 	public void writeStateAsUrlParams(FacesContext facesContext, SerializedView serializedview) {

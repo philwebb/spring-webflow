@@ -75,8 +75,8 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 
 	private class OrderVerifyingPhaseListener implements PhaseListener {
 
-		private List<OrderVerifyingPhaseListener> afterPhaseList;
-		private List<OrderVerifyingPhaseListener> beforePhaseList;
+		private final List<OrderVerifyingPhaseListener> afterPhaseList;
+		private final List<OrderVerifyingPhaseListener> beforePhaseList;
 
 		public OrderVerifyingPhaseListener(List<OrderVerifyingPhaseListener> afterPhaseList,
 				List<OrderVerifyingPhaseListener> beforePhaseList) {
@@ -85,11 +85,11 @@ public class JsfUtilsTests extends AbstractJsfTestCase {
 		}
 
 		public void afterPhase(PhaseEvent event) {
-			afterPhaseList.add(this);
+			this.afterPhaseList.add(this);
 		}
 
 		public void beforePhase(PhaseEvent event) {
-			beforePhaseList.add(this);
+			this.beforePhaseList.add(this);
 		}
 
 		public PhaseId getPhaseId() {

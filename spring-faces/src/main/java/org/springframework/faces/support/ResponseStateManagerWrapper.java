@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.faces.wrapper;
+package org.springframework.faces.support;
 
 import java.io.IOException;
 
@@ -28,6 +28,8 @@ import javax.faces.render.ResponseStateManager;
  * methods is to call through to the wrapped {@link ResponseStateManager}.
  * 
  * @author Phillip Webb
+ * 
+ * @since 2.4
  */
 @SuppressWarnings("deprecation")
 public abstract class ResponseStateManagerWrapper extends ResponseStateManager implements

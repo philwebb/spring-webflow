@@ -32,7 +32,7 @@ import org.springframework.util.Assert;
  */
 public class FlowApplication extends ApplicationWrapper {
 
-	private Application wrapped;
+	private final Application wrapped;
 
 	/**
 	 * Class constructor that accepts a delegate Application instance. If the delegate has default instantiation logic

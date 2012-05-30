@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,8 @@ import org.springframework.webflow.execution.RequestContext;
  * @author Jeremy Grelle
  * @author Phillip Webb
  * @author Rossen Stoyanchev
+ * 
+ * @since 2.4
  */
 public class FlowExternalContext extends ExternalContextWrapper {
 
@@ -39,9 +41,9 @@ public class FlowExternalContext extends ExternalContextWrapper {
 
 	private static final String CUSTOM_RESPONSE = FlowExternalContext.class.getName() + ".customResponse";
 
-	private ExternalContext wrapped;
+	private final ExternalContext wrapped;
 
-	private RequestContext context;
+	private final RequestContext context;
 
 	public FlowExternalContext(RequestContext context, ExternalContext wrapped) {
 		this.context = context;
@@ -49,23 +51,23 @@ public class FlowExternalContext extends ExternalContextWrapper {
 	}
 
 	public ExternalContext getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	public Object getResponse() {
-		if (context.getRequestScope().contains(CUSTOM_RESPONSE)) {
-			return context.getRequestScope().get(CUSTOM_RESPONSE);
+		if (this.context.getRequestScope().contains(CUSTOM_RESPONSE)) {
+			return this.context.getRequestScope().get(CUSTOM_RESPONSE);
 		}
 		return super.getResponse();
 	}
 
 	public void setResponse(Object response) {
-		context.getRequestScope().put(CUSTOM_RESPONSE, response);
+		this.context.getRequestScope().put(CUSTOM_RESPONSE, response);
 		super.setResponse(response);
 	}
 
 	public void responseSendError(int statusCode, String message) throws IOException {
-		logger.debug("Sending error HTTP status code " + statusCode + " with message '" + message + "'");
+		this.logger.debug("Sending error HTTP status code " + statusCode + " with message '" + message + "'");
 		super.responseSendError(statusCode, message);
 	}
 

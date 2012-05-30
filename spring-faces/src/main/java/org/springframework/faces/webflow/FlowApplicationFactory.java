@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2008 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.util.Assert;
  */
 public class FlowApplicationFactory extends ApplicationFactory {
 
-	private ApplicationFactory wrapped;
+	private final ApplicationFactory wrapped;
 
 	public FlowApplicationFactory(ApplicationFactory wrapped) {
 		Assert.notNull(wrapped, "The wrapped ApplicationFactory instance must not be null!");
@@ -39,18 +39,18 @@ public class FlowApplicationFactory extends ApplicationFactory {
 	}
 
 	public Application getApplication() {
-		Application application = wrapped.getApplication();
+		Application application = this.wrapped.getApplication();
 		if (application != null && (!(application instanceof FlowApplication))) {
 			setApplication(new FlowApplication(application));
 		}
-		return wrapped.getApplication();
+		return this.wrapped.getApplication();
 	}
 
 	public void setApplication(Application application) {
-		wrapped.setApplication(application);
+		this.wrapped.setApplication(application);
 	}
 
 	public ApplicationFactory getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 }

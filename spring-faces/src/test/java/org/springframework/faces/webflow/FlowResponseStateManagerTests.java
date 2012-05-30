@@ -12,7 +12,7 @@ import org.springframework.webflow.test.MockFlowExecutionKey;
 
 public class FlowResponseStateManagerTests extends TestCase {
 
-	private JSFMockHelper jsfMock = new JSFMockHelper();
+	private final JSFMockHelper jsfMock = new JSFMockHelper();
 
 	private FlowResponseStateManager responseStateManager;
 
@@ -20,20 +20,20 @@ public class FlowResponseStateManagerTests extends TestCase {
 	private FlowExecutionContext flowExecutionContext;
 
 	protected void setUp() throws Exception {
-		jsfMock.setUp();
+		this.jsfMock.setUp();
 		StaticWebApplicationContext webappContext = new StaticWebApplicationContext();
-		webappContext.setServletContext(jsfMock.servletContext());
+		webappContext.setServletContext(this.jsfMock.servletContext());
 
-		requestContext = EasyMock.createMock(RequestContext.class);
-		RequestContextHolder.setRequestContext(requestContext);
-		flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
+		this.requestContext = EasyMock.createMock(RequestContext.class);
+		RequestContextHolder.setRequestContext(this.requestContext);
+		this.flowExecutionContext = EasyMock.createMock(FlowExecutionContext.class);
 
-		responseStateManager = new FlowResponseStateManager(null);
+		this.responseStateManager = new FlowResponseStateManager(null);
 	}
 
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		jsfMock.tearDown();
+		this.jsfMock.tearDown();
 		RequestContextHolder.setRequestContext(null);
 	}
 
@@ -42,20 +42,20 @@ public class FlowResponseStateManagerTests extends TestCase {
 	}
 
 	public void testWriteFlowSerializedView() throws Exception {
-		EasyMock.expect(flowExecutionContext.getKey()).andReturn(new MockFlowExecutionKey("e1s1"));
+		EasyMock.expect(this.flowExecutionContext.getKey()).andReturn(new MockFlowExecutionKey("e1s1"));
 		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<Object>();
-		EasyMock.expect(requestContext.getViewScope()).andStubReturn(viewMap);
-		EasyMock.expect(requestContext.getFlowExecutionContext()).andReturn(flowExecutionContext);
-		EasyMock.replay(requestContext, flowExecutionContext);
+		EasyMock.expect(this.requestContext.getViewScope()).andStubReturn(viewMap);
+		EasyMock.expect(this.requestContext.getFlowExecutionContext()).andReturn(this.flowExecutionContext);
+		EasyMock.replay(this.requestContext, this.flowExecutionContext);
 
 		Object state = new Object();
-		responseStateManager.writeState(jsfMock.facesContext(), state);
+		this.responseStateManager.writeState(this.jsfMock.facesContext(), state);
 
 		assertEquals(state, viewMap.get(FlowResponseStateManager.FACES_VIEW_STATE));
 		assertEquals(
 				"<input type=\"hidden\" name=\"javax.faces.ViewState\" id=\"javax.faces.ViewState\" value=\"e1s1\" />",
-				jsfMock.contentAsString());
-		EasyMock.verify(flowExecutionContext, requestContext);
+				this.jsfMock.contentAsString());
+		EasyMock.verify(this.flowExecutionContext, this.requestContext);
 	}
 
 	public void testGetState() throws Exception {
@@ -63,12 +63,12 @@ public class FlowResponseStateManagerTests extends TestCase {
 
 		LocalAttributeMap<Object> viewMap = new LocalAttributeMap<Object>();
 		viewMap.put(FlowResponseStateManager.FACES_VIEW_STATE, state);
-		EasyMock.expect(requestContext.getViewScope()).andStubReturn(viewMap);
-		EasyMock.replay(requestContext);
+		EasyMock.expect(this.requestContext.getViewScope()).andStubReturn(viewMap);
+		EasyMock.replay(this.requestContext);
 
-		Object actual = responseStateManager.getState(jsfMock.facesContext(), "viewId");
+		Object actual = this.responseStateManager.getState(this.jsfMock.facesContext(), "viewId");
 
 		assertSame(state, actual);
-		EasyMock.verify(requestContext);
+		EasyMock.verify(this.requestContext);
 	}
 }

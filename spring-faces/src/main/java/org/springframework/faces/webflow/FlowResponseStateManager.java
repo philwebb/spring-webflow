@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2010 the original author or authors.
+ * Copyright 2004-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import javax.faces.render.ResponseStateManager;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.faces.wrapper.ResponseStateManagerWrapper;
+import org.springframework.faces.support.ResponseStateManagerWrapper;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.RequestContextHolder;
 
@@ -50,14 +50,14 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 
 	private static final char[] STATE_FIELD_END = "\" />".toCharArray();
 
-	private ResponseStateManager wrapped;
+	private final ResponseStateManager wrapped;
 
 	public FlowResponseStateManager(ResponseStateManager wrapped) {
 		this.wrapped = wrapped;
 	}
 
 	public ResponseStateManager getWrapped() {
-		return wrapped;
+		return this.wrapped;
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 		return getFlowExecutionKey();
 	}
 
-	void saveState(Object state) {
+	private void saveState(Object state) {
 		RequestContext requestContext = RequestContextHolder.getRequestContext();
 		requestContext.getViewScope().put(FACES_VIEW_STATE, state);
 	}
