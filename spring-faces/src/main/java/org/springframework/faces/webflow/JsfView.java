@@ -47,8 +47,8 @@ public class JsfView implements View {
 
 	private final RequestContext requestContext;
 
-	private final String viewId;
-
+	private String viewId;
+	
 	/**
 	 * Creates a new JSF view.
 	 * @param viewRoot the view root
