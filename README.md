@@ -24,7 +24,7 @@ See the current [Javadoc](http://static.springsource.org/spring-webflow/docs/cur
 
 # Samples
 
-The `spring-webflow-samples` sub-directory contains several samples that can be built with Maven. More samples can be found in the [spring-samples](https://src.springframework.org/svn/spring-samples) SVN repository: see [webflow-showcase](https://src.springframework.org/svn/spring-samples/webflow-showcase) and [webflow-primefaces-showcase](https://src.springframework.org/svn/spring-samples/webflow-primefaces-showcase).
+Samples can be found in the spring-webflow-samples [Github repository](https://github.com/SpringSource/spring-webflow-samples).
 
 # Downloading artifacts
 
@@ -40,7 +40,27 @@ Check out the [Spring forums](http://forum.springsource.org/forumdisplay.php?36-
 
 # Building from source
 
-Instructions on [building Spring Web Flow](https://github.com/SpringSource/spring-webflow/wiki/Building-From-Source) from source are available via the project wiki.
+Check out sources:
+````
+git clone git://github.com/SpringSource/spring-webflow.git
+````
+
+Compile and test, build all jars, distribution zips and docs:
+````
+./gradlew build
+````
+
+Install into your local Maven repository:
+````
+./gradlew install
+````
+
+Generate Eclipse settings and then manually import projects:
+````
+./import-into-eclipse.sh
+````
+
+The Spring Framework and Spring Web Flow use a very similar build system. For this reason the following [Gradle build FAQ](https://github.com/SpringSource/spring-framework/wiki/Gradle-build-and-release-FAQ) would be a very useful read.
 
 # Contributing
 
