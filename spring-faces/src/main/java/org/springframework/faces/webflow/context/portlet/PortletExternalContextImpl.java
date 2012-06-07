@@ -51,11 +51,14 @@ import org.apache.myfaces.shared.context.flash.FlashImpl;
 import org.springframework.binding.collection.MapAdaptable;
 import org.springframework.faces.webflow.JsfRuntimeInformation;
 import org.springframework.util.Assert;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.webflow.context.portlet.PortletContextMap;
 import org.springframework.webflow.context.portlet.PortletRequestMap;
 import org.springframework.webflow.context.portlet.PortletSessionMap;
 import org.springframework.webflow.core.collection.CollectionUtils;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
+
+import com.sun.faces.context.flash.ELFlash;
 
 /**
  * An implementation of {@link ExternalContext} for use with Portlet requests.
@@ -90,6 +93,8 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	private MapAdaptable<String, Object> sessionMap;
 
+	private Flash flash;
+
 	public PortletExternalContextImpl(PortletContext portletContext, PortletRequest portletRequest,
 			PortletResponse portletResponse) {
 		this.portletContext = portletContext;
@@ -115,8 +120,18 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	public Flash getFlash() {
-		// FIXME own impl
-		return FlashImpl.getCurrentInstance(this);
+		if(this.flash == null) {
+			this.flash = createFlash();
+		}
+		return this.flash;
+	}
+
+	private Flash createFlash() {
+		if (JsfRuntimeInformation.isMyFacesPresent()) {
+			return new MyFacesFlashFactory().newFlash(this);
+		} else {
+			return new MojarraFlashFactory().newFlash(this);
+		}
 	}
 
 	public void dispatch(String path) throws IOException {
@@ -156,19 +171,25 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	public String encodePartialActionURL(String url) {
 		Assert.notNull(url);
-		// FIXME check if this is OK
 		return response.encodeURL(url);
 	}
 
 	public String encodeBookmarkableURL(String baseUrl, Map<String, List<String>> parameters) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		return encodeUrl(baseUrl, parameters);
 	}
 
 	public String encodeRedirectURL(String baseUrl, Map<String, List<String>> parameters) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Auto-generated method stub");
+		return response.encodeURL(encodeUrl(baseUrl, parameters));
 	}
+
+	private String encodeUrl(String baseUrl, Map<String, List<String>> parameters) {
+		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(baseUrl);
+		for (Map.Entry<String, List<String>> entry : parameters.entrySet()) {
+			builder.queryParam(entry.getKey(), entry.getValue().toArray());
+		}
+		return builder.buildAndExpand().toUriString();
+	}
+	
 
 	@Override
 	public Object getContext() {
@@ -251,10 +272,13 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public String getRequestContentType() {
-		// FIXME PW is this correct
+		if (request instanceof ClientDataRequest) {
+			ClientDataRequest clientDataRequest = (ClientDataRequest) request;
+			return clientDataRequest.getContentType();
+		}
 		return null;
 	}
-
+	
 	@Override
 	public String getRequestContextPath() {
 		return request.getContextPath();
@@ -343,15 +367,11 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	@Override
 	public String getRequestPathInfo() {
-		// FIXME PW verify
 		return null;
 	}
 
 	@Override
 	public String getRequestServletPath() {
-		// FIXME PW verify same logic as getRequestPathInfo()
-		// FIXME PW can we remove the empty string now on 2.0
-		//
 		// Return "" instead of null in order to prevent NullPointerException in Apache MyFaces 1.2 when it tries to
 		// determine the servlet mappings in DefaultViewHandlerSupport.calculateFacesServletMapping(..).
 		// Note that the FacesServlet mapping in Web Flow is not relevant so this should be ok.
@@ -558,5 +578,17 @@ public class PortletExternalContextImpl extends ExternalContext {
 
 	public void setSessionMaxInactiveInterval(int interval) {
 		request.getPortletSession().setMaxInactiveInterval(interval);
+	}
+	
+	private static class MojarraFlashFactory {
+		public Flash newFlash(ExternalContext context) {
+			return ELFlash.getFlash(context, true);
+		}
+	}
+	
+	private static class MyFacesFlashFactory {
+		public Flash newFlash(ExternalContext context) {
+			return FlashImpl.getCurrentInstance(context);
+		}
 	}
 }
