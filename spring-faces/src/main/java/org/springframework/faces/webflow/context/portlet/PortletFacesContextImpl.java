@@ -111,7 +111,6 @@ public class PortletFacesContextImpl extends FacesContext {
 	private boolean processingEvents;
 
 	public PortletFacesContextImpl(ExternalContext externalContext) {
-		// FIXME PW odd constructor?
 		this.externalContext = externalContext;
 	}
 
@@ -127,7 +126,6 @@ public class PortletFacesContextImpl extends FacesContext {
 	public void release() {
 		assertNotReleased();
 		if (externalContext != null) {
-			// FIXME PW bit odd?
 			Method delegateMethod = ClassUtils.getMethodIfAvailable(externalContext.getClass(), "release");
 			if (delegateMethod != null) {
 				try {
@@ -382,7 +380,6 @@ public class PortletFacesContextImpl extends FacesContext {
 	}
 
 	public PartialViewContext getPartialViewContext() {
-		// FIXME PW is this correct
 		assertNotReleased();
 		if (partialViewContext == null) {
 			partialViewContext = JsfUtils.findFactory(PartialViewContextFactory.class).getPartialViewContext(this);
@@ -409,7 +406,6 @@ public class PortletFacesContextImpl extends FacesContext {
 		Assert.isTrue(!released, "FacesContext already released");
 	}
 
-	// FIXME PW hmmm, what is with all the null mappers
 	private class PortletELContextImpl extends ELContext {
 
 		private FunctionMapper functionMapper;
