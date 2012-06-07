@@ -1,3 +1,4 @@
+
 package org.springframework.faces.webflow.context.portlet;
 
 import java.util.List;
@@ -32,8 +33,7 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 		if (facesResourceIndex == -1) {
 			return uri;
 		}
-		UriComponents components = UriComponentsBuilder.fromUriString(
-				uri.substring(facesResourceIndex + FACES_RESOURCE.length() + 1)).build();
+		UriComponents components = UriComponentsBuilder.fromUriString(uri.substring(facesResourceIndex + FACES_RESOURCE.length() + 1)).build();
 		MimeResponse response = (MimeResponse) context.getExternalContext().getResponse();
 		ResourceURL resourceURL = response.createResourceURL();
 		for (Map.Entry<String, List<String>> entry : components.getQueryParams().entrySet()) {
@@ -43,12 +43,6 @@ public class PortletViewHandler extends ViewHandlerWrapper {
 		}
 		resourceURL.setParameter(FACES_RESOURCE, components.getPath());
 		return resourceURL.toString();
-
-		// url = url.replace("/booking-portlet-faces/", "/booking-portlet-faces/spring/");
-		// return url;
-		// System.out.println(url);
-		// resourceURL.setResourceID("test");
-		// return resourceURL.toString();
 	}
 
 }
