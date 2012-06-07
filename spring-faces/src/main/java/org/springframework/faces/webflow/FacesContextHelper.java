@@ -53,12 +53,7 @@ public class FacesContextHelper {
 		if (FacesContext.getCurrentInstance() != null) {
 			facesContext = FacesContext.getCurrentInstance();
 		} else {
-			if (context instanceof PortletContext) { // FIXME check if not portlet jar
-				facesContext = new PortletFacesContextImpl((PortletContext) context, (PortletRequest) request, (PortletResponse) response);
-			} else {
-				FacesContextFactory factory = JsfUtils.findFactory(FacesContextFactory.class);
-				facesContext = factory.getFacesContext(context, request, response, FlowLifecycle.newInstance());
-			}
+			facesContext = newDefaultInstance(context, request, response, FlowLifecycle.newInstance());
 			release = true;
 		}
 		return facesContext;
