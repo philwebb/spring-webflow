@@ -505,7 +505,7 @@ public class PortletExternalContextImpl extends ExternalContext {
 	}
 
 	public void setResponseStatus(int statusCode) {
-		response.setProperty(ResourceResponse.HTTP_STATUS_CODE, String.valueOf(statusCode));
+		PortletResponseUtils.setStatusCode(response, statusCode);
 	}
 
 	public boolean isResponseCommitted() {
