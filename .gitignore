@@ -14,6 +14,13 @@ build
 .project
 .settings
 .springBeans
+spring-binding/src/main/java/META-INF/MANIFEST.MF
+spring-faces/src/main/java/META-INF/MANIFEST.MF
+spring-js-resources/src/main/java/META-INF/MANIFEST.MF
+spring-js/src/main/java/META-INF/MANIFEST.MF
+spring-webflow/src/main/java/META-INF/MANIFEST.MF
+
+
 
 # IDEA metadata and output dirs
 *.iml
