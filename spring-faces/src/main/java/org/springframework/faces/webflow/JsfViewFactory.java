@@ -35,7 +35,6 @@ import javax.faces.lifecycle.Lifecycle;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.binding.expression.Expression;
-import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.View;
@@ -52,8 +51,6 @@ import org.springframework.webflow.execution.ViewFactory;
 public class JsfViewFactory implements ViewFactory {
 
 	private static final Log logger = LogFactory.getLog(JsfViewFactory.class);
-
-	private static SpringJavascriptAjaxHandler springJsAjaxHandler = new SpringJavascriptAjaxHandler();
 
 	private final Expression viewIdExpression;
 
