@@ -15,7 +15,7 @@
     (see <xref linkend="spring-faces-security-taglib" /> for more details).
     </para>
 
-    <para>Starting with version 2.4 the JSF integration in Web Flow requires
+    <para>Starting with Spring Web Flow version 2.4, JSF integration requires
     JSF v2.0 or above.  Both Sun Mojarra and Apache MyFaces runtime environments 
     are supported.</para>
 
@@ -85,9 +85,10 @@
       which provided Ajax and client-side validation capabilities for JSF 1.2 
       environments.  Applications using these components will need to switch to a
       3rd party JSF component library such as PrimeFaces or RichFaces.
-      Components that have been removed include <code>clientTextValidator</code>, 
-      <code>clientNumberValidator</code>, <code>clientDateValidator</code> and 
-      <code>validateAllOnClick</code>.
+      Components that have been removed include <code>&lt;sf:clientTextValidator&gt;</code>, 
+      <code>&lt;sf:clientNumberValidator&gt;</code>, <code>&lt;sf:clientDateValidator&gt;</code>,
+      <code>&lt;sf:validateAllOnClick&gt;</code>, <code>&lt;sf:resource&gt;</code> and 
+      <code>&lt;sf:resourceGroup&gt;</code>.
       The <code>swf-booking-faces</code> sample in the Spring Web Flow distribution 
       shows an example built with PrimeFaces components.</para>
     </sect2>
@@ -281,7 +282,7 @@
 
     <para>In doing pure JSF development, you will quickly find that request
     scope is not long-lived enough for storing conversational model objects
-    that drive complex event-driven views. In JSF usual option is to begin 
+    that drive complex event-driven views. In JSF the usual option is to begin 
     putting things into session scope, with the extra
     burden of needing to clean the objects up before progressing to another
     view or functional area of the application. What is really needed is a
@@ -806,9 +807,6 @@ mvn package
     Flow requests are not routed through the standard FacesServlet. Typically,
     anything that is traditionally mapped to the FacesServlet should be mapped
     to the Spring DispatcherServlet instead. (You can also map to both if for
-    example you are migrating a legacy JSF application page-by-page.) In some
-    cases, a deeper level of integration can be achieved by configuring
-    special flow services that are "aware" of a particular component library,
-    and these will be noted in the examples to follow.</para>
+    example you are migrating a legacy JSF application page-by-page.).</para>
   </sect1>
 </chapter>

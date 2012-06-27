@@ -10,7 +10,7 @@
 			<title>Minimum JSF 2.0 Requirement</title>
 			<para>
 				Java ServerFaces v1.2 and earlier are no longer supported by Spring Web Flow, if you have not done so already you will need to upgrade to JSF 2.0 or above.  
-				In addition the Spring Faces components that were previously provided in order to provided progress AJAX enhancements have been removed with this release.  
+				In addition the Spring Faces components that were previously provided in order to provided progressive AJAX enhancements have been removed with this release.  
 				See <xref linkend="spring-faces-upgrade-from-swf23"/>.
 			</para>
 		</sect2>
@@ -20,7 +20,7 @@
 				The internal Portlet integration introduced in Spring Web Flow 2.2 has been upgraded for JSF 2.0 compatibility.
 				Some of the more advanced JSF 2.0 features, such as partial state saving, are not supported in a Portlet environment, however, existing application can now upgrade to the minimum required JSF version.
 				Upgraded projects will need to ensure that the <code>&lt;faces:resources&gt;</code> elements is
-				included as part of their Spring configuration.
+				included as part of their Spring configuration. See <xref linked="portlet-jsf"/>.
 			</para>
 		</sect2>
 	</sect1>
