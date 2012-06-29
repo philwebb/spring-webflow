@@ -19,6 +19,7 @@ import java.io.Writer;
 import java.security.Principal;
 import java.util.Locale;
 
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.core.collection.ParameterMap;
 import org.springframework.webflow.core.collection.SharedAttributeMap;
@@ -38,6 +39,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * @author Erwin Vervaet
  * @author Jeremy Grelle
  * @author Scott Andrews
+ * @author Phillip Webb
  */
 public interface ExternalContext {
 
@@ -169,11 +171,22 @@ public interface ExternalContext {
 	/**
 	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
 	 * method also sets responseComplete status to true.
+	 * @see #requestExternalRedirect(String, AttributeMap)
 	 * @see #isResponseComplete()
 	 * @param location the location of the resource to redirect to
 	 * @throws IllegalStateException if the response has completed
 	 */
 	public void requestExternalRedirect(String location) throws IllegalStateException;
+
+	/**
+	 * Request a redirect to an arbitrary resource location. May not be supported in some environments. Calling this
+	 * method also sets responseComplete status to true.
+	 * @see #isResponseComplete()
+	 * @param location the location of the resource to redirect to
+	 * @param flash any flash attributes that should used when redirecting (can be <tt>null</tt>).
+	 * @throws IllegalStateException if the response has completed
+	 */
+	public void requestExternalRedirect(String location, AttributeMap<Object> flash) throws IllegalStateException;
 
 	/**
 	 * Request that the current redirect requested be sent to the client in a manner that causes the client to issue the

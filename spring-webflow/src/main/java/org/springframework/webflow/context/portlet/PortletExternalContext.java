@@ -32,6 +32,7 @@ import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
@@ -46,6 +47,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * @author Erwin Vervaet
  * @author Jeremy Grelle
  * @author Scott Andrews
+ * @author Phillip Webb
  */
 public class PortletExternalContext implements ExternalContext {
 
@@ -260,9 +262,13 @@ public class PortletExternalContext implements ExternalContext {
 		recordResponseComplete();
 	}
 
-	public void requestExternalRedirect(String uri) throws IllegalStateException {
+	public void requestExternalRedirect(String location) throws IllegalStateException {
+		requestExternalRedirect(location, null);
+	}
+
+	public void requestExternalRedirect(String location, AttributeMap<Object> flash) throws IllegalStateException {
 		assertRedirectResponseAllowed();
-		externalRedirectUrl = uri;
+		this.externalRedirectUrl = location;
 		recordResponseComplete();
 	}
 

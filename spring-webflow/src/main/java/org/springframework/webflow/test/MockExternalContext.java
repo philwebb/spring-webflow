@@ -24,6 +24,7 @@ import java.util.Locale;
 import org.springframework.binding.collection.SharedMapDecorator;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
@@ -34,6 +35,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * Mock implementation of the {@link ExternalContext} interface.
  * @see ExternalContext
  * @author Keith Donald
+ * @author Phillip Webb
  */
 public class MockExternalContext implements ExternalContext {
 
@@ -76,6 +78,8 @@ public class MockExternalContext implements ExternalContext {
 	private MutableAttributeMap<Object> flowDefinitionRedirectFlowInput;
 
 	private String externalRedirectUrl;
+
+	private AttributeMap<Object> externalRedirectFlash;
 
 	private boolean redirectInPopup;
 
@@ -189,8 +193,13 @@ public class MockExternalContext implements ExternalContext {
 		recordResponseComplete();
 	}
 
-	public void requestExternalRedirect(String uri) throws IllegalStateException {
-		externalRedirectUrl = uri;
+	public void requestExternalRedirect(String location) throws IllegalStateException {
+		requestExternalRedirect(location, null);
+	}
+
+	public void requestExternalRedirect(String location, AttributeMap<Object> flash) throws IllegalStateException {
+		externalRedirectUrl = location;
+		externalRedirectFlash = (flash == null ? null : new LocalAttributeMap<Object>(flash));
 		recordResponseComplete();
 	}
 
@@ -412,6 +421,13 @@ public class MockExternalContext implements ExternalContext {
 	 */
 	public String getExternalRedirectUrl() {
 		return externalRedirectUrl;
+	}
+
+	/**
+	 * Returns the flash to use when redirecting. Only set if {@link #getExternalRedirectRequested()} returns true.
+	 */
+	public AttributeMap<Object> getExternalRedirectFlash() {
+		return externalRedirectFlash;
 	}
 
 	/**

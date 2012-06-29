@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.webflow.context.ExternalContext;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.LocalParameterMap;
 import org.springframework.webflow.core.collection.LocalSharedAttributeMap;
@@ -38,6 +39,7 @@ import org.springframework.webflow.core.collection.SharedAttributeMap;
  * @author Keith Donald
  * @author Erwin Vervaet
  * @author Jeremy Grelle
+ * @author Phillip Webb
  */
 public class ServletExternalContext implements ExternalContext {
 
@@ -100,9 +102,14 @@ public class ServletExternalContext implements ExternalContext {
 	private MutableAttributeMap<Object> flowDefinitionRedirectFlowInput;
 
 	/**
-	 * A string specifying an arbitrary
+	 * A string specifying an arbitrary redirect URL.
 	 */
 	private String externalRedirectUrl;
+
+	/**
+	 * Flash to used when redirecting
+	 */
+	private AttributeMap<Object> externalRedirectFlash;
 
 	/**
 	 * The strategy for generating flow execution urls.
@@ -249,8 +256,13 @@ public class ServletExternalContext implements ExternalContext {
 	}
 
 	public void requestExternalRedirect(String location) throws IllegalStateException {
+		requestExternalRedirect(location, null);
+	}
+
+	public void requestExternalRedirect(String location, AttributeMap<Object> flash) throws IllegalStateException {
 		assertResponseAllowed();
 		externalRedirectUrl = location;
+		externalRedirectFlash = (flash == null ? null : new LocalAttributeMap<Object>(flash));
 		recordResponseComplete();
 	}
 
@@ -307,6 +319,13 @@ public class ServletExternalContext implements ExternalContext {
 	 */
 	public String getExternalRedirectUrl() {
 		return externalRedirectUrl;
+	}
+
+	/**
+	 * Returns the flash to use when redirecting. Only set if {@link #getExternalRedirectRequested()} returns true.
+	 */
+	public AttributeMap<Object> getExternalRedirectFlash() {
+		return externalRedirectFlash;
 	}
 
 	/**

@@ -129,6 +129,19 @@ public class ServletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
+	public void testCommitExternalRedirectWithFlash() {
+		LocalAttributeMap<Object> flash = new LocalAttributeMap<Object>();
+		flash.put("flash", "value");
+		context.requestExternalRedirect("foo", flash);
+		flash.clear();
+		assertTrue(context.getExternalRedirectRequested());
+		assertEquals("foo", context.getExternalRedirectUrl());
+		assertEquals("value", context.getExternalRedirectFlash().get("flash"));
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseAllowed());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
+	}
+
 	public void testCommitExecutionRedirectPopup() {
 		context.requestFlowExecutionRedirect();
 		context.requestRedirectInPopup();

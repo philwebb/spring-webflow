@@ -143,6 +143,15 @@ public class PortletExternalContextTests extends TestCase {
 		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
 	}
 
+	public void testCommitExternalRedirectWithFlash() {
+		assertFalse(context.isResponseAllowed());
+		context.requestExternalRedirect("foo", new LocalAttributeMap<Object>());
+		assertTrue(context.getExternalRedirectRequested());
+		assertEquals("foo", context.getExternalRedirectUrl());
+		assertTrue(context.isResponseComplete());
+		assertFalse(context.isResponseCompleteFlowExecutionRedirect());
+	}
+
 	public void testCommitExternalRedirectRenderRequest() {
 		try {
 			renderContext.requestExternalRedirect("foo");

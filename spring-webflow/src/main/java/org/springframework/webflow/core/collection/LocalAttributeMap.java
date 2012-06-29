@@ -31,6 +31,7 @@ import org.springframework.util.Assert;
  * A generic, mutable attribute map with string keys.
  * 
  * @author Keith Donald
+ * @author Phillip Webb
  */
 public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializable {
 
@@ -74,6 +75,17 @@ public class LocalAttributeMap<V> implements MutableAttributeMap<V>, Serializabl
 	public LocalAttributeMap(Map<String, V> map) {
 		Assert.notNull(map, "The target map is required");
 		initAttributes(map);
+	}
+
+	/**
+	 * Create a new attribute map copying values from the specified map.
+	 * @param map
+	 */
+	public LocalAttributeMap(AttributeMap<? extends V> map) {
+		Assert.notNull(map, "The target map is required");
+		Map<String, V> attributes = createTargetMap();
+		attributes.putAll(map.asMap());
+		initAttributes(attributes);
 	}
 
 	// implementing attribute map
