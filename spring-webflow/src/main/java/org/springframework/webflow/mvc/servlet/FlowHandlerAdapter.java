@@ -474,7 +474,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			url.append('/');
 		}
 		url.append(location);
-		if (redirectOutputToFlashScope && output != null && !output.isEmpty()) {
+		if (redirectOutputToFlashScope) {
 			saveOutputToFlashScope(url.toString(), request, response, output);
 		}
 		sendRedirect(url.toString(), request, response);
@@ -491,7 +491,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	protected void saveOutputToFlashScope(String location, HttpServletRequest request, HttpServletResponse response,
 			AttributeMap<Object> output) {
 		FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
-		if (flashMapManager != null) {
+		if (flashMapManager != null && output != null && !output.isEmpty()) {
 			UriComponents uriComponents = UriComponentsBuilder.fromUriString(location).build();
 			FlashMap flashMap = new FlashMap();
 			flashMap.setTargetRequestPath(uriComponents.getPath());
