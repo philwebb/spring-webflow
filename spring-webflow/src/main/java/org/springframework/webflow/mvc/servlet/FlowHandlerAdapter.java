@@ -27,13 +27,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.js.ajax.AjaxHandler;
 import org.springframework.js.ajax.SpringJavascriptAjaxHandler;
 import org.springframework.util.Assert;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.FlashMapManager;
 import org.springframework.web.servlet.HandlerAdapter;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.support.WebContentGenerator;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.springframework.webflow.context.servlet.DefaultFlowUrlHandler;
 import org.springframework.webflow.context.servlet.FlowUrlHandler;
 import org.springframework.webflow.context.servlet.ServletExternalContext;
 import org.springframework.webflow.core.FlowException;
+import org.springframework.webflow.core.collection.AttributeMap;
 import org.springframework.webflow.core.collection.LocalAttributeMap;
 import org.springframework.webflow.core.collection.MutableAttributeMap;
 import org.springframework.webflow.execution.FlowExecutionOutcome;
@@ -47,6 +53,7 @@ import org.springframework.webflow.executor.FlowExecutor;
  * specific flow definitions.
  * 
  * @author Keith Donald
+ * @author Phillip Webb
  */
 public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAdapter, InitializingBean {
 
@@ -76,6 +83,8 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	private AjaxHandler ajaxHandler;
 
 	private boolean redirectHttp10Compatible = true;
+
+	private boolean redirectOutputToFlashScope = false;
 
 	/**
 	 * Creates a new flow handler adapter.
@@ -155,6 +164,26 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 	 */
 	public void setRedirectHttp10Compatible(boolean redirectHttp10Compatible) {
 		this.redirectHttp10Compatible = redirectHttp10Compatible;
+	}
+
+	/**
+	 * Whether servlet relative redirects should pass {@link FlowExecutionOutcome#getOutput() flow output} to the Spring
+	 * MVC {@link FlashMap flash scope}.
+	 * @return true if so, false otherwise
+	 */
+	public boolean getRedirectOutputToFlashScope() {
+		return redirectOutputToFlashScope;
+	}
+
+	/**
+	 * Set whether servlet relative redirects sent by this handler adapter should pass
+	 * {@link FlowExecutionOutcome#getOutput() flow output} to the Spring MVC {@link FlashMap flash scope}.
+	 * <p>
+	 * By default, to remain compatible with previous releases, flow output is not mapped to flash scope.
+	 * @param redirectOutputToFlashScope
+	 */
+	public void setRedirectOutputToFlashScope(boolean redirectOutputToFlashScope) {
+		this.redirectOutputToFlashScope = redirectOutputToFlashScope;
 	}
 
 	public void afterPropertiesSet() throws Exception {
@@ -339,11 +368,12 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			if (context.getFlowDefinitionRedirectRequested()) {
 				sendFlowDefinitionRedirect(result, context, request, response);
 			} else if (context.getExternalRedirectRequested()) {
-				sendExternalRedirect(context.getExternalRedirectUrl(), request, response);
+				sendExternalRedirect(context.getExternalRedirectUrl(), request, response, result.getOutcome()
+						.getOutput());
 			} else {
 				String location = handler.handleExecutionOutcome(result.getOutcome(), request, response);
 				if (location != null) {
-					sendExternalRedirect(location, request, response);
+					sendExternalRedirect(location, request, response, result.getOutcome().getOutput());
 				} else {
 					defaultHandleExecutionOutcome(result.getFlowId(), result.getOutcome(), context, request, response);
 				}
@@ -382,12 +412,17 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 
 	private void sendExternalRedirect(String location, HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
+		sendExternalRedirect(location, request, response, null);
+	}
+
+	private void sendExternalRedirect(String location, HttpServletRequest request, HttpServletResponse response,
+			AttributeMap<Object> output) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Sending external redirect to '" + location + "'");
 		}
 		if (location.startsWith(SERVLET_RELATIVE_LOCATION_PREFIX)) {
 			sendServletRelativeRedirect(location.substring(SERVLET_RELATIVE_LOCATION_PREFIX.length()), request,
-					response);
+					response, output);
 		} else if (location.startsWith(CONTEXT_RELATIVE_LOCATION_PREFIX)) {
 			sendContextRelativeRedirect(location.substring(CONTEXT_RELATIVE_LOCATION_PREFIX.length()), request,
 					response);
@@ -401,7 +436,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			sendRedirect(location, request, response);
 		} else {
 			if (isRedirectServletRelative(request)) {
-				sendServletRelativeRedirect(location, request, response);
+				sendServletRelativeRedirect(location, request, response, output);
 			} else {
 				sendContextRelativeRedirect(location, request, response);
 			}
@@ -431,15 +466,39 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		sendRedirect(url.toString(), request, response);
 	}
 
-	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response,
+			AttributeMap<Object> output) throws IOException {
 		StringBuilder url = new StringBuilder(request.getContextPath());
 		url.append(request.getServletPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
 		url.append(location);
+		if (redirectOutputToFlashScope && output != null && !output.isEmpty()) {
+			saveOutputToFlashScope(url.toString(), request, response, output);
+		}
 		sendRedirect(url.toString(), request, response);
+	}
+
+	/**
+	 * Called to save {@link FlowExecutionOutcome#getOutput() flow output} to MVC flash scope. This method will only be
+	 * called if {@link #setRedirectOutputToFlashScope(boolean)} is <tt>true</tt>.
+	 * @param location
+	 * @param request
+	 * @param response
+	 * @param output
+	 */
+	protected void saveOutputToFlashScope(String location, HttpServletRequest request, HttpServletResponse response,
+			AttributeMap<Object> output) {
+		FlashMapManager flashMapManager = RequestContextUtils.getFlashMapManager(request);
+		if (flashMapManager != null) {
+			UriComponents uriComponents = UriComponentsBuilder.fromUriString(location).build();
+			FlashMap flashMap = new FlashMap();
+			flashMap.setTargetRequestPath(uriComponents.getPath());
+			flashMap.addTargetRequestParams(uriComponents.getQueryParams());
+			flashMap.putAll(output.asMap());
+			flashMapManager.saveOutputFlashMap(flashMap, request, response);
+		}
 	}
 
 	private void handleFlowException(FlowException e, HttpServletRequest request, HttpServletResponse response,
