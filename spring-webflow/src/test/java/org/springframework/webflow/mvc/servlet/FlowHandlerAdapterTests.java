@@ -454,7 +454,7 @@ public class FlowHandlerAdapterTests extends TestCase {
 	}
 
 	public void testHandleFlowServletRedirectOutcomeWithFlash() throws Exception {
-		flowHandlerAdapter.setRedirectOutputToFlashScope(true);
+		flowHandlerAdapter.setSaveOutputToFlashScopeOnRedirect(true);
 		doHandleFlowServletRedirectOutcome();
 		assertEquals("baz", flashMapManager.getFlashMap().get("bar"));
 		assertEquals("/springtravel/app/home", flashMapManager.getFlashMap().getTargetRequestPath());
