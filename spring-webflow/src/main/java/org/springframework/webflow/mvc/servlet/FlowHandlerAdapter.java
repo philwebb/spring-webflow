@@ -445,7 +445,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 					response, result);
 		} else if (location.startsWith(CONTEXT_RELATIVE_LOCATION_PREFIX)) {
 			sendContextRelativeRedirect(location.substring(CONTEXT_RELATIVE_LOCATION_PREFIX.length()), request,
-					response);
+					response, result);
 		} else if (location.startsWith(SERVER_RELATIVE_LOCATION_PREFIX)) {
 			String url = location.substring(SERVER_RELATIVE_LOCATION_PREFIX.length());
 			if (!url.startsWith("/")) {
@@ -458,7 +458,7 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			if (isRedirectServletRelative(request)) {
 				sendServletRelativeRedirect(location, request, response, result);
 			} else {
-				sendContextRelativeRedirect(location, request, response);
+				sendContextRelativeRedirect(location, request, response, result);
 			}
 		}
 	}
@@ -476,14 +476,14 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 		return (request.getPathInfo() != null);
 	}
 
-	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+	private void sendContextRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) throws IOException {
 		StringBuilder url = new StringBuilder(request.getContextPath());
 		if (!location.startsWith("/")) {
 			url.append('/');
 		}
 		url.append(location);
-		sendRedirect(url.toString(), request, response);
+		sendRedirect(url.toString(), request, response, result);
 	}
 
 	private void sendServletRelativeRedirect(String location, HttpServletRequest request, HttpServletResponse response,
@@ -494,9 +494,14 @@ public class FlowHandlerAdapter extends WebContentGenerator implements HandlerAd
 			url.append('/');
 		}
 		url.append(location);
+		sendRedirect(url.toString(), request, response, result);
+	}
+
+	private void sendRedirect(String url, HttpServletRequest request, HttpServletResponse response,
+			FlowExecutionResult result) throws IOException {
 		Map<String, Object> flashOutput = getFlashOutput(request, response, result);
 		saveFlashOutput(url.toString(), request, response, flashOutput);
-		sendRedirect(url.toString(), request, response);
+		sendRedirect(url, request, response);
 	}
 
 	private void saveFlashOutput(String location, HttpServletRequest request, HttpServletResponse response,
