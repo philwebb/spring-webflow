@@ -44,7 +44,7 @@ import org.springframework.webflow.execution.ViewFactory;
  * JSF-specific {@link ViewFactory} implementation.
  * <p>
  * This factory is responsible for performing the duties of the RESTORE_VIEW phase of the JSF lifecycle.
- * 
+ *
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
@@ -66,7 +66,7 @@ public class JsfViewFactory implements ViewFactory {
 	 * be rendered in the case of an executing transition.
 	 */
 	public View getView(RequestContext context) {
-		FacesContext facesContext = FlowFacesContext.getCurrentInstance();
+		FacesContext facesContext = FacesContext.getCurrentInstance();
 		Assert.state(
 				facesContext != null,
 				"FacesContext has not been initialized within the current Web Flow request."
@@ -113,7 +113,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	private boolean viewAlreadySet(FacesContext facesContext, String viewName) {
 		// the corner case where a before RESTORE_VIEW PhaseListener has handled setting the UIViewRoot
-		return (facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId().equals(viewName));
+		return facesContext.getViewRoot() != null && facesContext.getViewRoot().getViewId().equals(viewName);
 	}
 
 	private UIViewRoot getViewRootForAlreadySetView(RequestContext context, FacesContext facesContext) {
@@ -155,7 +155,7 @@ public class JsfViewFactory implements ViewFactory {
 
 	/**
 	 * Walk the component tree to perform any required per-component operations.
-	 * 
+	 *
 	 * @param context
 	 * @param component
 	 */
