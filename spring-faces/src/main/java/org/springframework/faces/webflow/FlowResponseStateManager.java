@@ -142,4 +142,12 @@ public class FlowResponseStateManager extends ResponseStateManagerWrapper {
 			writer.endElement("input");
 		}
 	}
+
+	public static boolean hasState() {
+		if (JsfUtils.isFlowRequest()) {
+			RequestContext requestContext = RequestContextHolder.getRequestContext();
+			return requestContext != null && requestContext.getViewScope().contains(FACES_VIEW_STATE);
+		}
+		return false;
+	}
 }
