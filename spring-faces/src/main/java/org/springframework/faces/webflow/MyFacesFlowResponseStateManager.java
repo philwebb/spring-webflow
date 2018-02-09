@@ -18,7 +18,6 @@ package org.springframework.faces.webflow;
 import java.io.IOException;
 
 import javax.faces.FacesWrapper;
-import javax.faces.application.StateManager.SerializedView;
 import javax.faces.context.FacesContext;
 import javax.faces.render.ResponseStateManager;
 
@@ -67,16 +66,18 @@ public class MyFacesFlowResponseStateManager extends ResponseStateManager
 		requestContext.getViewScope().put(FlowResponseStateManager.FACES_VIEW_STATE, state);
 	}
 
-	public Object getComponentStateToRestore(FacesContext context) {
-		return getWrapped().getComponentStateToRestore(context);
-	}
-
 	public Object getState(FacesContext context, String viewId) {
 		return getWrapped().getState(context, viewId);
 	}
 
-	public Object getTreeStructureToRestore(FacesContext context, String viewId) {
-		return getWrapped().getTreeStructureToRestore(context, viewId);
+	@Override
+	public boolean isStateless(FacesContext context, String viewId) {
+		return getWrapped().isStateless(context, viewId);
+	}
+
+	@Override
+	public String getCryptographicallyStrongTokenFromSession(FacesContext context) {
+		return getWrapped().getCryptographicallyStrongTokenFromSession(context);
 	}
 
 	public String getViewState(FacesContext context, Object state) {
@@ -88,11 +89,6 @@ public class MyFacesFlowResponseStateManager extends ResponseStateManager
 	}
 
 	public void writeState(FacesContext context, Object state) throws IOException {
-		getWrapped().writeState(context, state);
-	}
-
-	@Deprecated
-	public void writeState(FacesContext context, SerializedView state) throws IOException {
 		getWrapped().writeState(context, state);
 	}
 }
